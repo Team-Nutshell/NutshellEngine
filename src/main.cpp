@@ -1,7 +1,6 @@
-#include <iostream>
+#include "utils/ntsh_core_defines.h"
 
 int main()
 {
-	std::cout << "NutshellEngine" << std::endl;
-	return 0;
+	NTSH_CORE_ERROR("NutshellEngine", 1);
 }
