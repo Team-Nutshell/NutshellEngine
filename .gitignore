@@ -359,4 +359,6 @@ MigrationBackup/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 
+# NutshellEngine specific ignore
 build/
+external/
