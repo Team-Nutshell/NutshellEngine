@@ -1,57 +1,24 @@
 #include "utils/ntsh_core_defines.h"
 #include "../external/Common/ntsh_engine_defines.h"
 #include "../external/Common/ntsh_engine_enums.h"
-#include "../external/Common/ntsh_module_interface.h"
 #ifdef NTSH_OS_WINDOWS
-#include <windows.h>
+#include "module_loaders/module_loaders_windows.h"
 #elif NTSH_OS_LINUX
-#include <dlfcn.h>
+#include "module_loaders/module_loaders_linux.h"
 #endif
 
 int main()
 {
+	ModuleLoader moduleLoader;
 #ifdef NTSH_OS_WINDOWS
-	HINSTANCE moduleLibrary = LoadLibrary("./modules/NutshellModule.dll");
+	NutshellModuleInterface* module = moduleLoader.loadModule("./modules/NutshellModule.dll");
 #elif NTSH_OS_LINUX
-	void* moduleLibrary = dlopen("./modules/libNutshellModule.so", RTLD_LAZY);
+	NutshellModuleInterface* module = moduleLoader.loadModule("./modules/libNutshellModule.so");
 #endif
 
-	if (!moduleLibrary)
-	{
-		NTSH_CORE_ERROR("Could not load the dynamic library NutshellModule.", NTSH_RESULT_MODULE_LIBRARY_LOAD_ERROR);
-	}
-
-#ifdef NTSH_OS_WINDOWS
-	createModule_t createNutshellModule = (createModule_t)GetProcAddress(moduleLibrary, "createModule");
-	if (!createNutshellModule) {
-		NTSH_CORE_ERROR("Could not load symbol createModule.", NTSH_RESULT_MODULE_SYMBOL_LOAD_ERROR);
-	}
-#elif NTSH_OS_LINUX
-	createModule_t* createNutshellModule = (createModule_t*)dlsym(moduleLibrary, "createModule");
-	const char* dlsymError = dlerror();
-	if (dlsymError) {
-		NTSH_CORE_ERROR("Could not load symbol createModule.", NTSH_RESULT_MODULE_SYMBOL_LOAD_ERROR);
-	}
-#endif
-
-#ifdef NTSH_OS_WINDOWS
-	destroyModule_t destroyNutshellModule = (destroyModule_t)GetProcAddress(moduleLibrary, "destroyModule");
-	if (!createNutshellModule) {
-		NTSH_CORE_ERROR("Could not load symbol destroyModule.", NTSH_RESULT_MODULE_SYMBOL_LOAD_ERROR);
-	}
-#elif NTSH_OS_LINUX
-	destroyModule_t* destroyNutshellModule = (destroyModule_t*)dlsym(moduleLibrary, "destroyModule");
-	dlsymError = dlerror();
-	if (dlsymError) {
-		NTSH_CORE_ERROR("Could not load symbol destroyModule.", NTSH_RESULT_MODULE_SYMBOL_LOAD_ERROR);
-	}
-#endif
-
-	NutshellModuleInterface* module = createNutshellModule();
 	NTSH_CORE_INFO(module->getName());
-	module->init();
 	
-	destroyNutshellModule(module);
+	moduleLoader.unloadModule(module);
 
 	return 0;
 }
