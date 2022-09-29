@@ -18,36 +18,37 @@ int main()
 
 	if (!moduleLibrary)
 	{
-		NTSH_CORE_ERROR("Could not load the dynamic library NutshellModule.", NTSH_RESULT_UNKNOWN_ERROR);
+		NTSH_CORE_ERROR("Could not load the dynamic library NutshellModule.", NTSH_RESULT_MODULE_LIBRARY_LOAD_ERROR);
 	}
 
 #ifdef NTSH_OS_WINDOWS
 	createModule_t createNutshellModule = (createModule_t)GetProcAddress(moduleLibrary, "createModule");
 	if (!createNutshellModule) {
-		NTSH_CORE_ERROR("Could not load symbol createModule.", NTSH_RESULT_UNKNOWN_ERROR);
+		NTSH_CORE_ERROR("Could not load symbol createModule.", NTSH_RESULT_MODULE_SYMBOL_LOAD_ERROR);
 	}
 #elif NTSH_OS_LINUX
 	createModule_t* createNutshellModule = (createModule_t*)dlsym(moduleLibrary, "createModule");
 	const char* dlsymError = dlerror();
 	if (dlsymError) {
-		NTSH_CORE_ERROR("Could not load symbol createModule.", NTSH_RESULT_UNKNOWN_ERROR);
+		NTSH_CORE_ERROR("Could not load symbol createModule.", NTSH_RESULT_MODULE_SYMBOL_LOAD_ERROR);
 	}
 #endif
 
 #ifdef NTSH_OS_WINDOWS
 	destroyModule_t destroyNutshellModule = (destroyModule_t)GetProcAddress(moduleLibrary, "destroyModule");
 	if (!createNutshellModule) {
-		NTSH_CORE_ERROR("Could not load symbol destroyModule.", NTSH_RESULT_UNKNOWN_ERROR);
+		NTSH_CORE_ERROR("Could not load symbol destroyModule.", NTSH_RESULT_MODULE_SYMBOL_LOAD_ERROR);
 	}
 #elif NTSH_OS_LINUX
 	destroyModule_t* destroyNutshellModule = (destroyModule_t*)dlsym(moduleLibrary, "destroyModule");
 	dlsymError = dlerror();
 	if (dlsymError) {
-		NTSH_CORE_ERROR("Could not load symbol destroyModule.", NTSH_RESULT_UNKNOWN_ERROR);
+		NTSH_CORE_ERROR("Could not load symbol destroyModule.", NTSH_RESULT_MODULE_SYMBOL_LOAD_ERROR);
 	}
 #endif
 
 	NutshellModuleInterface* module = createNutshellModule();
+	NTSH_CORE_INFO(module->getName());
 	module->init();
 	
 	destroyNutshellModule(module);
