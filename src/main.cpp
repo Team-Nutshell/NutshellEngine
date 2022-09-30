@@ -15,10 +15,22 @@ int main()
 	NutshellWindowModuleInterface* windowModule = moduleLoader.loadWindowModule();
 	NutshellAudioModuleInterface* audioModule = moduleLoader.loadAudioModule();
 
-	NTSH_CORE_INFO(graphicsModule->getName());
-	NTSH_CORE_INFO(physicsModule->getName());
-	NTSH_CORE_INFO(windowModule->getName());
-	NTSH_CORE_INFO(audioModule->getName());
+	graphicsModule->init();
+	physicsModule->init();
+	windowModule->init();
+	audioModule->init();
+
+	while (true) {
+		windowModule->update(0.0f);
+		audioModule->update(0.0f);
+		physicsModule->update(0.0f);
+		graphicsModule->update(0.0f);
+	}
+
+	graphicsModule->destroy();
+	physicsModule->destroy();
+	windowModule->destroy();
+	audioModule->destroy();
 	
 	moduleLoader.unloadGraphicsModule();
 	moduleLoader.unloadPhysicsModule();
