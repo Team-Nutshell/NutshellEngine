@@ -10,15 +10,20 @@
 int main()
 {
 	ModuleLoader moduleLoader;
-#ifdef NTSH_OS_WINDOWS
-	NutshellModuleInterface* module = moduleLoader.loadModule("./modules/NutshellModule.dll");
-#elif NTSH_OS_LINUX
-	NutshellModuleInterface* module = moduleLoader.loadModule("./modules/libNutshellModule.so");
-#endif
+	NutshellGraphicsModuleInterface* graphicsModule = moduleLoader.loadGraphicsModule();
+	NutshellPhysicsModuleInterface* physicsModule = moduleLoader.loadPhysicsModule();
+	NutshellWindowModuleInterface* windowModule = moduleLoader.loadWindowModule();
+	NutshellAudioModuleInterface* audioModule = moduleLoader.loadAudioModule();
 
-	NTSH_CORE_INFO(module->getName());
+	NTSH_CORE_INFO(graphicsModule->getName());
+	NTSH_CORE_INFO(physicsModule->getName());
+	NTSH_CORE_INFO(windowModule->getName());
+	NTSH_CORE_INFO(audioModule->getName());
 	
-	moduleLoader.unloadModule(module);
+	moduleLoader.unloadGraphicsModule();
+	moduleLoader.unloadPhysicsModule();
+	moduleLoader.unloadWindowModule();
+	moduleLoader.unloadAudioModule();
 
 	return 0;
 }
