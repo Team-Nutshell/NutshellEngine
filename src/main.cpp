@@ -20,11 +20,13 @@ int main()
 	windowModule->init();
 	audioModule->init();
 
+	windowModule->setTitle("NutshellEngine Test");
+
 	while (!windowModule->shouldClose()) {
-		windowModule->update(0.0f);
-		audioModule->update(0.0f);
-		physicsModule->update(0.0f);
-		graphicsModule->update(0.0f);
+		windowModule->update(0.0);
+		audioModule->update(0.0);
+		physicsModule->update(0.0);
+		graphicsModule->update(0.0);
 	}
 
 	graphicsModule->destroy();
