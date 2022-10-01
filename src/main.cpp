@@ -20,7 +20,7 @@ int main()
 	windowModule->init();
 	audioModule->init();
 
-	while (true) {
+	while (!windowModule->shouldClose()) {
 		windowModule->update(0.0f);
 		audioModule->update(0.0f);
 		physicsModule->update(0.0f);
