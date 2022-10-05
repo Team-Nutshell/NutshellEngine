@@ -7,6 +7,13 @@
 #include "module_loaders/module_loaders_linux.h"
 #endif
 
+void setModules(NutshellGraphicsModuleInterface* graphicsModule, NutshellPhysicsModuleInterface* physicsModule, NutshellWindowModuleInterface* windowModule, NutshellAudioModuleInterface* audioModule) {
+	graphicsModule->setModules(graphicsModule, physicsModule, windowModule, audioModule);
+	physicsModule->setModules(graphicsModule, physicsModule, windowModule, audioModule);
+	windowModule->setModules(graphicsModule, physicsModule, windowModule, audioModule);
+	audioModule->setModules(graphicsModule, physicsModule, windowModule, audioModule);
+}
+
 int main()
 {
 	ModuleLoader moduleLoader;
@@ -14,6 +21,8 @@ int main()
 	NutshellPhysicsModuleInterface* physicsModule = moduleLoader.loadPhysicsModule();
 	NutshellWindowModuleInterface* windowModule = moduleLoader.loadWindowModule();
 	NutshellAudioModuleInterface* audioModule = moduleLoader.loadAudioModule();
+
+	setModules(graphicsModule, physicsModule, windowModule, audioModule);
 
 	graphicsModule->init();
 	physicsModule->init();
