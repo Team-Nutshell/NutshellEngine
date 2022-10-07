@@ -17,13 +17,9 @@ add_subdirectory(external/Common)
 set(MODULE_LOADERS_SOURCES "")
 set(MODULE_LOADERS_HEADERS "")
 if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
-	set(MODULE_LOADERS_SOURCES
-		src/module_loaders/module_loaders_windows.cpp)
 	set(MODULE_LOADERS_HEADERS
 		src/module_loaders/module_loaders_windows.h)
 elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
-	set(MODULE_LOADERS_SOURCES
-		src/module_loaders/module_loaders_linux.cpp)
 	set(MODULE_LOADERS_HEADERS
 		src/module_loaders/module_loaders_linux.h)
 endif()
@@ -31,7 +27,7 @@ endif()
 set(UTILS_HEADERS
 	src/utils/ntsh_core_defines.h)
 
-set(SOURCES ${MODULE_LOADERS_SOURCES})
+set(SOURCES "")
 set(HEADERS ${MODULE_LOADERS_HEADERS} ${UTILS_HEADERS})
 
 add_executable(${PROJECT_NAME} src/main.cpp ${SOURCES} ${HEADERS})
