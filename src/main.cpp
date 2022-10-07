@@ -16,11 +16,23 @@ void setModules(NutshellGraphicsModuleInterface* graphicsModule, NutshellPhysics
 
 int main()
 {
+#ifdef NTSH_OS_WINDOWS
+	const std::string graphicsModulePath = "./modules/NutshellGraphicsModule.dll";
+	const std::string physicsModulePath = "./modules/NutshellPhysicsModule.dll";
+	const std::string windowModulePath = "./modules/NutshellWindowModule.dll";
+	const std::string audioModulePath = "./modules/NutshellAudioModule.dll";
+#elif NTSH_OS_LINUX
+	const std::string graphicsModulePath = "./modules/libNutshellGraphicsModule.so";
+	const std::string physicsModulePath = "./modules/libNutshellPhysicsModule.so";
+	const std::string windowModulePath = "./modules/libNutshellWindowModule.so";
+	const std::string audioModulePath = "./modules/libNutshellAudioModule.so";
+#endif
+
 	ModuleLoader moduleLoader;
-	NutshellGraphicsModuleInterface* graphicsModule = moduleLoader.loadGraphicsModule();
-	NutshellPhysicsModuleInterface* physicsModule = moduleLoader.loadPhysicsModule();
-	NutshellWindowModuleInterface* windowModule = moduleLoader.loadWindowModule();
-	NutshellAudioModuleInterface* audioModule = moduleLoader.loadAudioModule();
+	NutshellGraphicsModuleInterface* graphicsModule = moduleLoader.loadModule<NutshellGraphicsModuleInterface>(graphicsModulePath);
+	NutshellPhysicsModuleInterface* physicsModule = moduleLoader.loadModule<NutshellPhysicsModuleInterface>(physicsModulePath);
+	NutshellWindowModuleInterface* windowModule = moduleLoader.loadModule<NutshellWindowModuleInterface>(windowModulePath);
+	NutshellAudioModuleInterface* audioModule = moduleLoader.loadModule<NutshellAudioModuleInterface>(audioModulePath);
 
 	setModules(graphicsModule, physicsModule, windowModule, audioModule);
 
@@ -43,10 +55,10 @@ int main()
 	windowModule->destroy();
 	audioModule->destroy();
 	
-	moduleLoader.unloadGraphicsModule();
-	moduleLoader.unloadPhysicsModule();
-	moduleLoader.unloadWindowModule();
-	moduleLoader.unloadAudioModule();
+	moduleLoader.unloadModule(graphicsModule);
+	moduleLoader.unloadModule(physicsModule);
+	moduleLoader.unloadModule(windowModule);
+	moduleLoader.unloadModule(audioModule);
 
 	return 0;
 }
