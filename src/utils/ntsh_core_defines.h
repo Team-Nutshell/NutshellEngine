@@ -1,7 +1,7 @@
 #pragma once
 #include <iostream>
 
-#ifndef NDEBUG
+#ifdef NTSH_DEBUG
 #define NTSH_CORE_INFO(message) \
 	do { \
 		std::cerr << "\33[1m\33[39mCORE \33[34mINFO\33[39m\33[0m: " << message << std::endl; \
@@ -12,7 +12,7 @@
 	} while(0)
 #endif
 
-#ifndef NDEBUG
+#ifdef NTSH_DEBUG
 #define NTSH_CORE_WARNING(message) \
 	do { \
 		std::cerr << "\33[1m\33[39mCORE \33[93mWARNING\33[39m\33[0m: " << message << std::endl; \
@@ -23,7 +23,7 @@
 	} while(0)
 #endif
 
-#ifndef NDEBUG
+#ifdef NTSH_DEBUG
 #define NTSH_CORE_ERROR(message, code) \
 	do { \
 		std::cerr << "\33[1m\33[39mCORE \33[31mERROR\33[39m\33[0m: " << message << std::endl; \

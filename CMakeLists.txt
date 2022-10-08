@@ -39,4 +39,9 @@ target_compile_options(${PROJECT_NAME} PRIVATE
 	$<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wall -Werror>)
 
 target_compile_definitions(${PROJECT_NAME} PRIVATE
-	${NTSH_DEFINES})
+	${NTSH_DEFINES}
+	PUBLIC
+	$<$<CONFIG:Debug>:NTSH_DEBUG>
+	$<$<CONFIG:MinSizeRel>:NTSH_RELEASE>
+	$<$<CONFIG:Release>:NTSH_RELEASE>
+	$<$<CONFIG:RelWithDebInfo>:NTSH_DEBUG>)
