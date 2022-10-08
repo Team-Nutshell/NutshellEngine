@@ -14,8 +14,7 @@ void setModules(NutshellGraphicsModuleInterface* graphicsModule, NutshellPhysics
 	audioModule->setModules(graphicsModule, physicsModule, windowModule, audioModule);
 }
 
-int main()
-{
+int main() {
 #ifdef NTSH_OS_WINDOWS
 	const std::string graphicsModulePath = "./modules/NutshellGraphicsModule.dll";
 	const std::string physicsModulePath = "./modules/NutshellPhysicsModule.dll";
