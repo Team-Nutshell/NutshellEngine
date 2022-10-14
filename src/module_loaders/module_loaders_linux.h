@@ -22,7 +22,8 @@ public:
 		void* moduleLibrary = dlopen(modulePath.c_str(), RTLD_LAZY);
 		if (!moduleLibrary)
 		{
-			NTSH_CORE_ERROR("Could not load the dynamic library.", NTSH_RESULT_MODULE_LIBRARY_LOAD_ERROR);
+			NTSH_CORE_WARNING("Could not load the dynamic library.");
+			return nullptr;
 		}
 
 		createModule_t* createModule = (createModule_t*)dlsym(moduleLibrary, "createModule");

@@ -20,9 +20,9 @@ public:
 		NTSH_CORE_INFO("Loading module from: " + modulePath + ".");
 
 		HINSTANCE moduleLibrary = LoadLibrary(modulePath.c_str());
-		if (!moduleLibrary)
-		{
-			NTSH_CORE_ERROR("Could not load the dynamic library.", NTSH_RESULT_MODULE_LIBRARY_LOAD_ERROR);
+		if (!moduleLibrary) {
+			NTSH_CORE_WARNING("Could not load the dynamic library.");
+			return nullptr;
 		}
 
 		createModule_t createModule = (createModule_t)GetProcAddress(moduleLibrary, "createModule");
