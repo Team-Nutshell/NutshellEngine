@@ -35,9 +35,9 @@ int main() {
 
 	setModules(graphicsModule, physicsModule, windowModule, audioModule);
 
+	windowModule->init();
 	graphicsModule->init();
 	physicsModule->init();
-	windowModule->init();
 	audioModule->init();
 
 	windowModule->setTitle("NutshellEngine Test");
