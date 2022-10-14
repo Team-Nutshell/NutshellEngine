@@ -6,12 +6,13 @@
 #elif NTSH_OS_LINUX
 #include "module_loaders/module_loaders_linux.h"
 #endif
+#include <filesystem>
 
 void setModules(NutshellGraphicsModuleInterface* graphicsModule, NutshellPhysicsModuleInterface* physicsModule, NutshellWindowModuleInterface* windowModule, NutshellAudioModuleInterface* audioModule) {
-	graphicsModule->setModules(graphicsModule, physicsModule, windowModule, audioModule);
-	physicsModule->setModules(graphicsModule, physicsModule, windowModule, audioModule);
-	windowModule->setModules(graphicsModule, physicsModule, windowModule, audioModule);
-	audioModule->setModules(graphicsModule, physicsModule, windowModule, audioModule);
+	NTSH_EXECUTE_IF_NOT_NULL(graphicsModule, setModules(graphicsModule, physicsModule, windowModule, audioModule));
+	NTSH_EXECUTE_IF_NOT_NULL(physicsModule, setModules(graphicsModule, physicsModule, windowModule, audioModule));
+	NTSH_EXECUTE_IF_NOT_NULL(windowModule, setModules(graphicsModule, physicsModule, windowModule, audioModule));
+	NTSH_EXECUTE_IF_NOT_NULL(audioModule, setModules(graphicsModule, physicsModule, windowModule, audioModule));
 }
 
 int main() {
@@ -28,6 +29,7 @@ int main() {
 #endif
 
 	ModuleLoader moduleLoader;
+
 	NutshellGraphicsModuleInterface* graphicsModule = moduleLoader.loadModule<NutshellGraphicsModuleInterface>(graphicsModulePath);
 	NutshellPhysicsModuleInterface* physicsModule = moduleLoader.loadModule<NutshellPhysicsModuleInterface>(physicsModulePath);
 	NutshellWindowModuleInterface* windowModule = moduleLoader.loadModule<NutshellWindowModuleInterface>(windowModulePath);
@@ -35,29 +37,42 @@ int main() {
 
 	setModules(graphicsModule, physicsModule, windowModule, audioModule);
 
-	windowModule->init();
-	graphicsModule->init();
-	physicsModule->init();
-	audioModule->init();
+	NTSH_EXECUTE_IF_NOT_NULL(windowModule, init());
+	NTSH_EXECUTE_IF_NOT_NULL(graphicsModule, init());
+	NTSH_EXECUTE_IF_NOT_NULL(physicsModule, init());
+	NTSH_EXECUTE_IF_NOT_NULL(audioModule, init());
 
-	windowModule->setTitle("NutshellEngine Test");
+	NTSH_EXECUTE_IF_NOT_NULL(windowModule, setTitle("NutshellEngine Test"));
+	
+	bool close = false;
+	while (!close) {
+		NTSH_EXECUTE_IF_NOT_NULL(windowModule, update(0.0));
+		NTSH_EXECUTE_IF_NOT_NULL(audioModule, update(0.0));
+		NTSH_EXECUTE_IF_NOT_NULL(physicsModule, update(0.0));
+		NTSH_EXECUTE_IF_NOT_NULL(graphicsModule, update(0.0));
 
-	while (!windowModule->shouldClose()) {
-		windowModule->update(0.0);
-		audioModule->update(0.0);
-		physicsModule->update(0.0);
-		graphicsModule->update(0.0);
+		if (windowModule) {
+			close = windowModule->shouldClose();
+		}
 	}
 
-	graphicsModule->destroy();
-	physicsModule->destroy();
-	windowModule->destroy();
-	audioModule->destroy();
+	NTSH_EXECUTE_IF_NOT_NULL(graphicsModule, destroy());
+	NTSH_EXECUTE_IF_NOT_NULL(physicsModule, destroy());
+	NTSH_EXECUTE_IF_NOT_NULL(windowModule, destroy());
+	NTSH_EXECUTE_IF_NOT_NULL(audioModule, destroy());
 	
-	moduleLoader.unloadModule(graphicsModule);
-	moduleLoader.unloadModule(physicsModule);
-	moduleLoader.unloadModule(windowModule);
-	moduleLoader.unloadModule(audioModule);
+	if (graphicsModule) {
+		moduleLoader.unloadModule(graphicsModule);
+	}
+	if (physicsModule) {
+		moduleLoader.unloadModule(physicsModule);
+	}
+	if (windowModule) {
+		moduleLoader.unloadModule(windowModule);
+	}
+	if (audioModule) {
+		moduleLoader.unloadModule(audioModule);
+	}
 
 	return 0;
 }
