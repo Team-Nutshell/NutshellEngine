@@ -54,6 +54,9 @@ int main() {
 		if (windowModule) {
 			close = windowModule->shouldClose();
 		}
+		else {
+			close = true;
+		}
 	}
 
 	NTSH_EXECUTE_IF_NOT_NULL(graphicsModule, destroy());
