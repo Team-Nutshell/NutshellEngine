@@ -21,13 +21,13 @@ public:
 
 		HINSTANCE moduleLibrary = LoadLibrary(modulePath.c_str());
 		if (!moduleLibrary) {
-			NTSH_CORE_WARNING("Could not load the dynamic library.");
+			NTSH_CORE_WARNING("Could not load the dynamic library. Error code: " + std::to_string(GetLastError()));
 			return nullptr;
 		}
 
 		createModule_t createModule = (createModule_t)GetProcAddress(moduleLibrary, "createModule");
 		if (!createModule) {
-			NTSH_CORE_ERROR("Could not load symbol createModule from dynamic library.", NTSH_RESULT_MODULE_SYMBOL_LOAD_ERROR);
+			NTSH_CORE_ERROR("Could not load symbol createModule from dynamic library. Error code: " + std::to_string(GetLastError()), NTSH_RESULT_MODULE_SYMBOL_LOAD_ERROR);
 		}
 
 		T* module = static_cast<T*>(createModule());

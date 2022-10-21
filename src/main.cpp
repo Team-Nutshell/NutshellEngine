@@ -6,7 +6,6 @@
 #elif NTSH_OS_LINUX
 #include "module_loaders/module_loaders_linux.h"
 #endif
-#include <filesystem>
 
 void setModules(NutshellGraphicsModuleInterface* graphicsModule, NutshellPhysicsModuleInterface* physicsModule, NutshellWindowModuleInterface* windowModule, NutshellAudioModuleInterface* audioModule) {
 	NTSH_EXECUTE_IF_NOT_NULL(graphicsModule, setModules(graphicsModule, physicsModule, windowModule, audioModule));
@@ -44,18 +43,18 @@ int main() {
 
 	NTSH_EXECUTE_IF_NOT_NULL(windowModule, setTitle("NutshellEngine Test"));
 	
-	bool close = false;
-	while (!close) {
+	bool applicationClose = false;
+	while (!applicationClose) {
 		NTSH_EXECUTE_IF_NOT_NULL(windowModule, update(0.0));
 		NTSH_EXECUTE_IF_NOT_NULL(audioModule, update(0.0));
 		NTSH_EXECUTE_IF_NOT_NULL(physicsModule, update(0.0));
 		NTSH_EXECUTE_IF_NOT_NULL(graphicsModule, update(0.0));
 
 		if (windowModule) {
-			close = windowModule->shouldClose();
+			applicationClose = windowModule->shouldClose();
 		}
 		else {
-			close = true;
+			applicationClose = true;
 		}
 	}
 
