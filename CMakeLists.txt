@@ -14,7 +14,6 @@ endif()
 
 add_subdirectory(external/Common)
 
-set(MODULE_LOADERS_SOURCES "")
 set(MODULE_LOADERS_HEADERS "")
 if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
 	set(MODULE_LOADERS_HEADERS
