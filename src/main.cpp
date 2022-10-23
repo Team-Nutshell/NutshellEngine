@@ -1,11 +1,12 @@
 #include "utils/ntsh_core_defines.h"
-#include "../external/Common/ntsh_engine_defines.h"
-#include "../external/Common/ntsh_engine_enums.h"
+#include "../external/Common/utils/ntsh_engine_defines.h"
+#include "../external/Common/utils/ntsh_engine_enums.h"
 #ifdef NTSH_OS_WINDOWS
-#include "module_loaders/module_loaders_windows.h"
+#include "module_loader/module_loader_windows.h"
 #elif NTSH_OS_LINUX
-#include "module_loaders/module_loaders_linux.h"
+#include "module_loader/module_loader_linux.h"
 #endif
+#include "asset_loader/asset_loader.h"
 
 void setModules(NutshellGraphicsModuleInterface* graphicsModule, NutshellPhysicsModuleInterface* physicsModule, NutshellWindowModuleInterface* windowModule, NutshellAudioModuleInterface* audioModule) {
 	NTSH_EXECUTE_IF_NOT_NULL(graphicsModule, setModules(graphicsModule, physicsModule, windowModule, audioModule));
@@ -42,6 +43,9 @@ int main() {
 	NTSH_EXECUTE_IF_NOT_NULL(audioModule, init());
 
 	NTSH_EXECUTE_IF_NOT_NULL(windowModule, setTitle("NutshellEngine Test"));
+
+	AssetLoader assetLoader;
+	NTSH_UNUSED(assetLoader);
 	
 	bool applicationClose = false;
 	while (!applicationClose) {
