@@ -6,7 +6,9 @@
 class AssetLoader {
 public:
 	NtshAudio loadAudio(const std::string& filePath);
+	NtshModel loadModel(const std::string& filePath);
 
 private:
 	void loadAudioWav(const std::string& filePath, NtshAudio& audio);
+	void loadModelObj(const std::string& filePath, NtshModel& model);
 };
