@@ -1,5 +1,6 @@
 #pragma once
 #include "../../external/Common/resources/ntsh_resources_audio.h"
+#include "../../external/Common/resources/ntsh_resources_graphics.h"
 #include <string>
 
 class AssetLoader {
