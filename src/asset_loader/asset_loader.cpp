@@ -5,6 +5,7 @@
 #include <iterator>
 #include <cstdlib>
 #include <unordered_map>
+#include <array>
 
 NtshAudio AssetLoader::loadAudio(const std::string& filePath) {
 	NtshAudio newAudio;
@@ -151,11 +152,11 @@ void AssetLoader::loadModelObj(const std::string& filePath, NtshModel& model) {
 		NTSH_ASSET_LOADER_ERROR("Could not open model file \"" + filePath + "\".", NTSH_RESULT_ASSET_LOADER_FILE_NOT_FOUND);
 	}
 
-	std::vector<float[3]> positions;
-	std::vector<float[3]> normals;
-	std::vector<float[2]> uvs;
+	std::vector<std::array<float, 3>> positions;
+	std::vector<std::array<float, 3>> normals;
+	std::vector<std::array<float, 2>> uvs;
 
-	std::unordered_map<NtshVertex, uint32_t> uniqueVertices;
+	std::unordered_map<std::string, uint32_t> uniqueVertices;
 	NtshMesh mesh = {};
 
 	std::string line;
@@ -177,29 +178,26 @@ void AssetLoader::loadModelObj(const std::string& filePath, NtshModel& model) {
 		// Parse tokens
 		// Position
 		if (tokens[0] == "v") {
-			float position[3] = {
-				std::atof(tokens[1].c_str()),
-				std::atof(tokens[2].c_str()),
-				std::atof(tokens[3].c_str())
-			};
-			positions.push_back(position);
+			positions.push_back({
+				static_cast<float>(std::atof(tokens[1].c_str())),
+				static_cast<float>(std::atof(tokens[2].c_str())),
+				static_cast<float>(std::atof(tokens[3].c_str()))
+				});
 		}
 		// Normal
 		else if (tokens[0] == "vn") {
-			float normal[3] = {
-				std::atof(tokens[1].c_str()),
-				std::atof(tokens[2].c_str()),
-				std::atof(tokens[3].c_str())
-			};
-			normals.push_back(normal);
+			normals.push_back({
+				static_cast<float>(std::atof(tokens[1].c_str())),
+				static_cast<float>(std::atof(tokens[2].c_str())),
+				static_cast<float>(std::atof(tokens[3].c_str()))
+				});
 		}
 		// UV
 		else if (tokens[0] == "vt") {
-			float uv[2] = {
-				std::atof(tokens[1].c_str()),
-				std::atof(tokens[2].c_str())
-			};
-			uvs.push_back(uv);
+			uvs.push_back({
+				static_cast<float>(std::atof(tokens[1].c_str())),
+				static_cast<float>(std::atof(tokens[2].c_str()))
+				});
 		}
 		// Face
 		else if (tokens[0] == "f") {
@@ -216,34 +214,34 @@ void AssetLoader::loadModelObj(const std::string& filePath, NtshModel& model) {
 				}
 				valueIndices.push_back(tmp);
 
-				for (size_t j = 0; j < valueIndices.size(); i++) {
+				for (size_t j = 0; j < valueIndices.size(); j++) {
 					if (valueIndices[j] != "") {
 						// v/vt/vn
 						// Position index
 						if (j == 0) {
-							vertex.position[0] = positions[static_cast<size_t>(std::atoi(valueIndices[j].c_str())) + 1][0];
-							vertex.position[1] = positions[static_cast<size_t>(std::atoi(valueIndices[j].c_str())) + 1][1];
-							vertex.position[2] = positions[static_cast<size_t>(std::atoi(valueIndices[j].c_str())) + 1][2];
+							vertex.position[0] = positions[static_cast<size_t>(std::atoi(valueIndices[j].c_str())) - 1][0];
+							vertex.position[1] = positions[static_cast<size_t>(std::atoi(valueIndices[j].c_str())) - 1][1];
+							vertex.position[2] = positions[static_cast<size_t>(std::atoi(valueIndices[j].c_str())) - 1][2];
 						}
 						// UV index
 						else if (j == 1) {
-							vertex.uv[0] = uvs[static_cast<size_t>(std::atoi(valueIndices[j].c_str())) + 1][0];
-							vertex.uv[1] = uvs[static_cast<size_t>(std::atoi(valueIndices[j].c_str())) + 1][1];
+							vertex.uv[0] = uvs[static_cast<size_t>(std::atoi(valueIndices[j].c_str())) - 1][0];
+							vertex.uv[1] = uvs[static_cast<size_t>(std::atoi(valueIndices[j].c_str())) - 1][1];
 						}
 						// Normal index
 						else if (j == 2) {
-							vertex.normal[0] = normals[static_cast<size_t>(std::atoi(valueIndices[j].c_str())) + 1][0];
-							vertex.normal[1] = normals[static_cast<size_t>(std::atoi(valueIndices[j].c_str())) + 1][1];
-							vertex.normal[2] = normals[static_cast<size_t>(std::atoi(valueIndices[j].c_str())) + 1][2];
+							vertex.normal[0] = normals[static_cast<size_t>(std::atoi(valueIndices[j].c_str())) - 1][0];
+							vertex.normal[1] = normals[static_cast<size_t>(std::atoi(valueIndices[j].c_str())) - 1][1];
+							vertex.normal[2] = normals[static_cast<size_t>(std::atoi(valueIndices[j].c_str())) - 1][2];
 						}
 					}
 				}
 
-				if (uniqueVertices.count(vertex) == 0) {
-					uniqueVertices[vertex] = static_cast<uint32_t>(mesh.vertices.size());
+				if (uniqueVertices.count(tokens[i]) == 0) {
+					uniqueVertices[tokens[i]] = static_cast<uint32_t>(mesh.vertices.size());
 					mesh.vertices.push_back(vertex);
 				}
-				tmpIndices.push_back(uniqueVertices[vertex]);
+				tmpIndices.push_back(uniqueVertices[tokens[i]]);
 			}
 
 			// Face can be a triangle or a rectangle
@@ -265,6 +263,8 @@ void AssetLoader::loadModelObj(const std::string& filePath, NtshModel& model) {
 			}
 		}
 	}
+
+	model.primitives.push_back({ mesh, {} });
 
 	file.close();
 }
