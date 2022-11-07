@@ -287,7 +287,7 @@ void AssetLoader::loadModelObj(const std::string& filePath, NtshModel& model) {
 				mesh.indices.push_back(tmpIndices[2]);
 
 				// Triangle 2
-				mesh.indices.push_back(tmpIndices[1]);
+				mesh.indices.push_back(tmpIndices[0]);
 				mesh.indices.push_back(tmpIndices[2]);
 				mesh.indices.push_back(tmpIndices[3]);
 			}
