@@ -7,7 +7,7 @@
 #include <unordered_map>
 #include <array>
 
-NtshAudio AssetLoader::loadAudio(const std::string& filePath) {
+NtshAudio* AssetLoader::loadAudio(const std::string& filePath) {
 	NtshAudio newAudio;
 
 	if (utils::file::extension(filePath) == "wav") {
@@ -17,10 +17,11 @@ NtshAudio AssetLoader::loadAudio(const std::string& filePath) {
 		NTSH_ASSET_LOADER_ERROR("Audio file extension \"." + utils::file::extension(filePath) + "\" not supported.", NTSH_RESULT_ASSET_LOADER_ERROR);
 	}
 
-	return newAudio;
+	m_audioResources.push_front(newAudio);
+	return &m_audioResources.front();
 }
 
-NtshModel AssetLoader::loadModel(const std::string& filePath) {
+NtshModel* AssetLoader::loadModel(const std::string& filePath) {
 	NtshModel newModel;
 
 	if (utils::file::extension(filePath) == "obj") {
@@ -30,7 +31,36 @@ NtshModel AssetLoader::loadModel(const std::string& filePath) {
 		NTSH_ASSET_LOADER_ERROR("Model file extension \"." + utils::file::extension(filePath) + "\" not supported.", NTSH_RESULT_ASSET_LOADER_ERROR);
 	}
 
-	return newModel;
+	m_modelResources.push_front(newModel);
+	return &m_modelResources.front();
+}
+
+void AssetLoader::unloadAudio(NtshAudio* audio) {
+	std::forward_list<NtshAudio>::iterator prev = m_audioResources.before_begin();
+	for (std::forward_list<NtshAudio>::iterator it = m_audioResources.begin(); it != m_audioResources.end(); it++) {
+		if (audio == &(*it)) {
+			m_audioResources.erase_after(prev);
+			break;
+		}
+
+		prev = it;
+	}
+
+	NTSH_ASSET_LOADER_ERROR("Could not unload audio resource.", NTSH_RESULT_ASSET_LOADER_ERROR);
+}
+
+void AssetLoader::unloadModel(NtshModel* model) {
+	std::forward_list<NtshModel>::iterator prev = m_modelResources.before_begin();
+	for (std::forward_list<NtshModel>::iterator it = m_modelResources.begin(); it != m_modelResources.end(); it++) {
+		if (model == &(*it)) {
+			m_modelResources.erase_after(prev);
+			return;
+		}
+
+		prev = it;
+	}
+
+	NTSH_ASSET_LOADER_ERROR("Could not unload model resource.", NTSH_RESULT_ASSET_LOADER_ERROR);
 }
 
 void AssetLoader::loadAudioWav(const std::string& filePath, NtshAudio& audio) {
