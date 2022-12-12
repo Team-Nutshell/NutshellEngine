@@ -7,6 +7,7 @@
 #include "module_loader/module_loader_linux.h"
 #endif
 #include "asset_loader/asset_loader.h"
+#include <filesystem>
 
 void setModules(NutshellGraphicsModuleInterface* graphicsModule, NutshellPhysicsModuleInterface* physicsModule, NutshellWindowModuleInterface* windowModule, NutshellAudioModuleInterface* audioModule) {
 	NTSH_EXECUTE_IF_NOT_NULL(graphicsModule, setModules(graphicsModule, physicsModule, windowModule, audioModule));
@@ -30,10 +31,22 @@ int main() {
 
 	ModuleLoader moduleLoader;
 
-	NutshellGraphicsModuleInterface* graphicsModule = moduleLoader.loadModule<NutshellGraphicsModuleInterface>(graphicsModulePath);
-	NutshellPhysicsModuleInterface* physicsModule = moduleLoader.loadModule<NutshellPhysicsModuleInterface>(physicsModulePath);
-	NutshellWindowModuleInterface* windowModule = moduleLoader.loadModule<NutshellWindowModuleInterface>(windowModulePath);
-	NutshellAudioModuleInterface* audioModule = moduleLoader.loadModule<NutshellAudioModuleInterface>(audioModulePath);
+	NutshellGraphicsModuleInterface* graphicsModule = nullptr;
+	if (std::filesystem::exists(std::filesystem::current_path().string() + "/" + graphicsModulePath)) {
+		graphicsModule = moduleLoader.loadModule<NutshellGraphicsModuleInterface>(graphicsModulePath);
+	}
+	NutshellPhysicsModuleInterface* physicsModule = nullptr;
+	if (std::filesystem::exists(std::filesystem::current_path().string() + "/" + physicsModulePath)) {
+		physicsModule = moduleLoader.loadModule<NutshellPhysicsModuleInterface>(physicsModulePath);
+	}
+	NutshellWindowModuleInterface* windowModule = nullptr;
+	if (std::filesystem::exists(std::filesystem::current_path().string() + "/" + windowModulePath)) {
+		windowModule = moduleLoader.loadModule<NutshellWindowModuleInterface>(windowModulePath);
+	}
+	NutshellAudioModuleInterface* audioModule = nullptr;
+	if (std::filesystem::exists(std::filesystem::current_path().string() + "/" + audioModulePath)) {
+		audioModule = moduleLoader.loadModule<NutshellAudioModuleInterface>(audioModulePath);
+	}
 
 	setModules(graphicsModule, physicsModule, windowModule, audioModule);
 
