@@ -14,7 +14,7 @@ NtshAudio* AssetLoader::loadAudio(const std::string& filePath) {
 		loadAudioWav(filePath, newAudio);
 	}
 	else {
-		NTSH_ASSET_LOADER_ERROR("Audio file extension \"." + utils::file::extension(filePath) + "\" not supported.", NTSH_RESULT_ASSET_LOADER_ERROR);
+		NTSH_ASSET_LOADER_ERROR("Audio file extension \"." + utils::file::extension(filePath) + "\" not supported.", NtshResult::AssetLoaderError);
 	}
 
 	m_audioResources.push_front(newAudio);
@@ -28,7 +28,7 @@ NtshModel* AssetLoader::loadModel(const std::string& filePath) {
 		loadModelObj(filePath, newModel);
 	}
 	else {
-		NTSH_ASSET_LOADER_ERROR("Model file extension \"." + utils::file::extension(filePath) + "\" not supported.", NTSH_RESULT_ASSET_LOADER_ERROR);
+		NTSH_ASSET_LOADER_ERROR("Model file extension \"." + utils::file::extension(filePath) + "\" not supported.", NtshResult::AssetLoaderError);
 	}
 
 	m_modelResources.push_front(newModel);
@@ -46,7 +46,7 @@ void AssetLoader::unloadAudio(NtshAudio* audio) {
 		prev = it;
 	}
 
-	NTSH_ASSET_LOADER_ERROR("Could not unload audio resource.", NTSH_RESULT_ASSET_LOADER_ERROR);
+	NTSH_ASSET_LOADER_ERROR("Could not unload audio resource.", NtshResult::AssetLoaderError);
 }
 
 void AssetLoader::unloadModel(NtshModel* model) {
@@ -60,7 +60,7 @@ void AssetLoader::unloadModel(NtshModel* model) {
 		prev = it;
 	}
 
-	NTSH_ASSET_LOADER_ERROR("Could not unload model resource.", NTSH_RESULT_ASSET_LOADER_ERROR);
+	NTSH_ASSET_LOADER_ERROR("Could not unload model resource.", NtshResult::AssetLoaderError);
 }
 
 void AssetLoader::loadAudioWav(const std::string& filePath, NtshAudio& audio) {
@@ -72,96 +72,96 @@ void AssetLoader::loadAudioWav(const std::string& filePath, NtshAudio& audio) {
 
 	// Open file
 	if (!file.is_open()) {
-		NTSH_ASSET_LOADER_ERROR("Could not open audio file \"" + filePath + "\".", NTSH_RESULT_ASSET_LOADER_FILE_NOT_FOUND);
+		NTSH_ASSET_LOADER_ERROR("Could not open audio file \"" + filePath + "\".", NtshResult::AssetLoaderFileNotFound);
 	}
 
 	// RIFF header
 	if (!file.read(buffer, 4)) {
-		NTSH_ASSET_LOADER_ERROR("Could not read \"RIFF\" for audio file \"" + filePath + "\".", NTSH_RESULT_ASSET_LOADER_ERROR);
+		NTSH_ASSET_LOADER_ERROR("Could not read \"RIFF\" for audio file \"" + filePath + "\".", NtshResult::AssetLoaderError);
 	}
 	if (strncmp(buffer, "RIFF", 4) != 0) {
-		NTSH_ASSET_LOADER_ERROR("File \"" + filePath + "\" is not a valid WAVE audio file (RIFF header missing).", NTSH_RESULT_ASSET_LOADER_ERROR);
+		NTSH_ASSET_LOADER_ERROR("File \"" + filePath + "\" is not a valid WAVE audio file (RIFF header missing).", NtshResult::AssetLoaderError);
 	}
 
 	// Size
 	if (!file.read(buffer, 4)) {
-		NTSH_ASSET_LOADER_ERROR("Could not read size for audio file \"" + filePath + "\".", NTSH_RESULT_ASSET_LOADER_ERROR);
+		NTSH_ASSET_LOADER_ERROR("Could not read size for audio file \"" + filePath + "\".", NtshResult::AssetLoaderError);
 	}
 
 	// WAVE header
 	if (!file.read(buffer, 4)) {
-		NTSH_ASSET_LOADER_ERROR("Could not read \"WAVE\" for audio file \"" + filePath + "\".", NTSH_RESULT_ASSET_LOADER_ERROR);
+		NTSH_ASSET_LOADER_ERROR("Could not read \"WAVE\" for audio file \"" + filePath + "\".", NtshResult::AssetLoaderError);
 	}
 	if (strncmp(buffer, "WAVE", 4) != 0) {
-		NTSH_ASSET_LOADER_ERROR("File \"" + filePath + "\" is not a valid WAVE audio file (WAVE header missing).", NTSH_RESULT_ASSET_LOADER_ERROR);
+		NTSH_ASSET_LOADER_ERROR("File \"" + filePath + "\" is not a valid WAVE audio file (WAVE header missing).", NtshResult::AssetLoaderError);
 	}
 
 	// fmt/0
 	if (!file.read(buffer, 4)) {
-		NTSH_ASSET_LOADER_ERROR("Could not read fmt/0 for audio file \"" + filePath + "\".", NTSH_RESULT_ASSET_LOADER_ERROR);
+		NTSH_ASSET_LOADER_ERROR("Could not read fmt/0 for audio file \"" + filePath + "\".", NtshResult::AssetLoaderError);
 	}
 
 	// 16
 	if (!file.read(buffer, 4)) {
-		NTSH_ASSET_LOADER_ERROR("Could not read 16 for audio file \"" + filePath + "\".", NTSH_RESULT_ASSET_LOADER_ERROR);
+		NTSH_ASSET_LOADER_ERROR("Could not read 16 for audio file \"" + filePath + "\".", NtshResult::AssetLoaderError);
 	}
 
 	// PCM
 	if (!file.read(buffer, 2)) {
-		NTSH_ASSET_LOADER_ERROR("Could not read PCM for audio file \"" + filePath + "\".", NTSH_RESULT_ASSET_LOADER_ERROR);
+		NTSH_ASSET_LOADER_ERROR("Could not read PCM for audio file \"" + filePath + "\".", NtshResult::AssetLoaderError);
 	}
 
 	// Channels
 	if (!file.read(buffer, 2)) {
-		NTSH_ASSET_LOADER_ERROR("Could not read the number of channels for audio file \"" + filePath + "\".", NTSH_RESULT_ASSET_LOADER_ERROR);
+		NTSH_ASSET_LOADER_ERROR("Could not read the number of channels for audio file \"" + filePath + "\".", NtshResult::AssetLoaderError);
 	}
 	memcpy(&tmp, buffer, 2);
 	audio.channels = static_cast<uint8_t>(tmp);
 
 	// Sample rate
 	if (!file.read(buffer, 4)) {
-		NTSH_ASSET_LOADER_ERROR("Could not read sample rate for audio file \"" + filePath + "\".", NTSH_RESULT_ASSET_LOADER_ERROR);
+		NTSH_ASSET_LOADER_ERROR("Could not read sample rate for audio file \"" + filePath + "\".", NtshResult::AssetLoaderError);
 	}
 	memcpy(&tmp, buffer, 4);
 	audio.sampleRate = static_cast<int32_t>(tmp);
 
 	// Byte rate ((sampleRate * bitsPerSample * channels) / 8)
 	if (!file.read(buffer, 4)) {
-		NTSH_ASSET_LOADER_ERROR("Could not read byte rate for audio file \"" + filePath + "\".", NTSH_RESULT_ASSET_LOADER_ERROR);
+		NTSH_ASSET_LOADER_ERROR("Could not read byte rate for audio file \"" + filePath + "\".", NtshResult::AssetLoaderError);
 	}
 
 	// Block align ((bitsPerSample * channels) / 8)
 	if (!file.read(buffer, 2)) {
-		NTSH_ASSET_LOADER_ERROR("Could not read block align for audio file \"" + filePath + "\".", NTSH_RESULT_ASSET_LOADER_ERROR);
+		NTSH_ASSET_LOADER_ERROR("Could not read block align for audio file \"" + filePath + "\".", NtshResult::AssetLoaderError);
 	}
 
 	// Bits per sample
 	if (!file.read(buffer, 2)) {
-		NTSH_ASSET_LOADER_ERROR("Could not read bits per sample for audio file \"" + filePath + "\".", NTSH_RESULT_ASSET_LOADER_ERROR);
+		NTSH_ASSET_LOADER_ERROR("Could not read bits per sample for audio file \"" + filePath + "\".", NtshResult::AssetLoaderError);
 	}
 	memcpy(&tmp, buffer, 2);
 	audio.bitsPerSample = static_cast<uint8_t>(tmp);
 
 	// data header
 	if (!file.read(buffer, 4)) {
-		NTSH_ASSET_LOADER_ERROR("Could not read \"data\" for audio file \"" + filePath + "\".", NTSH_RESULT_ASSET_LOADER_ERROR);
+		NTSH_ASSET_LOADER_ERROR("Could not read \"data\" for audio file \"" + filePath + "\".", NtshResult::AssetLoaderError);
 	}
 	if (strncmp(buffer, "data", 4) != 0) {
-		NTSH_ASSET_LOADER_ERROR("File \"" + filePath + "\" is not a valid WAVE audio file (data header missing).", NTSH_RESULT_ASSET_LOADER_ERROR);
+		NTSH_ASSET_LOADER_ERROR("File \"" + filePath + "\" is not a valid WAVE audio file (data header missing).", NtshResult::AssetLoaderError);
 	}
 
 	// Data size
 	if (!file.read(buffer, 4)) {
-		NTSH_ASSET_LOADER_ERROR("Could not read data size for audio file \"" + filePath + "\".", NTSH_RESULT_ASSET_LOADER_ERROR);
+		NTSH_ASSET_LOADER_ERROR("Could not read data size for audio file \"" + filePath + "\".", NtshResult::AssetLoaderError);
 	}
 	memcpy(&tmp, buffer, 4);
 	audio.size = static_cast<size_t>(tmp);
 
 	if (file.eof()) {
-		NTSH_ASSET_LOADER_ERROR("File \"" + filePath + "\" is not a valid WAVE audio file (data missing).", NTSH_RESULT_ASSET_LOADER_ERROR);
+		NTSH_ASSET_LOADER_ERROR("File \"" + filePath + "\" is not a valid WAVE audio file (data missing).", NtshResult::AssetLoaderError);
 	}
 	if (file.fail()) {
-		NTSH_ASSET_LOADER_ERROR("Unknown error while loading WAVE file.", NTSH_RESULT_ASSET_LOADER_ERROR);
+		NTSH_ASSET_LOADER_ERROR("Unknown error while loading WAVE file.", NtshResult::AssetLoaderError);
 	}
 
 	// Data
@@ -179,7 +179,7 @@ void AssetLoader::loadModelObj(const std::string& filePath, NtshModel& model) {
 
 	// Open file
 	if (!file.is_open()) {
-		NTSH_ASSET_LOADER_ERROR("Could not open model file \"" + filePath + "\".", NTSH_RESULT_ASSET_LOADER_FILE_NOT_FOUND);
+		NTSH_ASSET_LOADER_ERROR("Could not open model file \"" + filePath + "\".", NtshResult::AssetLoaderFileNotFound);
 	}
 
 	std::vector<std::array<float, 3>> positions;
