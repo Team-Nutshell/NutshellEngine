@@ -4,6 +4,7 @@
 #include "../utils/ntsh_core_defines.h"
 #include <iterator>
 #include <cstdlib>
+#include <cstring>
 #include <unordered_map>
 #include <array>
 
