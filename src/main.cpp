@@ -8,6 +8,7 @@
 #endif
 #include "asset_loader/asset_loader.h"
 #include <filesystem>
+#include <chrono>
 
 void setModules(NutshellGraphicsModuleInterface* graphicsModule, NutshellPhysicsModuleInterface* physicsModule, NutshellWindowModuleInterface* windowModule, NutshellAudioModuleInterface* audioModule) {
 	NTSH_EXECUTE_IF_NOT_NULL(graphicsModule, setModules(graphicsModule, physicsModule, windowModule, audioModule));
@@ -60,12 +61,16 @@ int main() {
 	AssetLoader assetLoader;
 	NTSH_UNUSED(assetLoader);
 	
+	double lastFrame = 0.0;
 	bool applicationClose = false;
 	while (!applicationClose) {
-		NTSH_EXECUTE_IF_NOT_NULL(windowModule, update(0.0));
-		NTSH_EXECUTE_IF_NOT_NULL(audioModule, update(0.0));
-		NTSH_EXECUTE_IF_NOT_NULL(physicsModule, update(0.0));
-		NTSH_EXECUTE_IF_NOT_NULL(graphicsModule, update(0.0));
+		double currentFrame = std::chrono::duration<double, std::milli>(std::chrono::steady_clock::now().time_since_epoch()).count();
+		double dt = currentFrame - lastFrame;
+
+		NTSH_EXECUTE_IF_NOT_NULL(windowModule, update(dt));
+		NTSH_EXECUTE_IF_NOT_NULL(audioModule, update(dt));
+		NTSH_EXECUTE_IF_NOT_NULL(physicsModule, update(dt));
+		NTSH_EXECUTE_IF_NOT_NULL(graphicsModule, update(dt));
 
 		if (windowModule) {
 			applicationClose = windowModule->shouldClose();
@@ -73,6 +78,8 @@ int main() {
 		else {
 			applicationClose = true;
 		}
+
+		lastFrame = currentFrame;
 	}
 
 	NTSH_EXECUTE_IF_NOT_NULL(graphicsModule, destroy());
