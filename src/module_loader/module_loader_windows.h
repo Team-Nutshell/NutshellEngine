@@ -34,6 +34,8 @@ public:
 
 		m_modules[typeid(T).name()] = moduleLibrary;
 
+		NTSH_CORE_INFO("Loaded module \"" + module->getName() + "\".");
+
 		return module;
 	}
 
