@@ -52,11 +52,11 @@ int main() {
 	setModules(graphicsModule, physicsModule, windowModule, audioModule);
 
 	NTSH_POINTER_EXECUTE(windowModule, init());
+	NTSH_POINTER_EXECUTE(windowModule, setTitle("NutshellEngine Test"));
 	NTSH_POINTER_EXECUTE(graphicsModule, init());
 	NTSH_POINTER_EXECUTE(physicsModule, init());
 	NTSH_POINTER_EXECUTE(audioModule, init());
 
-	NTSH_POINTER_EXECUTE(windowModule, setTitle("NutshellEngine Test"));
 
 	AssetLoader assetLoader;
 	NTSH_UNUSED(assetLoader);
