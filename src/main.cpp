@@ -1,7 +1,7 @@
 #include "utils/ntsh_core_defines.h"
 #include "../external/Common/utils/ntsh_engine_defines.h"
 #include "../external/Common/utils/ntsh_engine_enums.h"
-#if defined(NTSH_OS_WINDOWS)
+#ifdef NTSH_OS_WINDOWS
 #include "module_loader/module_loader_windows.h"
 #elif defined(NTSH_OS_LINUX)
 #include "module_loader/module_loader_linux.h"
@@ -18,7 +18,7 @@ void setModules(NutshellGraphicsModuleInterface* graphicsModule, NutshellPhysics
 }
 
 int main() {
-#if defined(NTSH_OS_WINDOWS)
+#ifdef NTSH_OS_WINDOWS
 	const std::string graphicsModulePath = "./modules/NutshellGraphicsModule.dll";
 	const std::string physicsModulePath = "./modules/NutshellPhysicsModule.dll";
 	const std::string windowModulePath = "./modules/NutshellWindowModule.dll";
