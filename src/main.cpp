@@ -1,9 +1,9 @@
 #include "utils/ntsh_core_defines.h"
 #include "../external/Common/utils/ntsh_engine_defines.h"
 #include "../external/Common/utils/ntsh_engine_enums.h"
-#ifdef NTSH_OS_WINDOWS
+#if defined(NTSH_OS_WINDOWS)
 #include "module_loader/module_loader_windows.h"
-#elif NTSH_OS_LINUX
+#elif defined(NTSH_OS_LINUX)
 #include "module_loader/module_loader_linux.h"
 #endif
 #include "asset_loader/asset_loader.h"
@@ -18,12 +18,12 @@ void setModules(NutshellGraphicsModuleInterface* graphicsModule, NutshellPhysics
 }
 
 int main() {
-#ifdef NTSH_OS_WINDOWS
+#if defined(NTSH_OS_WINDOWS)
 	const std::string graphicsModulePath = "./modules/NutshellGraphicsModule.dll";
 	const std::string physicsModulePath = "./modules/NutshellPhysicsModule.dll";
 	const std::string windowModulePath = "./modules/NutshellWindowModule.dll";
 	const std::string audioModulePath = "./modules/NutshellAudioModule.dll";
-#elif NTSH_OS_LINUX
+#elif defined(NTSH_OS_LINUX)
 	const std::string graphicsModulePath = "./modules/libNutshellGraphicsModule.so";
 	const std::string physicsModulePath = "./modules/libNutshellPhysicsModule.so";
 	const std::string windowModulePath = "./modules/libNutshellWindowModule.so";
@@ -56,7 +56,6 @@ int main() {
 	NTSH_POINTER_EXECUTE(graphicsModule, init());
 	NTSH_POINTER_EXECUTE(physicsModule, init());
 	NTSH_POINTER_EXECUTE(audioModule, init());
-
 
 	AssetLoader assetLoader;
 	NTSH_UNUSED(assetLoader);
