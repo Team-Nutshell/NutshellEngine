@@ -11,10 +11,10 @@
 #include <chrono>
 
 void setModules(NutshellGraphicsModuleInterface* graphicsModule, NutshellPhysicsModuleInterface* physicsModule, NutshellWindowModuleInterface* windowModule, NutshellAudioModuleInterface* audioModule) {
-	NTSH_EXECUTE_IF_NOT_NULL(graphicsModule, setModules(graphicsModule, physicsModule, windowModule, audioModule));
-	NTSH_EXECUTE_IF_NOT_NULL(physicsModule, setModules(graphicsModule, physicsModule, windowModule, audioModule));
-	NTSH_EXECUTE_IF_NOT_NULL(windowModule, setModules(graphicsModule, physicsModule, windowModule, audioModule));
-	NTSH_EXECUTE_IF_NOT_NULL(audioModule, setModules(graphicsModule, physicsModule, windowModule, audioModule));
+	NTSH_POINTER_EXECUTE(graphicsModule, setModules(graphicsModule, physicsModule, windowModule, audioModule));
+	NTSH_POINTER_EXECUTE(physicsModule, setModules(graphicsModule, physicsModule, windowModule, audioModule));
+	NTSH_POINTER_EXECUTE(windowModule, setModules(graphicsModule, physicsModule, windowModule, audioModule));
+	NTSH_POINTER_EXECUTE(audioModule, setModules(graphicsModule, physicsModule, windowModule, audioModule));
 }
 
 int main() {
@@ -51,12 +51,12 @@ int main() {
 
 	setModules(graphicsModule, physicsModule, windowModule, audioModule);
 
-	NTSH_EXECUTE_IF_NOT_NULL(windowModule, init());
-	NTSH_EXECUTE_IF_NOT_NULL(graphicsModule, init());
-	NTSH_EXECUTE_IF_NOT_NULL(physicsModule, init());
-	NTSH_EXECUTE_IF_NOT_NULL(audioModule, init());
+	NTSH_POINTER_EXECUTE(windowModule, init());
+	NTSH_POINTER_EXECUTE(graphicsModule, init());
+	NTSH_POINTER_EXECUTE(physicsModule, init());
+	NTSH_POINTER_EXECUTE(audioModule, init());
 
-	NTSH_EXECUTE_IF_NOT_NULL(windowModule, setTitle("NutshellEngine Test"));
+	NTSH_POINTER_EXECUTE(windowModule, setTitle("NutshellEngine Test"));
 
 	AssetLoader assetLoader;
 	NTSH_UNUSED(assetLoader);
@@ -67,25 +67,20 @@ int main() {
 		double currentFrame = std::chrono::duration<double, std::milli>(std::chrono::steady_clock::now().time_since_epoch()).count();
 		double dt = currentFrame - lastFrame;
 
-		NTSH_EXECUTE_IF_NOT_NULL(windowModule, update(dt));
-		NTSH_EXECUTE_IF_NOT_NULL(audioModule, update(dt));
-		NTSH_EXECUTE_IF_NOT_NULL(physicsModule, update(dt));
-		NTSH_EXECUTE_IF_NOT_NULL(graphicsModule, update(dt));
+		NTSH_POINTER_EXECUTE(windowModule, update(dt));
+		NTSH_POINTER_EXECUTE(audioModule, update(dt));
+		NTSH_POINTER_EXECUTE(physicsModule, update(dt));
+		NTSH_POINTER_EXECUTE(graphicsModule, update(dt));
 
-		if (windowModule) {
-			applicationClose = windowModule->shouldClose();
-		}
-		else {
-			applicationClose = true;
-		}
+		applicationClose = windowModule ? windowModule->shouldClose() : true; 
 
 		lastFrame = currentFrame;
 	}
 
-	NTSH_EXECUTE_IF_NOT_NULL(graphicsModule, destroy());
-	NTSH_EXECUTE_IF_NOT_NULL(physicsModule, destroy());
-	NTSH_EXECUTE_IF_NOT_NULL(windowModule, destroy());
-	NTSH_EXECUTE_IF_NOT_NULL(audioModule, destroy());
+	NTSH_POINTER_EXECUTE(graphicsModule, destroy());
+	NTSH_POINTER_EXECUTE(physicsModule, destroy());
+	NTSH_POINTER_EXECUTE(windowModule, destroy());
+	NTSH_POINTER_EXECUTE(audioModule, destroy());
 	
 	if (graphicsModule) {
 		moduleLoader.unloadModule(graphicsModule);
