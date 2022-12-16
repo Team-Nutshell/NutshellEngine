@@ -52,7 +52,8 @@ int main() {
 	setModules(graphicsModule, physicsModule, windowModule, audioModule);
 
 	NTSH_POINTER_EXECUTE(windowModule, init());
-	NTSH_POINTER_EXECUTE(windowModule, setTitle("NutshellEngine Test"));
+	NTSH_POINTER_EXECUTE(windowModule, open());
+	NTSH_POINTER_EXECUTE(windowModule, setTitle(NTSH_MAIN_WINDOW, "NutshellEngine Test"));
 	NTSH_POINTER_EXECUTE(graphicsModule, init());
 	NTSH_POINTER_EXECUTE(physicsModule, init());
 	NTSH_POINTER_EXECUTE(audioModule, init());
@@ -71,7 +72,7 @@ int main() {
 		NTSH_POINTER_EXECUTE(physicsModule, update(dt));
 		NTSH_POINTER_EXECUTE(graphicsModule, update(dt));
 
-		applicationClose = windowModule ? windowModule->shouldClose() : true; 
+		applicationClose = windowModule ? windowModule->shouldClose(NTSH_MAIN_WINDOW) : true; 
 
 		lastFrame = currentFrame;
 	}
