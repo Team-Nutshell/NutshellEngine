@@ -189,6 +189,7 @@ void AssetLoader::loadModelObj(const std::string& filePath, NtshModel& model) {
 
 	std::unordered_map<std::string, uint32_t> uniqueVertices;
 	NtshMesh mesh = {};
+	mesh.topology = NtshMeshTopology::TriangleList;
 
 	std::string line;
 	while (std::getline(file, line)) {
