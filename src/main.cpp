@@ -60,7 +60,7 @@ int main() {
 	AssetLoader assetLoader;
 	NTSH_UNUSED(assetLoader);
 	
-	double lastFrame = 0.0;
+	double lastFrame = std::chrono::duration<double, std::milli>(std::chrono::steady_clock::now().time_since_epoch()).count();;
 	bool applicationClose = false;
 	while (!applicationClose) {
 		double currentFrame = std::chrono::duration<double, std::milli>(std::chrono::steady_clock::now().time_since_epoch()).count();
