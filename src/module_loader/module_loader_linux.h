@@ -29,7 +29,7 @@ public:
 		createModule_t* createModule = (createModule_t*)dlsym(moduleLibrary, "createModule");
 		const char* dlsymError = dlerror();
 		if (!createModule) {
-			NTSH_CORE_ERROR("Could not load symbol \"createModule\" from dynamic library: " + std::string(dlsymError), NTSH_RESULT_MODULE_SYMBOL_LOAD_ERROR);
+			NTSH_CORE_ERROR("Could not load symbol \"createModule\" from dynamic library: " + std::string(dlsymError), Ntsh::Result::ModuleSymbolLoadError);
 		}
 
 		T* module = static_cast<T*>(createModule());
@@ -48,13 +48,13 @@ public:
 		destroyModule_t* destroyModule = (destroyModule_t*)dlsym(m_modules[typeid(T).name()], "destroyModule");
 		const char* dlsymError = dlerror();
 		if (dlsymError) {
-			NTSH_CORE_ERROR("Could not load symbol \"destroyModule\": " + std::string(dlsymError), NTSH_RESULT_MODULE_SYMBOL_LOAD_ERROR);
+			NTSH_CORE_ERROR("Could not load symbol \"destroyModule\": " + std::string(dlsymError), Ntsh::Result::ModuleSymbolLoadError);
 		}
 
 		destroyModule(module);
 
 		if (dlclose(m_modules[typeid(T).name()]) != 0) {
-			NTSH_CORE_ERROR("Could not unload the dynamic library: " + std::string(dlsymError), NTSH_RESULT_MODULE_LIBRARY_LOAD_ERROR);
+			NTSH_CORE_ERROR("Could not unload the dynamic library: " + std::string(dlsymError), Ntsh::Result::ModuleLibraryLoadError);
 		}
 	}
 
