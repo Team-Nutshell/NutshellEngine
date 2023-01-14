@@ -1,3 +1,4 @@
+#include "asset_loader/asset_loader.h"
 #include "ntsh_core.h"
 
 void scene(NutshellCore& core) {
@@ -10,6 +11,10 @@ int main() {
 	// Load modules
 	core.loadModules();
 	core.setModules();
+
+	// Initialize ECS
+	core.initializeECS();
+	core.setECS();
 
 	// Initialize modules
 	core.init();

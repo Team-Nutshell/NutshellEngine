@@ -49,6 +49,30 @@ void NutshellCore::setModules() {
 	NTSH_POINTER_EXECUTE(m_audioModule, setModules(m_graphicsModule, m_physicsModule, m_windowModule, m_audioModule));
 }
 
+void NutshellCore::initializeECS() {
+	m_ecs.init();
+
+	m_ecs.registerComponent<Transform>();
+	m_ecs.registerComponent<Renderable>();
+
+	m_ecs.registerSystem<NutshellGraphicsModuleInterface>(m_graphicsModule);
+	ComponentMask graphicsComponents;
+	graphicsComponents.set(m_ecs.getComponentId<Transform>());
+	graphicsComponents.set(m_ecs.getComponentId<Renderable>());
+	m_ecs.setSystemComponents<NutshellGraphicsModuleInterface>(graphicsComponents);
+}
+
+void NutshellCore::setECS() {
+	NTSH_POINTER_EXECUTE(m_graphicsModule, setECS(&m_ecs));
+	NTSH_POINTER_EXECUTE(m_physicsModule, setECS(&m_ecs));
+	NTSH_POINTER_EXECUTE(m_windowModule, setECS(&m_ecs));
+	NTSH_POINTER_EXECUTE(m_audioModule, setECS(&m_ecs));
+}
+
+ECS* NutshellCore::getECS() {
+	return &m_ecs;
+}
+
 void NutshellCore::init() {
 	NTSH_POINTER_EXECUTE(m_windowModule, init());
 	NTSH_POINTER_EXECUTE(m_windowModule, open(1280, 720, "NutshellEngine"));
