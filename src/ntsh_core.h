@@ -1,8 +1,8 @@
 #pragma once
 #include "../external/Common/utils/ntsh_engine_defines.h"
 #include "../external/Common/utils/ntsh_engine_enums.h"
+#include "../external/Common/ecs/ecs_includes.h"
 #include "utils/ntsh_core_defines.h"
-#include "asset_loader/asset_loader.h"
 #if defined(NTSH_OS_WINDOWS)
 #include "module_loader/module_loader_windows.h"
 #elif defined(NTSH_OS_LINUX)
@@ -17,6 +17,9 @@ public:
 	void unloadModules();
 	void setModules();
 
+	void initializeECS();
+	void setECS();
+
 	void init();
 	void update();
 	void destroy();
@@ -26,6 +29,8 @@ public:
 	NutshellWindowModuleInterface* getWindowModule();
 	NutshellAudioModuleInterface* getAudioModule();
 
+	ECS* getECS();
+
 private:
 	NutshellGraphicsModuleInterface* m_graphicsModule = nullptr;
 	NutshellPhysicsModuleInterface* m_physicsModule = nullptr;
@@ -33,4 +38,6 @@ private:
 	NutshellAudioModuleInterface* m_audioModule = nullptr;
 
 	ModuleLoader m_moduleLoader;
+
+	ECS m_ecs;
 };
