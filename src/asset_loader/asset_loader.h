@@ -6,16 +6,16 @@
 
 class AssetLoader {
 public:
-	NtshAudio* loadAudio(const std::string& filePath);
-	NtshModel* loadModel(const std::string& filePath);
+	Ntsh::Sound* loadSound(const std::string& filePath);
+	Ntsh::Model* loadModel(const std::string& filePath);
 
-	void unloadAudio(NtshAudio* audio);
-	void unloadModel(NtshModel* model);
+	void unloadSound(Ntsh::Sound* audio);
+	void unloadModel(Ntsh::Model* model);
 
 private:
-	void loadAudioWav(const std::string& filePath, NtshAudio& audio);
-	void loadModelObj(const std::string& filePath, NtshModel& model);
+	void loadSoundWav(const std::string& filePath, Ntsh::Sound& audio);
+	void loadModelObj(const std::string& filePath, Ntsh::Model& model);
 
-	std::forward_list<NtshAudio> m_audioResources;
-	std::forward_list<NtshModel> m_modelResources;
+	std::forward_list<Ntsh::Sound> m_soundResources;
+	std::forward_list<Ntsh::Model> m_modelResources;
 };
