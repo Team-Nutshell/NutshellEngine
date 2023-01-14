@@ -14,6 +14,11 @@ endif()
 
 add_subdirectory(external/Common)
 
+set(CORE_SOURCES
+	src/ntsh_core.cpp)
+set(CORE_HEADERS
+	src/ntsh_core.h)
+
 set(MODULE_LOADER_HEADERS "")
 if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
 	set(MODULE_LOADER_HEADERS
@@ -31,8 +36,8 @@ set(ASSET_LOADER_HEADERS
 set(UTILS_HEADERS
 	src/utils/ntsh_core_defines.h)
 
-set(SOURCES ${ASSET_LOADER_SOURCES})
-set(HEADERS ${ASSET_LOADER_HEADERS} ${MODULE_LOADER_HEADERS} ${UTILS_HEADERS})
+set(SOURCES ${CORE_SOURCES} ${ASSET_LOADER_SOURCES})
+set(HEADERS ${CORE_HEADERS} ${ASSET_LOADER_HEADERS} ${MODULE_LOADER_HEADERS} ${UTILS_HEADERS})
 
 add_executable(${PROJECT_NAME} src/main.cpp ${SOURCES} ${HEADERS})
 
