@@ -1,5 +1,72 @@
 #include "ntsh_core.h"
 
+void NutshellCore::init() {
+	// Load modules
+	loadModules();
+	setModules();
+
+	// Initialize ECS
+	initializeECS();
+	setECS();
+
+	// Initialize modules
+	NTSH_POINTER_EXECUTE(m_windowModule, init());
+	NTSH_POINTER_EXECUTE(m_windowModule, open(1280, 720, "NutshellEngine"));
+	NTSH_POINTER_EXECUTE(m_graphicsModule, init());
+	NTSH_POINTER_EXECUTE(m_physicsModule, init());
+	NTSH_POINTER_EXECUTE(m_audioModule, init());
+}
+
+void NutshellCore::update() {
+	double lastFrame = std::chrono::duration<double, std::milli>(std::chrono::steady_clock::now().time_since_epoch()).count();;
+	bool applicationClose = false;
+	while (!applicationClose) {
+		double currentFrame = std::chrono::duration<double, std::milli>(std::chrono::steady_clock::now().time_since_epoch()).count();
+		double dt = currentFrame - lastFrame;
+
+		// Update modules
+		NTSH_POINTER_EXECUTE(m_windowModule, update(dt));
+		NTSH_POINTER_EXECUTE(m_physicsModule, update(dt));
+		NTSH_POINTER_EXECUTE(m_audioModule, update(dt));
+		NTSH_POINTER_EXECUTE(m_graphicsModule, update(dt));
+
+		applicationClose = m_windowModule ? !m_windowModule->isOpen(NTSH_MAIN_WINDOW) : true;
+
+		lastFrame = currentFrame;
+	}
+}
+
+void NutshellCore::destroy() {
+	// Destroy modules
+	NTSH_POINTER_EXECUTE(m_graphicsModule, destroy());
+	NTSH_POINTER_EXECUTE(m_physicsModule, destroy());
+	NTSH_POINTER_EXECUTE(m_windowModule, destroy());
+	NTSH_POINTER_EXECUTE(m_audioModule, destroy());
+
+	// Unload module
+	unloadModules();
+}
+
+NutshellGraphicsModuleInterface* NutshellCore::getGraphicsModule() {
+	return m_graphicsModule;
+}
+
+NutshellPhysicsModuleInterface* NutshellCore::getPhysicsModule() {
+	return m_physicsModule;
+}
+
+NutshellWindowModuleInterface* NutshellCore::getWindowModule() {
+	return m_windowModule;
+}
+
+NutshellAudioModuleInterface* NutshellCore::getAudioModule() {
+	return m_audioModule;
+}
+
+ECS* NutshellCore::getECS() {
+	return &m_ecs;
+}
+
 void NutshellCore::loadModules() {
 #if defined(NTSH_OS_WINDOWS)
 	const std::string graphicsModulePath = "./modules/NutshellGraphicsModule.dll";
@@ -67,58 +134,4 @@ void NutshellCore::setECS() {
 	NTSH_POINTER_EXECUTE(m_physicsModule, setECS(&m_ecs));
 	NTSH_POINTER_EXECUTE(m_windowModule, setECS(&m_ecs));
 	NTSH_POINTER_EXECUTE(m_audioModule, setECS(&m_ecs));
-}
-
-ECS* NutshellCore::getECS() {
-	return &m_ecs;
-}
-
-void NutshellCore::init() {
-	NTSH_POINTER_EXECUTE(m_windowModule, init());
-	NTSH_POINTER_EXECUTE(m_windowModule, open(1280, 720, "NutshellEngine"));
-	NTSH_POINTER_EXECUTE(m_graphicsModule, init());
-	NTSH_POINTER_EXECUTE(m_physicsModule, init());
-	NTSH_POINTER_EXECUTE(m_audioModule, init());
-}
-
-void NutshellCore::update() {
-	double lastFrame = std::chrono::duration<double, std::milli>(std::chrono::steady_clock::now().time_since_epoch()).count();;
-	bool applicationClose = false;
-	while (!applicationClose) {
-		double currentFrame = std::chrono::duration<double, std::milli>(std::chrono::steady_clock::now().time_since_epoch()).count();
-		double dt = currentFrame - lastFrame;
-
-		// Update modules
-		NTSH_POINTER_EXECUTE(m_windowModule, update(dt));
-		NTSH_POINTER_EXECUTE(m_physicsModule, update(dt));
-		NTSH_POINTER_EXECUTE(m_audioModule, update(dt));
-		NTSH_POINTER_EXECUTE(m_graphicsModule, update(dt));
-
-		applicationClose = m_windowModule ? !m_windowModule->isOpen(NTSH_MAIN_WINDOW) : true;
-
-		lastFrame = currentFrame;
-	}
-}
-
-void NutshellCore::destroy() {
-	NTSH_POINTER_EXECUTE(m_graphicsModule, destroy());
-	NTSH_POINTER_EXECUTE(m_physicsModule, destroy());
-	NTSH_POINTER_EXECUTE(m_windowModule, destroy());
-	NTSH_POINTER_EXECUTE(m_audioModule, destroy());
-}
-
-NutshellGraphicsModuleInterface* NutshellCore::getGraphicsModule() {
-	return m_graphicsModule;
-}
-
-NutshellPhysicsModuleInterface* NutshellCore::getPhysicsModule() {
-	return m_physicsModule;
-}
-
-NutshellWindowModuleInterface* NutshellCore::getWindowModule() {
-	return m_windowModule;
-}
-
-NutshellAudioModuleInterface* NutshellCore::getAudioModule() {
-	return m_audioModule;
 }

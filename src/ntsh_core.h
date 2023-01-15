@@ -13,13 +13,6 @@
 
 class NutshellCore {
 public:
-	void loadModules();
-	void unloadModules();
-	void setModules();
-
-	void initializeECS();
-	void setECS();
-
 	void init();
 	void update();
 	void destroy();
@@ -30,6 +23,14 @@ public:
 	NutshellAudioModuleInterface* getAudioModule();
 
 	ECS* getECS();
+
+private:
+	void loadModules();
+	void unloadModules();
+	void setModules();
+
+	void initializeECS();
+	void setECS();
 
 private:
 	NutshellGraphicsModuleInterface* m_graphicsModule = nullptr;
