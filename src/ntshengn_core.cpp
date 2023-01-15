@@ -11,7 +11,7 @@ void NtshEngn::Core::init() {
 
 	// Initialize modules
 	NTSHENGN_POINTER_EXECUTE(m_windowModule, init());
-	NTSHENGN_POINTER_EXECUTE(m_windowModule, open(1280, 720, "Engine"));
+	NTSHENGN_POINTER_EXECUTE(m_windowModule, open(1280, 720, "NutshellEngine"));
 	NTSHENGN_POINTER_EXECUTE(m_graphicsModule, init());
 	NTSHENGN_POINTER_EXECUTE(m_physicsModule, init());
 	NTSHENGN_POINTER_EXECUTE(m_audioModule, init());
