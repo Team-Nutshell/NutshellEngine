@@ -1,40 +1,38 @@
-#include "asset_loader/asset_loader.h"
-#include "ntsh_core.h"
+#include "asset_loader/ntshengn_asset_loader.h"
+#include "ntshengn_core.h"
 
-void scene(NutshellCore& core) {
-	ECS* ecs = core.getECS();
+void scene(NtshEngn::Core& core) {
+	NtshEngn::ECS* ecs = core.getECS();
 
-	AssetLoader assetLoader;
+	NtshEngn::AssetLoader assetLoader;
 
-	Ntsh::Model* cubeMesh = assetLoader.loadModel("cube.obj");
-	Ntsh::Model* roomMesh = assetLoader.loadModel("viking_room.obj");
+	NtshEngn::Model* cubeMesh = assetLoader.loadModel("cube.obj");
+	NtshEngn::Model* roomMesh = assetLoader.loadModel("viking_room.obj");
 
-	Entity cube = core.getECS()->createEntity();
+	NtshEngn::Entity cube = core.getECS()->createEntity();
 
-	Transform cubeTransform;
+	NtshEngn::Transform cubeTransform;
 	ecs->addComponent(cube, cubeTransform);
 
-	Renderable cubeRenderable;
+	NtshEngn::Renderable cubeRenderable;
 	cubeRenderable.mesh = cubeMesh->primitives[0].first;
 	cubeRenderable.material = cubeMesh->primitives[0].second;
 	ecs->addComponent(cube, cubeRenderable);
 
-	Entity room = core.getECS()->createEntity();
+	NtshEngn::Entity room = core.getECS()->createEntity();
 
-	Transform roomTransform;
+	NtshEngn::Transform roomTransform;
 	roomTransform.position[0] = 3.0f;
 	ecs->addComponent(room, roomTransform);
 
-	Renderable roomRenderable;
+	NtshEngn::Renderable roomRenderable;
 	roomRenderable.mesh = roomMesh->primitives[0].first;
 	roomRenderable.material = roomMesh->primitives[0].second;
 	ecs->addComponent(room, roomRenderable);
-
-	Renderable test = ecs->getComponent<Renderable>(cube);
 }
 
 int main() {
-	NutshellCore core;
+	NtshEngn::Core core;
 
 	// Initialize
 	core.init();
