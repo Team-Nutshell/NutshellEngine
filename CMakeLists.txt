@@ -33,11 +33,16 @@ set(ASSET_LOADER_SOURCES
 set(ASSET_LOADER_HEADERS
 	src/asset_loader/ntshengn_asset_loader.h)
 
+set(SCRIPTING_SOURCES
+	src/scripting/ntshengn_scripting.cpp)
+set(SCRIPTING_HEADERS
+	src/scripting/ntshengn_scripting.h)
+
 set(UTILS_HEADERS
 	src/utils/ntshengn_core_defines.h)
 
-set(SOURCES ${CORE_SOURCES} ${ASSET_LOADER_SOURCES})
-set(HEADERS ${CORE_HEADERS} ${ASSET_LOADER_HEADERS} ${MODULE_LOADER_HEADERS} ${UTILS_HEADERS})
+set(SOURCES ${CORE_SOURCES} ${ASSET_LOADER_SOURCES} ${SCRIPTING_SOURCES})
+set(HEADERS ${CORE_HEADERS} ${ASSET_LOADER_HEADERS} ${MODULE_LOADER_HEADERS} ${SCRIPTING_HEADERS} ${UTILS_HEADERS})
 
 add_executable(${PROJECT_NAME} src/main.cpp ${SOURCES} ${HEADERS})
 

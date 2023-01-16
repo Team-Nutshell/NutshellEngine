@@ -12,6 +12,7 @@ void NtshEngn::Core::init() {
 	// Initialize modules
 	NTSHENGN_POINTER_EXECUTE(m_windowModule, init());
 	NTSHENGN_POINTER_EXECUTE(m_windowModule, open(1280, 720, "NutshellEngine"));
+	m_scripting.init();
 	NTSHENGN_POINTER_EXECUTE(m_graphicsModule, init());
 	NTSHENGN_POINTER_EXECUTE(m_physicsModule, init());
 	NTSHENGN_POINTER_EXECUTE(m_audioModule, init());
@@ -26,6 +27,7 @@ void NtshEngn::Core::update() {
 
 		// Update modules
 		NTSHENGN_POINTER_EXECUTE(m_windowModule, update(dt));
+		m_scripting.update(dt);
 		NTSHENGN_POINTER_EXECUTE(m_physicsModule, update(dt));
 		NTSHENGN_POINTER_EXECUTE(m_audioModule, update(dt));
 		NTSHENGN_POINTER_EXECUTE(m_graphicsModule, update(dt));
@@ -40,6 +42,7 @@ void NtshEngn::Core::destroy() {
 	// Destroy modules
 	NTSHENGN_POINTER_EXECUTE(m_graphicsModule, destroy());
 	NTSHENGN_POINTER_EXECUTE(m_physicsModule, destroy());
+	m_scripting.destroy();
 	NTSHENGN_POINTER_EXECUTE(m_windowModule, destroy());
 	NTSHENGN_POINTER_EXECUTE(m_audioModule, destroy());
 
@@ -125,6 +128,7 @@ void NtshEngn::Core::initializeECS() {
 	m_ecs.registerComponent<SphereCollidable>();
 	m_ecs.registerComponent<AABBCollidable>();
 	m_ecs.registerComponent<CapsuleCollidable>();
+	m_ecs.registerComponent<Scriptable>();
 
 	m_ecs.registerSystem<GraphicsModuleInterface>(m_graphicsModule);
 	ComponentMask graphicsComponents;
@@ -138,11 +142,17 @@ void NtshEngn::Core::initializeECS() {
 	physicsComponents.set(m_ecs.getComponentId<AABBCollidable>());
 	physicsComponents.set(m_ecs.getComponentId<CapsuleCollidable>());
 	m_ecs.setSystemComponents<PhysicsModuleInterface>(physicsComponents);
+
+	m_ecs.registerSystem<Scripting>(&m_scripting);
+	ComponentMask scriptingComponents;
+	scriptingComponents.set(m_ecs.getComponentId<Scriptable>());
+	m_ecs.setSystemComponents<Scripting>(scriptingComponents);
 }
 
 void NtshEngn::Core::setECS() {
 	NTSHENGN_POINTER_EXECUTE(m_graphicsModule, setECS(&m_ecs));
 	NTSHENGN_POINTER_EXECUTE(m_physicsModule, setECS(&m_ecs));
+	m_scripting.setECS(&m_ecs);
 	NTSHENGN_POINTER_EXECUTE(m_windowModule, setECS(&m_ecs));
 	NTSHENGN_POINTER_EXECUTE(m_audioModule, setECS(&m_ecs));
 }

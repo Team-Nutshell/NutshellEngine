@@ -2,6 +2,7 @@
 #include "../external/Common/utils/ntshengn_defines.h"
 #include "../external/Common/utils/ntshengn_enums.h"
 #include "../external/Common/ecs/ntshengn_ecs.h"
+#include "scripting/ntshengn_scripting.h"
 #include "utils/ntshengn_core_defines.h"
 #if defined(NTSHENGN_OS_WINDOWS)
 #include "module_loader/ntshengn_module_loader_windows.h"
@@ -41,6 +42,8 @@ namespace NtshEngn {
 		AudioModuleInterface* m_audioModule = nullptr;
 
 		ModuleLoader m_moduleLoader;
+
+		Scripting m_scripting;
 
 		ECS m_ecs;
 	};
