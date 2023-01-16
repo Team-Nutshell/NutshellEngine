@@ -18,8 +18,8 @@ void scene(NtshEngn::Core& core) {
 
 	NtshEngn::Entity room = core.getECS()->createEntity();
 
-	NtshEngn::Transform roomTransform = ecs->getComponent<NtshEngn::Transform>(room);
-	roomTransform.position[0] = 2.0f;
+	NtshEngn::Transform& roomTransform = ecs->getComponent<NtshEngn::Transform>(room);
+	roomTransform.position[0] = 3.0f;
 
 	NtshEngn::Renderable roomRenderable;
 	roomRenderable.mesh = roomMesh->primitives[0].first;
@@ -28,7 +28,7 @@ void scene(NtshEngn::Core& core) {
 
 	NtshEngn::Entity camera = core.getECS()->createEntity();
 
-	NtshEngn::Transform cameraTransform = ecs->getComponent<NtshEngn::Transform>(camera);
+	NtshEngn::Transform& cameraTransform = ecs->getComponent<NtshEngn::Transform>(camera);
 	cameraTransform.position = { 0.0f, 2.0f, 5.0f };
 	cameraTransform.rotation = { 0.0f, 0.0f, -1.0f };
 	
