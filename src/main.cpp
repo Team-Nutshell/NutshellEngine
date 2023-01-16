@@ -1,6 +1,26 @@
 #include "asset_loader/ntshengn_asset_loader.h"
 #include "ntshengn_core.h"
 
+struct CameraScript : NtshEngn::Script {
+	NTSHENGN_SCRIPT(CameraScript);
+
+	void init() {
+		std::cout << "create camera" << std::endl;
+	}
+
+	void update(double dt) {
+		NTSHENGN_UNUSED(dt);
+		std::cout << "update camera " << count++ << std::endl;
+	}
+
+	void destroy() {
+		std::cout << "destroy camera" << std::endl;
+	}
+
+private:
+	int count = 0;
+};
+
 void scene(NtshEngn::Core& core) {
 	NtshEngn::ECS* ecs = core.getECS();
 
@@ -37,6 +57,10 @@ void scene(NtshEngn::Core& core) {
 	cameraCamera.nearPlane = 0.03f;
 	cameraCamera.farPlane = 100.0f;
 	ecs->addComponent(camera, cameraCamera);
+
+	NtshEngn::Scriptable cameraScriptable;
+	cameraScriptable.script = std::make_unique<CameraScript>();
+	ecs->addComponent(camera, cameraScriptable);
 }
 
 int main() {
