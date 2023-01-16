@@ -11,9 +11,6 @@ void scene(NtshEngn::Core& core) {
 
 	NtshEngn::Entity cube = core.getECS()->createEntity();
 
-	NtshEngn::Transform cubeTransform;
-	ecs->addComponent(cube, cubeTransform);
-
 	NtshEngn::Renderable cubeRenderable;
 	cubeRenderable.mesh = cubeMesh->primitives[0].first;
 	cubeRenderable.material = cubeMesh->primitives[0].second;
@@ -21,14 +18,25 @@ void scene(NtshEngn::Core& core) {
 
 	NtshEngn::Entity room = core.getECS()->createEntity();
 
-	NtshEngn::Transform roomTransform;
-	roomTransform.position[0] = 3.0f;
-	ecs->addComponent(room, roomTransform);
+	NtshEngn::Transform roomTransform = ecs->getComponent<NtshEngn::Transform>(room);
+	roomTransform.position[0] = 2.0f;
 
 	NtshEngn::Renderable roomRenderable;
 	roomRenderable.mesh = roomMesh->primitives[0].first;
 	roomRenderable.material = roomMesh->primitives[0].second;
 	ecs->addComponent(room, roomRenderable);
+
+	NtshEngn::Entity camera = core.getECS()->createEntity();
+
+	NtshEngn::Transform cameraTransform = ecs->getComponent<NtshEngn::Transform>(camera);
+	cameraTransform.position = { 0.0f, 2.0f, 5.0f };
+	cameraTransform.rotation = { 0.0f, 0.0f, -1.0f };
+	
+	NtshEngn::Camera cameraCamera;
+	cameraCamera.fov = 45.0f;
+	cameraCamera.nearPlane = 0.03f;
+	cameraCamera.farPlane = 100.0f;
+	ecs->addComponent(camera, cameraCamera);
 }
 
 int main() {

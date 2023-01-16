@@ -1,7 +1,7 @@
 #pragma once
 #include "../external/Common/utils/ntshengn_defines.h"
 #include "../external/Common/utils/ntshengn_enums.h"
-#include "../external/Common/ecs/ntshengn_ecs_includes.h"
+#include "../external/Common/ecs/ntshengn_ecs.h"
 #include "utils/ntshengn_core_defines.h"
 #if defined(NTSHENGN_OS_WINDOWS)
 #include "module_loader/ntshengn_module_loader_windows.h"
