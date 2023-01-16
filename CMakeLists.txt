@@ -44,15 +44,15 @@ set(UTILS_HEADERS
 set(SOURCES ${CORE_SOURCES} ${ASSET_LOADER_SOURCES} ${SCRIPTING_SOURCES})
 set(HEADERS ${CORE_HEADERS} ${ASSET_LOADER_HEADERS} ${MODULE_LOADER_HEADERS} ${SCRIPTING_HEADERS} ${UTILS_HEADERS})
 
-add_executable(${PROJECT_NAME} src/main.cpp ${SOURCES} ${HEADERS})
+add_library(${PROJECT_NAME} ${SOURCES} ${HEADERS})
 
-target_link_libraries(${PROJECT_NAME} PRIVATE NutshellEngine::Common ${NTSHENGN_LIBRARIES})
+target_link_libraries(${PROJECT_NAME} PUBLIC NutshellEngine::Common ${NTSHENGN_LIBRARIES})
 
-target_compile_options(${PROJECT_NAME} PRIVATE
+target_compile_options(${PROJECT_NAME} PUBLIC
 	$<$<CXX_COMPILER_ID:MSVC>:/W4 /WX>
 	$<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wall -Werror>)
 
-target_compile_definitions(${PROJECT_NAME} PRIVATE
+target_compile_definitions(${PROJECT_NAME} PUBLIC
 	${NTSHENGN_DEFINES}
 	PUBLIC
 	$<$<CONFIG:Debug>:NTSHENGN_DEBUG>
