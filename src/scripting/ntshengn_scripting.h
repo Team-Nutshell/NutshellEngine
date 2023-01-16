@@ -9,10 +9,16 @@ namespace NtshEngn {
 		void update(double dt);
 		void destroy();
 
+		void setModules(GraphicsModuleInterface* graphicsModule, PhysicsModuleInterface* physicsModule, WindowModuleInterface* windowModule, AudioModuleInterface* audioModule);
 		void setECS(ECS* ecs);
 
 	private:
-		ECS* m_ecs;
+		GraphicsModuleInterface* m_graphicsModule = nullptr;
+		PhysicsModuleInterface* m_physicsModule = nullptr;
+		WindowModuleInterface* m_windowModule = nullptr;
+		AudioModuleInterface* m_audioModule = nullptr;
+
+		ECS* m_ecs = nullptr;
 	};
 
 }
