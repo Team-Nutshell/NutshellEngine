@@ -1,4 +1,4 @@
-#include "ntshengn_asset_loader.h"
+#include "ntshengn_asset_manager.h"
 #include "../../external/Common/utils/ntshengn_defines.h"
 #include "../../external/Common/utils/ntshengn_utils_file.h"
 #include "../utils/ntshengn_core_defines.h"
@@ -8,35 +8,75 @@
 #include <unordered_map>
 #include <array>
 
-NtshEngn::Sound* NtshEngn::AssetLoader::loadSound(const std::string& filePath) {
+NtshEngn::Sound* NtshEngn::AssetManager::createSound() {
+	NtshEngn::Sound newSound;
+	m_soundResources.push_front(newSound);
+
+	return &m_soundResources.front();
+}
+
+NtshEngn::Sound* NtshEngn::AssetManager::loadSound(const std::string& filePath) {
 	NtshEngn::Sound newSound;
 
 	if (NtshEngn::extension(filePath) == "wav") {
 		loadSoundWav(filePath, newSound);
 	}
 	else {
-		NTSHENGN_ASSET_LOADER_ERROR("Sound file extension \"." + NtshEngn::extension(filePath) + "\" not supported.", NtshEngn::Result::AssetLoaderError);
+		NTSHENGN_ASSET_MANAGER_ERROR("Sound file extension \"." + NtshEngn::extension(filePath) + "\" not supported.", NtshEngn::Result::AssetManagerError);
 	}
 
 	m_soundResources.push_front(newSound);
+
 	return &m_soundResources.front();
 }
 
-NtshEngn::Model* NtshEngn::AssetLoader::loadModel(const std::string& filePath) {
+NtshEngn::Model* NtshEngn::AssetManager::createModel() {
+	NtshEngn::Model newModel;
+
+	m_modelResources.push_front(newModel);
+
+	return &m_modelResources.front();
+}
+
+NtshEngn::Model* NtshEngn::AssetManager::loadModel(const std::string& filePath) {
 	NtshEngn::Model newModel;
 
 	if (NtshEngn::extension(filePath) == "obj") {
 		loadModelObj(filePath, newModel);
 	}
 	else {
-		NTSHENGN_ASSET_LOADER_ERROR("Model file extension \"." + NtshEngn::extension(filePath) + "\" not supported.", NtshEngn::Result::AssetLoaderError);
+		NTSHENGN_ASSET_MANAGER_ERROR("Model file extension \"." + NtshEngn::extension(filePath) + "\" not supported.", NtshEngn::Result::AssetManagerError);
 	}
 
 	m_modelResources.push_front(newModel);
+
 	return &m_modelResources.front();
 }
 
-void NtshEngn::AssetLoader::unloadSound(NtshEngn::Sound* sound) {
+NtshEngn::Image* NtshEngn::AssetManager::createImage() {
+	NtshEngn::Image newImage;
+
+	m_imageResources.push_front(newImage);
+
+	return &m_imageResources.front();
+}
+
+NtshEngn::Image* NtshEngn::AssetManager::loadImage(const std::string& filePath) {
+	NtshEngn::Image newImage;
+
+	if (NtshEngn::extension(filePath) == "") {
+		
+	}
+	else {
+		NTSHENGN_ASSET_MANAGER_ERROR("Image file extension \"." + NtshEngn::extension(filePath) + "\" not supported.", NtshEngn::Result::AssetManagerError);
+	}
+
+	m_imageResources.push_front(newImage);
+
+	return &m_imageResources.front();
+}
+
+void NtshEngn::AssetManager::destroySound(NtshEngn::Sound* sound) {
 	std::forward_list<NtshEngn::Sound>::iterator prev = m_soundResources.before_begin();
 	for (std::forward_list<Sound>::iterator it = m_soundResources.begin(); it != m_soundResources.end(); it++) {
 		if (sound == &(*it)) {
@@ -47,10 +87,10 @@ void NtshEngn::AssetLoader::unloadSound(NtshEngn::Sound* sound) {
 		prev = it;
 	}
 
-	NTSHENGN_ASSET_LOADER_ERROR("Could not unload sound resource.", NtshEngn::Result::AssetLoaderError);
+	NTSHENGN_ASSET_MANAGER_ERROR("Could not destroy sound resource.", NtshEngn::Result::AssetManagerError);
 }
 
-void NtshEngn::AssetLoader::unloadModel(NtshEngn::Model* model) {
+void NtshEngn::AssetManager::destroyModel(NtshEngn::Model* model) {
 	std::forward_list<NtshEngn::Model>::iterator prev = m_modelResources.before_begin();
 	for (std::forward_list<NtshEngn::Model>::iterator it = m_modelResources.begin(); it != m_modelResources.end(); it++) {
 		if (model == &(*it)) {
@@ -61,10 +101,24 @@ void NtshEngn::AssetLoader::unloadModel(NtshEngn::Model* model) {
 		prev = it;
 	}
 
-	NTSHENGN_ASSET_LOADER_ERROR("Could not unload model resource.", NtshEngn::Result::AssetLoaderError);
+	NTSHENGN_ASSET_MANAGER_ERROR("Could not destroy model resource.", NtshEngn::Result::AssetManagerError);
 }
 
-void NtshEngn::AssetLoader::loadSoundWav(const std::string& filePath, NtshEngn::Sound& sound) {
+void NtshEngn::AssetManager::destroyImage(Image* image) {
+	std::forward_list<NtshEngn::Image>::iterator prev = m_imageResources.before_begin();
+	for (std::forward_list<NtshEngn::Image>::iterator it = m_imageResources.begin(); it != m_imageResources.end(); it++) {
+		if (image == &(*it)) {
+			m_imageResources.erase_after(prev);
+			return;
+		}
+
+		prev = it;
+	}
+
+	NTSHENGN_ASSET_MANAGER_ERROR("Could not destroy image resource.", NtshEngn::Result::AssetManagerError);
+}
+
+void NtshEngn::AssetManager::loadSoundWav(const std::string& filePath, NtshEngn::Sound& sound) {
 	char buffer[4];
 	int64_t tmp = 0;
 	std::vector<char> data;
@@ -73,96 +127,96 @@ void NtshEngn::AssetLoader::loadSoundWav(const std::string& filePath, NtshEngn::
 
 	// Open file
 	if (!file.is_open()) {
-		NTSHENGN_ASSET_LOADER_ERROR("Could not open sound file \"" + filePath + "\".", NtshEngn::Result::AssetLoaderFileNotFound);
+		NTSHENGN_ASSET_MANAGER_ERROR("Could not open sound file \"" + filePath + "\".", NtshEngn::Result::AssetManagerFileNotFound);
 	}
 
 	// RIFF header
 	if (!file.read(buffer, 4)) {
-		NTSHENGN_ASSET_LOADER_ERROR("Could not read \"RIFF\" for sound file \"" + filePath + "\".", NtshEngn::Result::AssetLoaderError);
+		NTSHENGN_ASSET_MANAGER_ERROR("Could not read \"RIFF\" for sound file \"" + filePath + "\".", NtshEngn::Result::AssetManagerError);
 	}
 	if (strncmp(buffer, "RIFF", 4) != 0) {
-		NTSHENGN_ASSET_LOADER_ERROR("File \"" + filePath + "\" is not a valid WAVE sound file (RIFF header missing).", NtshEngn::Result::AssetLoaderError);
+		NTSHENGN_ASSET_MANAGER_ERROR("File \"" + filePath + "\" is not a valid WAVE sound file (RIFF header missing).", NtshEngn::Result::AssetManagerError);
 	}
 
 	// Size
 	if (!file.read(buffer, 4)) {
-		NTSHENGN_ASSET_LOADER_ERROR("Could not read size for sound file \"" + filePath + "\".", NtshEngn::Result::AssetLoaderError);
+		NTSHENGN_ASSET_MANAGER_ERROR("Could not read size for sound file \"" + filePath + "\".", NtshEngn::Result::AssetManagerError);
 	}
 
 	// WAVE header
 	if (!file.read(buffer, 4)) {
-		NTSHENGN_ASSET_LOADER_ERROR("Could not read \"WAVE\" for sound file \"" + filePath + "\".", NtshEngn::Result::AssetLoaderError);
+		NTSHENGN_ASSET_MANAGER_ERROR("Could not read \"WAVE\" for sound file \"" + filePath + "\".", NtshEngn::Result::AssetManagerError);
 	}
 	if (strncmp(buffer, "WAVE", 4) != 0) {
-		NTSHENGN_ASSET_LOADER_ERROR("File \"" + filePath + "\" is not a valid WAVE sound file (WAVE header missing).", NtshEngn::Result::AssetLoaderError);
+		NTSHENGN_ASSET_MANAGER_ERROR("File \"" + filePath + "\" is not a valid WAVE sound file (WAVE header missing).", NtshEngn::Result::AssetManagerError);
 	}
 
 	// fmt/0
 	if (!file.read(buffer, 4)) {
-		NTSHENGN_ASSET_LOADER_ERROR("Could not read fmt/0 for sound file \"" + filePath + "\".", NtshEngn::Result::AssetLoaderError);
+		NTSHENGN_ASSET_MANAGER_ERROR("Could not read fmt/0 for sound file \"" + filePath + "\".", NtshEngn::Result::AssetManagerError);
 	}
 
 	// 16
 	if (!file.read(buffer, 4)) {
-		NTSHENGN_ASSET_LOADER_ERROR("Could not read 16 for sound file \"" + filePath + "\".", NtshEngn::Result::AssetLoaderError);
+		NTSHENGN_ASSET_MANAGER_ERROR("Could not read 16 for sound file \"" + filePath + "\".", NtshEngn::Result::AssetManagerError);
 	}
 
 	// PCM
 	if (!file.read(buffer, 2)) {
-		NTSHENGN_ASSET_LOADER_ERROR("Could not read PCM for sound file \"" + filePath + "\".", NtshEngn::Result::AssetLoaderError);
+		NTSHENGN_ASSET_MANAGER_ERROR("Could not read PCM for sound file \"" + filePath + "\".", NtshEngn::Result::AssetManagerError);
 	}
 
 	// Channels
 	if (!file.read(buffer, 2)) {
-		NTSHENGN_ASSET_LOADER_ERROR("Could not read the number of channels for sound file \"" + filePath + "\".", NtshEngn::Result::AssetLoaderError);
+		NTSHENGN_ASSET_MANAGER_ERROR("Could not read the number of channels for sound file \"" + filePath + "\".", NtshEngn::Result::AssetManagerError);
 	}
 	memcpy(&tmp, buffer, 2);
 	sound.channels = static_cast<uint8_t>(tmp);
 
 	// Sample rate
 	if (!file.read(buffer, 4)) {
-		NTSHENGN_ASSET_LOADER_ERROR("Could not read sample rate for sound file \"" + filePath + "\".", NtshEngn::Result::AssetLoaderError);
+		NTSHENGN_ASSET_MANAGER_ERROR("Could not read sample rate for sound file \"" + filePath + "\".", NtshEngn::Result::AssetManagerError);
 	}
 	memcpy(&tmp, buffer, 4);
 	sound.sampleRate = static_cast<int32_t>(tmp);
 
 	// Byte rate ((sampleRate * bitsPerSample * channels) / 8)
 	if (!file.read(buffer, 4)) {
-		NTSHENGN_ASSET_LOADER_ERROR("Could not read byte rate for sound file \"" + filePath + "\".", NtshEngn::Result::AssetLoaderError);
+		NTSHENGN_ASSET_MANAGER_ERROR("Could not read byte rate for sound file \"" + filePath + "\".", NtshEngn::Result::AssetManagerError);
 	}
 
 	// Block align ((bitsPerSample * channels) / 8)
 	if (!file.read(buffer, 2)) {
-		NTSHENGN_ASSET_LOADER_ERROR("Could not read block align for sound file \"" + filePath + "\".", NtshEngn::Result::AssetLoaderError);
+		NTSHENGN_ASSET_MANAGER_ERROR("Could not read block align for sound file \"" + filePath + "\".", NtshEngn::Result::AssetManagerError);
 	}
 
 	// Bits per sample
 	if (!file.read(buffer, 2)) {
-		NTSHENGN_ASSET_LOADER_ERROR("Could not read bits per sample for sound file \"" + filePath + "\".", NtshEngn::Result::AssetLoaderError);
+		NTSHENGN_ASSET_MANAGER_ERROR("Could not read bits per sample for sound file \"" + filePath + "\".", NtshEngn::Result::AssetManagerError);
 	}
 	memcpy(&tmp, buffer, 2);
 	sound.bitsPerSample = static_cast<uint8_t>(tmp);
 
 	// data header
 	if (!file.read(buffer, 4)) {
-		NTSHENGN_ASSET_LOADER_ERROR("Could not read \"data\" for sound file \"" + filePath + "\".", NtshEngn::Result::AssetLoaderError);
+		NTSHENGN_ASSET_MANAGER_ERROR("Could not read \"data\" for sound file \"" + filePath + "\".", NtshEngn::Result::AssetManagerError);
 	}
 	if (strncmp(buffer, "data", 4) != 0) {
-		NTSHENGN_ASSET_LOADER_ERROR("File \"" + filePath + "\" is not a valid WAVE sound file (data header missing).", NtshEngn::Result::AssetLoaderError);
+		NTSHENGN_ASSET_MANAGER_ERROR("File \"" + filePath + "\" is not a valid WAVE sound file (data header missing).", NtshEngn::Result::AssetManagerError);
 	}
 
 	// Data size
 	if (!file.read(buffer, 4)) {
-		NTSHENGN_ASSET_LOADER_ERROR("Could not read data size for sound file \"" + filePath + "\".", NtshEngn::Result::AssetLoaderError);
+		NTSHENGN_ASSET_MANAGER_ERROR("Could not read data size for sound file \"" + filePath + "\".", NtshEngn::Result::AssetManagerError);
 	}
 	memcpy(&tmp, buffer, 4);
 	sound.size = static_cast<size_t>(tmp);
 
 	if (file.eof()) {
-		NTSHENGN_ASSET_LOADER_ERROR("File \"" + filePath + "\" is not a valid WAVE sound file (data missing).", NtshEngn::Result::AssetLoaderError);
+		NTSHENGN_ASSET_MANAGER_ERROR("File \"" + filePath + "\" is not a valid WAVE sound file (data missing).", NtshEngn::Result::AssetManagerError);
 	}
 	if (file.fail()) {
-		NTSHENGN_ASSET_LOADER_ERROR("Unknown error while loading WAVE sound file.", NtshEngn::Result::AssetLoaderError);
+		NTSHENGN_ASSET_MANAGER_ERROR("Unknown error while loading WAVE sound file.", NtshEngn::Result::AssetManagerError);
 	}
 
 	// Data
@@ -174,13 +228,13 @@ void NtshEngn::AssetLoader::loadSoundWav(const std::string& filePath, NtshEngn::
 	file.close();
 }
 
-void NtshEngn::AssetLoader::loadModelObj(const std::string& filePath, NtshEngn::Model& model) {
+void NtshEngn::AssetManager::loadModelObj(const std::string& filePath, NtshEngn::Model& model) {
 	NTSHENGN_UNUSED(model);
 	std::ifstream file(filePath);
 
 	// Open file
 	if (!file.is_open()) {
-		NTSHENGN_ASSET_LOADER_ERROR("Could not open model file \"" + filePath + "\".", NtshEngn::Result::AssetLoaderFileNotFound);
+		NTSHENGN_ASSET_MANAGER_ERROR("Could not open model file \"" + filePath + "\".", NtshEngn::Result::AssetManagerFileNotFound);
 	}
 
 	std::vector<std::array<float, 3>> positions;

@@ -70,6 +70,10 @@ NtshEngn::ECS* NtshEngn::Core::getECS() {
 	return &m_ecs;
 }
 
+NtshEngn::AssetManager* NtshEngn::Core::getAssetManager() {
+	return &m_assetManager;
+}
+
 void NtshEngn::Core::loadModules() {
 #if defined(NTSHENGN_OS_WINDOWS)
 	const std::string graphicsModulePath = "./modules/NutshellEngine-GraphicsModule.dll";
