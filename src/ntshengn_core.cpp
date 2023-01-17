@@ -131,18 +131,22 @@ void NtshEngn::Core::initializeECS() {
 	m_ecs.registerComponent<CapsuleCollidable>();
 	m_ecs.registerComponent<Scriptable>();
 
-	m_ecs.registerSystem<GraphicsModuleInterface>(m_graphicsModule);
-	ComponentMask graphicsComponents;
-	graphicsComponents.set(m_ecs.getComponentId<Renderable>());
-	graphicsComponents.set(m_ecs.getComponentId<Camera>());
-	m_ecs.setSystemComponents<GraphicsModuleInterface>(graphicsComponents);
+	if (m_graphicsModule) {
+		m_ecs.registerSystem<GraphicsModuleInterface>(m_graphicsModule);
+		ComponentMask graphicsComponents;
+		graphicsComponents.set(m_ecs.getComponentId<Renderable>());
+		graphicsComponents.set(m_ecs.getComponentId<Camera>());
+		m_ecs.setSystemComponents<GraphicsModuleInterface>(graphicsComponents);
+	}
 
-	m_ecs.registerSystem<PhysicsModuleInterface>(m_physicsModule);
-	ComponentMask physicsComponents;
-	physicsComponents.set(m_ecs.getComponentId<SphereCollidable>());
-	physicsComponents.set(m_ecs.getComponentId<AABBCollidable>());
-	physicsComponents.set(m_ecs.getComponentId<CapsuleCollidable>());
-	m_ecs.setSystemComponents<PhysicsModuleInterface>(physicsComponents);
+	if (m_physicsModule) {
+		m_ecs.registerSystem<PhysicsModuleInterface>(m_physicsModule);
+		ComponentMask physicsComponents;
+		physicsComponents.set(m_ecs.getComponentId<SphereCollidable>());
+		physicsComponents.set(m_ecs.getComponentId<AABBCollidable>());
+		physicsComponents.set(m_ecs.getComponentId<CapsuleCollidable>());
+		m_ecs.setSystemComponents<PhysicsModuleInterface>(physicsComponents);
+	}
 
 	m_ecs.registerSystem<Scripting>(&m_scripting);
 	ComponentMask scriptingComponents;
