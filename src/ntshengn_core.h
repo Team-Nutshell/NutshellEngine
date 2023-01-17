@@ -4,6 +4,7 @@
 #include "../external/Common/ecs/ntshengn_ecs.h"
 #include "scripting/ntshengn_scripting.h"
 #include "utils/ntshengn_core_defines.h"
+#include "asset_manager/ntshengn_asset_manager.h"
 #if defined(NTSHENGN_OS_WINDOWS)
 #include "module_loader/ntshengn_module_loader_windows.h"
 #elif defined(NTSHENGN_OS_LINUX)
@@ -27,6 +28,8 @@ namespace NtshEngn {
 
 		ECS* getECS();
 
+		AssetManager* getAssetManager();
+
 	private:
 		void loadModules();
 		void unloadModules();
@@ -41,11 +44,13 @@ namespace NtshEngn {
 		WindowModuleInterface* m_windowModule = nullptr;
 		AudioModuleInterface* m_audioModule = nullptr;
 
-		ModuleLoader m_moduleLoader;
-
 		Scripting m_scripting;
 
 		ECS m_ecs;
+
+		ModuleLoader m_moduleLoader;
+
+		AssetManager m_assetManager;
 	};
 
 }

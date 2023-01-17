@@ -28,10 +28,10 @@ elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
 		src/module_loader/ntshengn_module_loader_linux.h)
 endif()
 
-set(ASSET_LOADER_SOURCES
-	src/asset_loader/ntshengn_asset_loader.cpp)
-set(ASSET_LOADER_HEADERS
-	src/asset_loader/ntshengn_asset_loader.h)
+set(ASSET_MANAGER_SOURCES
+	src/asset_manager/ntshengn_asset_manager.cpp)
+set(ASSET_MANAGER_HEADERS
+	src/asset_manager/ntshengn_asset_manager.h)
 
 set(SCRIPTING_SOURCES
 	src/scripting/ntshengn_scripting.cpp)
@@ -41,8 +41,8 @@ set(SCRIPTING_HEADERS
 set(UTILS_HEADERS
 	src/utils/ntshengn_core_defines.h)
 
-set(SOURCES ${CORE_SOURCES} ${ASSET_LOADER_SOURCES} ${SCRIPTING_SOURCES})
-set(HEADERS ${CORE_HEADERS} ${ASSET_LOADER_HEADERS} ${MODULE_LOADER_HEADERS} ${SCRIPTING_HEADERS} ${UTILS_HEADERS})
+set(SOURCES ${CORE_SOURCES} ${ASSET_MANAGER_SOURCES} ${SCRIPTING_SOURCES})
+set(HEADERS ${CORE_HEADERS} ${ASSET_MANAGER_HEADERS} ${MODULE_LOADER_HEADERS} ${SCRIPTING_HEADERS} ${UTILS_HEADERS})
 
 add_library(${PROJECT_NAME} ${SOURCES} ${HEADERS})
 
