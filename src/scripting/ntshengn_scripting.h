@@ -1,5 +1,6 @@
 #pragma once
 #include "../../external/Common/ecs/ntshengn_ecs.h"
+#include <set>
 
 namespace NtshEngn {
 
@@ -19,6 +20,9 @@ namespace NtshEngn {
 		AudioModuleInterface* m_audioModule = nullptr;
 
 		ECS* m_ecs = nullptr;
+
+	private:
+		std::set<Entity> m_activeEntities;
 	};
 
 }
