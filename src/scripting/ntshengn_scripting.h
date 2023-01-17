@@ -13,6 +13,10 @@ namespace NtshEngn {
 		void setModules(GraphicsModuleInterface* graphicsModule, PhysicsModuleInterface* physicsModule, WindowModuleInterface* windowModule, AudioModuleInterface* audioModule);
 		void setECS(ECS* ecs);
 
+	public:
+		void onEntityComponentAdded(Entity entity, Component componentID);
+		void onEntityComponentRemoved(Entity entity, Component componentID);
+
 	private:
 		GraphicsModuleInterface* m_graphicsModule = nullptr;
 		PhysicsModuleInterface* m_physicsModule = nullptr;
@@ -20,9 +24,6 @@ namespace NtshEngn {
 		AudioModuleInterface* m_audioModule = nullptr;
 
 		ECS* m_ecs = nullptr;
-
-	private:
-		std::set<Entity> m_activeEntities;
 	};
 
 }
