@@ -5,10 +5,14 @@ void NtshEngn::Scripting::init() {
 }
 
 void NtshEngn::Scripting::update(double dt) {
-	for (Entity entity : m_entities) {
-		const Scriptable& entityScript = m_ecs->getComponent<Scriptable>(entity);
+	for (auto entityScript : m_entityScripts) {
+		if (m_entityScriptsToDestroy.find(entityScript.first) == m_entityScriptsToDestroy.end()) {
+			entityScript.second->update(dt);
+		}
+	}
 
-		entityScript.script->update(dt);
+	for (auto destroyedEntity : m_entityScriptsToDestroy) {
+		m_entityScripts.erase(destroyedEntity);
 	}
 }
 
@@ -35,14 +39,16 @@ void NtshEngn::Scripting::onEntityComponentAdded(Entity entity, Component compon
 		entityScript.script->setModules(m_graphicsModule, m_physicsModule, m_windowModule, m_audioModule);
 		entityScript.script->setECS(m_ecs);
 
-		entityScript.script->init();
+		m_entityScripts[entity] = entityScript.script.get();
+
+		m_entityScripts[entity]->init();
 	}
 }
 
 void NtshEngn::Scripting::onEntityComponentRemoved(Entity entity, Component componentID) {
 	if (componentID == m_ecs->getComponentId<Scriptable>()) {
-		const Scriptable& entityScript = m_ecs->getComponent<Scriptable>(entity);
+		m_entityScripts[entity]->destroy();
 
-		entityScript.script->destroy();
+		m_entityScriptsToDestroy.insert(entity);
 	}
 }

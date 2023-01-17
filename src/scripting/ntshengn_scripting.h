@@ -1,6 +1,6 @@
 #pragma once
 #include "../../external/Common/ecs/ntshengn_ecs.h"
-#include <set>
+#include <unordered_map>
 
 namespace NtshEngn {
 
@@ -24,6 +24,10 @@ namespace NtshEngn {
 		AudioModuleInterface* m_audioModule = nullptr;
 
 		ECS* m_ecs = nullptr;
+
+	private:
+		std::unordered_map<Entity, Script*> m_entityScripts;
+		std::set<Entity> m_entityScriptsToDestroy;
 	};
 
 }
