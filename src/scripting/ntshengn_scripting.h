@@ -1,5 +1,6 @@
 #pragma once
 #include "../../external/Common/ecs/ntshengn_ecs.h"
+#include "../asset_manager/ntshengn_asset_manager.h"
 #include <unordered_map>
 
 namespace NtshEngn {
@@ -12,6 +13,7 @@ namespace NtshEngn {
 
 		void setModules(GraphicsModuleInterface* graphicsModule, PhysicsModuleInterface* physicsModule, WindowModuleInterface* windowModule, AudioModuleInterface* audioModule);
 		void setECS(ECS* ecs);
+		void setAssetManager(AssetManager* assetManager);
 
 	public:
 		void onEntityComponentAdded(Entity entity, Component componentID);
@@ -24,6 +26,8 @@ namespace NtshEngn {
 		AudioModuleInterface* m_audioModule = nullptr;
 
 		ECS* m_ecs = nullptr;
+
+		AssetManager* m_assetManager;
 
 	private:
 		std::unordered_map<Entity, Script*> m_entityScripts;

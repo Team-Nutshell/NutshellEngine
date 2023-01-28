@@ -37,6 +37,7 @@ namespace NtshEngn {
 
 		void initializeECS();
 		void setECS();
+		void setAssetManager();
 
 	private:
 		GraphicsModuleInterface* m_graphicsModule = nullptr;

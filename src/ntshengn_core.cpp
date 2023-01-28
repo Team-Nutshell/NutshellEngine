@@ -165,3 +165,11 @@ void NtshEngn::Core::setECS() {
 	NTSHENGN_POINTER_EXECUTE(m_windowModule, setECS(&m_ecs));
 	NTSHENGN_POINTER_EXECUTE(m_audioModule, setECS(&m_ecs));
 }
+
+void NtshEngn::Core::setAssetManager() {
+	NTSHENGN_POINTER_EXECUTE(m_graphicsModule, setAssetManager(&m_assetManager));
+	NTSHENGN_POINTER_EXECUTE(m_physicsModule, setAssetManager(&m_assetManager));
+	m_scripting.setAssetManager(&m_assetManager);
+	NTSHENGN_POINTER_EXECUTE(m_windowModule, setAssetManager(&m_assetManager));
+	NTSHENGN_POINTER_EXECUTE(m_audioModule, setAssetManager(&m_assetManager));
+}
