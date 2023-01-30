@@ -45,7 +45,7 @@ target_link_libraries(${PROJECT_NAME} PUBLIC NutshellEngine::Common ${NTSHENGN_L
 
 target_compile_options(${PROJECT_NAME} PUBLIC
 	$<$<CXX_COMPILER_ID:MSVC>:/W4 /WX>
-	$<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wall -Werror -save-temps>)
+	$<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wall -Werror>)
 
 target_compile_definitions(${PROJECT_NAME} PUBLIC
 	${NTSHENGN_DEFINES}

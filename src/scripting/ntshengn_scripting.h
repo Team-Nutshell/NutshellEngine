@@ -1,5 +1,6 @@
 #pragma once
 #include "../../external/Common/ecs/ntshengn_ecs.h"
+#include "../../external/Common/asset_manager/ntshengn_asset_manager.h"
 #include <unordered_map>
 
 namespace NtshEngn {
