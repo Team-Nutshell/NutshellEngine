@@ -1,6 +1,5 @@
 #pragma once
 #include "../../external/Common/ecs/ntshengn_ecs.h"
-#include "../asset_manager/ntshengn_asset_manager.h"
 #include <unordered_map>
 
 namespace NtshEngn {
@@ -27,7 +26,7 @@ namespace NtshEngn {
 
 		ECS* m_ecs = nullptr;
 
-		AssetManager* m_assetManager;
+		AssetManager* m_assetManager = nullptr;
 
 	private:
 		std::unordered_map<Entity, Script*> m_entityScripts;
