@@ -2,9 +2,9 @@
 #include "../external/Common/utils/ntshengn_defines.h"
 #include "../external/Common/utils/ntshengn_enums.h"
 #include "../external/Common/ecs/ntshengn_ecs.h"
+#include "../external/Common/asset_manager/ntshengn_asset_manager.h"
 #include "scripting/ntshengn_scripting.h"
 #include "utils/ntshengn_core_defines.h"
-#include "asset_manager/ntshengn_asset_manager.h"
 #if defined(NTSHENGN_OS_WINDOWS)
 #include "module_loader/ntshengn_module_loader_windows.h"
 #elif defined(NTSHENGN_OS_LINUX)
@@ -37,6 +37,7 @@ namespace NtshEngn {
 
 		void initializeECS();
 		void setECS();
+
 		void setAssetManager();
 
 	private:

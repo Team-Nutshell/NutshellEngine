@@ -28,11 +28,6 @@ elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
 		src/module_loader/ntshengn_module_loader_linux.h)
 endif()
 
-set(ASSET_MANAGER_SOURCES
-	src/asset_manager/ntshengn_asset_manager.cpp)
-set(ASSET_MANAGER_HEADERS
-	src/asset_manager/ntshengn_asset_manager.h)
-
 set(SCRIPTING_SOURCES
 	src/scripting/ntshengn_scripting.cpp)
 set(SCRIPTING_HEADERS
@@ -41,8 +36,8 @@ set(SCRIPTING_HEADERS
 set(UTILS_HEADERS
 	src/utils/ntshengn_core_defines.h)
 
-set(SOURCES ${CORE_SOURCES} ${ASSET_MANAGER_SOURCES} ${SCRIPTING_SOURCES})
-set(HEADERS ${CORE_HEADERS} ${ASSET_MANAGER_HEADERS} ${MODULE_LOADER_HEADERS} ${SCRIPTING_HEADERS} ${UTILS_HEADERS})
+set(SOURCES ${CORE_SOURCES} ${SCRIPTING_SOURCES})
+set(HEADERS ${CORE_HEADERS} ${MODULE_LOADER_HEADERS} ${SCRIPTING_HEADERS} ${UTILS_HEADERS})
 
 add_library(${PROJECT_NAME} ${SOURCES} ${HEADERS})
 
@@ -50,7 +45,7 @@ target_link_libraries(${PROJECT_NAME} PUBLIC NutshellEngine::Common ${NTSHENGN_L
 
 target_compile_options(${PROJECT_NAME} PUBLIC
 	$<$<CXX_COMPILER_ID:MSVC>:/W4 /WX>
-	$<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wall -Werror>)
+	$<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wall -Werror -save-temps>)
 
 target_compile_definitions(${PROJECT_NAME} PUBLIC
 	${NTSHENGN_DEFINES}
