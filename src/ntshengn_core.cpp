@@ -137,25 +137,28 @@ void NtshEngn::Core::initializeECS() {
 
 	if (m_graphicsModule) {
 		m_ecs.registerSystem<GraphicsModuleInterface>(m_graphicsModule);
-		ComponentMask graphicsComponents;
-		graphicsComponents.set(m_ecs.getComponentId<Renderable>());
-		graphicsComponents.set(m_ecs.getComponentId<Camera>());
-		m_ecs.setSystemComponents<GraphicsModuleInterface>(graphicsComponents);
+		m_ecs.setSystemComponents<GraphicsModuleInterface>(m_graphicsModule->getComponentMask());
 	}
 
 	if (m_physicsModule) {
 		m_ecs.registerSystem<PhysicsModuleInterface>(m_physicsModule);
-		ComponentMask physicsComponents;
-		physicsComponents.set(m_ecs.getComponentId<SphereCollidable>());
-		physicsComponents.set(m_ecs.getComponentId<AABBCollidable>());
-		physicsComponents.set(m_ecs.getComponentId<CapsuleCollidable>());
-		m_ecs.setSystemComponents<PhysicsModuleInterface>(physicsComponents);
+		m_ecs.setSystemComponents<PhysicsModuleInterface>(m_physicsModule->getComponentMask());
 	}
 
 	m_ecs.registerSystem<Scripting>(&m_scripting);
 	ComponentMask scriptingComponents;
 	scriptingComponents.set(m_ecs.getComponentId<Scriptable>());
 	m_ecs.setSystemComponents<Scripting>(scriptingComponents);
+
+	if (m_windowModule) {
+		m_ecs.registerSystem<WindowModuleInterface>(m_windowModule);
+		m_ecs.setSystemComponents<WindowModuleInterface>(m_windowModule->getComponentMask());
+	}
+
+	if (m_audioModule) {
+		m_ecs.registerSystem<AudioModuleInterface>(m_audioModule);
+		m_ecs.setSystemComponents<AudioModuleInterface>(m_audioModule->getComponentMask());
+	}
 }
 
 void NtshEngn::Core::setECS() {
