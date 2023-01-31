@@ -7,7 +7,6 @@ void NtshEngn::Core::init() {
 
 	// Initialize ECS
 	initializeECS();
-	setECS();
 
 	// Initialize modules
 	NTSHENGN_POINTER_EXECUTE(m_windowModule, init());
@@ -126,6 +125,8 @@ void NtshEngn::Core::setModules() {
 
 void NtshEngn::Core::initializeECS() {
 	m_ecs.init();
+
+	setECS();
 
 	m_ecs.registerComponent<Transform>();
 	m_ecs.registerComponent<Renderable>();
