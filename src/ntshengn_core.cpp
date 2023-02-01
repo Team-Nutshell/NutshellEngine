@@ -8,6 +8,9 @@ void NtshEngn::Core::init() {
 	// Initialize ECS
 	initializeECS();
 
+	// Set Asset Manager
+	setAssetManager();
+
 	// Initialize modules
 	NTSHENGN_POINTER_EXECUTE(m_windowModule, init());
 	NTSHENGN_POINTER_EXECUTE(m_windowModule, open(1280, 720, "NutshellEngine"));
