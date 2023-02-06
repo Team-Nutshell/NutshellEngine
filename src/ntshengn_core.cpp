@@ -134,9 +134,12 @@ void NtshEngn::Core::initializeECS() {
 	m_ecs.registerComponent<Transform>();
 	m_ecs.registerComponent<Renderable>();
 	m_ecs.registerComponent<Camera>();
+	m_ecs.registerComponent<Light>();
 	m_ecs.registerComponent<SphereCollidable>();
 	m_ecs.registerComponent<AABBCollidable>();
 	m_ecs.registerComponent<CapsuleCollidable>();
+	m_ecs.registerComponent<AudioEmitter>();
+	m_ecs.registerComponent<AudioListener>();
 	m_ecs.registerComponent<Scriptable>();
 
 	if (m_graphicsModule) {
