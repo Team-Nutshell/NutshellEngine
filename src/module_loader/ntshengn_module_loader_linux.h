@@ -30,7 +30,7 @@ namespace NtshEngn {
 
 			createModule_t* createModule = (createModule_t*)dlsym(moduleLibrary, "createModule");
 			const char* dlsymError = dlerror();
-			if (!createModule) {
+			if (dlsymError) {
 				NTSHENGN_CORE_ERROR("Could not load symbol \"createModule\" from dynamic library: " + std::string(dlsymError), NtshEngn::Result::ModuleSymbolLoadError);
 			}
 
