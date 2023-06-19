@@ -17,7 +17,7 @@ if(NOT ${NTSHENGN_COMMON_PATH} STREQUAL "NtshEngn_Common_NOTFOUND" AND EXISTS ${
 	file(COPY ${NTSHENGN_COMMON_PATH}/ DESTINATION ${CMAKE_SOURCE_DIR}/external/Common)
 	message(STATUS "Copy NutshellEngine's common resources from ${NTSHENGN_COMMON_PATH} to ${CMAKE_SOURCE_DIR}/external/Common")
 else()
-	message(FATAL_ERROR "Could not find the directory containing NutshellEngine's common resources.")
+	message(SEND_ERROR "Could not find the directory containing NutshellEngine's common resources.")
 endif()
 
 add_subdirectory(external/Common)
