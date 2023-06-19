@@ -12,6 +12,14 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
 	list(APPEND NTSHENGN_LIBRARIES ${CMAKE_DL_LIBS})
 endif()
 
+set(NTSHENGN_COMMON_PATH "NtshEngn_Common_NOTFOUND" CACHE PATH "The directory containing NutshellEngine's common resources.")
+if(NOT ${NTSHENGN_COMMON_PATH} STREQUAL "NtshEngn_Common_NOTFOUND" AND EXISTS ${NTSHENGN_COMMON_PATH})
+	file(COPY ${NTSHENGN_COMMON_PATH}/ DESTINATION ${CMAKE_SOURCE_DIR}/external/Common)
+	message(STATUS "Copy NutshellEngine's common resources from ${NTSHENGN_COMMON_PATH} to ${CMAKE_SOURCE_DIR}/external/Common")
+else()
+	message(FATAL_ERROR "Could not find the directory containing NutshellEngine's common resources.")
+endif()
+
 add_subdirectory(external/Common)
 
 set(CORE_SOURCES
