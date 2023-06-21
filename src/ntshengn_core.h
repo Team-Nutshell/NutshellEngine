@@ -10,8 +10,6 @@
 #elif defined(NTSHENGN_OS_LINUX)
 #include "module_loader/ntshengn_module_loader_linux.h"
 #endif
-#include <filesystem>
-#include <chrono>
 
 namespace NtshEngn {
 
@@ -33,12 +31,12 @@ namespace NtshEngn {
 	private:
 		void loadModules();
 		void unloadModules();
-		void setModules();
+		void passModules();
 
 		void initializeECS();
-		void setECS();
+		void passECS();
 
-		void setAssetManager();
+		void passAssetManager();
 
 	private:
 		GraphicsModuleInterface* m_graphicsModule = nullptr;
