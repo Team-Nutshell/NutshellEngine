@@ -1,15 +1,18 @@
 #include "ntshengn_core.h"
+#include <filesystem>
+#include <chrono>
+#include <thread>
 
 void NtshEngn::Core::init() {
 	// Load modules
 	loadModules();
-	setModules();
+	passModules();
 
 	// Initialize ECS
 	initializeECS();
 
 	// Set Asset Manager
-	setAssetManager();
+	passAssetManager();
 
 	// Initialize modules
 	NTSHENGN_POINTER_EXECUTE(m_windowModule, init());
@@ -118,7 +121,7 @@ void NtshEngn::Core::unloadModules() {
 	}
 }
 
-void NtshEngn::Core::setModules() {
+void NtshEngn::Core::passModules() {
 	NTSHENGN_POINTER_EXECUTE(m_graphicsModule, setModules(m_graphicsModule, m_physicsModule, m_windowModule, m_audioModule));
 	NTSHENGN_POINTER_EXECUTE(m_physicsModule, setModules(m_graphicsModule, m_physicsModule, m_windowModule, m_audioModule));
 	m_scripting.setModules(m_graphicsModule, m_physicsModule, m_windowModule, m_audioModule);
@@ -129,7 +132,7 @@ void NtshEngn::Core::setModules() {
 void NtshEngn::Core::initializeECS() {
 	m_ecs.init();
 
-	setECS();
+	passECS();
 
 	m_ecs.registerComponent<Transform>();
 	m_ecs.registerComponent<Renderable>();
@@ -168,7 +171,7 @@ void NtshEngn::Core::initializeECS() {
 	}
 }
 
-void NtshEngn::Core::setECS() {
+void NtshEngn::Core::passECS() {
 	NTSHENGN_POINTER_EXECUTE(m_graphicsModule, setECS(&m_ecs));
 	NTSHENGN_POINTER_EXECUTE(m_physicsModule, setECS(&m_ecs));
 	m_scripting.setECS(&m_ecs);
@@ -176,7 +179,7 @@ void NtshEngn::Core::setECS() {
 	NTSHENGN_POINTER_EXECUTE(m_audioModule, setECS(&m_ecs));
 }
 
-void NtshEngn::Core::setAssetManager() {
+void NtshEngn::Core::passAssetManager() {
 	NTSHENGN_POINTER_EXECUTE(m_graphicsModule, setAssetManager(&m_assetManager));
 	NTSHENGN_POINTER_EXECUTE(m_physicsModule, setAssetManager(&m_assetManager));
 	m_scripting.setAssetManager(&m_assetManager);
