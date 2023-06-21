@@ -30,6 +30,18 @@ void NtshEngn::Core::update() {
 		double currentFrame = std::chrono::duration<double, std::milli>(std::chrono::steady_clock::now().time_since_epoch()).count();
 		double dt = currentFrame - lastFrame;
 
+		if (m_maxFPS != 0) {
+			double maxFPSToMilliseconds = 1000.0 / static_cast<double>(m_maxFPS);
+			if (dt < maxFPSToMilliseconds) {
+				double busyWaitingNow = std::chrono::duration<double, std::milli>(std::chrono::steady_clock::now().time_since_epoch()).count();
+				while ((busyWaitingNow - currentFrame) < (maxFPSToMilliseconds - dt)) {
+					busyWaitingNow = std::chrono::duration<double, std::milli>(std::chrono::steady_clock::now().time_since_epoch()).count();
+				}
+
+				dt = maxFPSToMilliseconds;
+			}
+		}
+
 		// Update modules
 		NTSHENGN_POINTER_EXECUTE(m_windowModule, update(dt));
 		m_scripting.update(dt);
@@ -185,4 +197,12 @@ void NtshEngn::Core::passAssetManager() {
 	m_scripting.setAssetManager(&m_assetManager);
 	NTSHENGN_POINTER_EXECUTE(m_windowModule, setAssetManager(&m_assetManager));
 	NTSHENGN_POINTER_EXECUTE(m_audioModule, setAssetManager(&m_assetManager));
+}
+
+void NtshEngn::Core::setMaxFPS(uint32_t maxFPS) {
+	m_maxFPS = maxFPS;
+}
+
+uint32_t NtshEngn::Core::getMaxFPS() {
+	return m_maxFPS;
 }

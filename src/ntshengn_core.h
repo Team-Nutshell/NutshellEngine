@@ -28,6 +28,9 @@ namespace NtshEngn {
 
 		AssetManager* getAssetManager();
 
+		void setMaxFPS(uint32_t maxFPS); 
+		uint32_t getMaxFPS();
+
 	private:
 		void loadModules();
 		void unloadModules();
@@ -51,6 +54,8 @@ namespace NtshEngn {
 		ModuleLoader m_moduleLoader;
 
 		AssetManager m_assetManager;
+
+		uint32_t m_maxFPS = 0;
 	};
 
 }
