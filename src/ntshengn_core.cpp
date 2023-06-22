@@ -1,7 +1,6 @@
 #include "ntshengn_core.h"
 #include <filesystem>
 #include <chrono>
-#include <thread>
 
 void NtshEngn::Core::init() {
 	// Load modules
@@ -11,8 +10,11 @@ void NtshEngn::Core::init() {
 	// Initialize ECS
 	initializeECS();
 
-	// Set Asset Manager
+	// Pass Asset Manager
 	passAssetManager();
+
+	// Pass Frame Limiter
+	passFrameLimiter();
 
 	// Initialize modules
 	NTSHENGN_POINTER_EXECUTE(m_windowModule, init());
@@ -30,17 +32,7 @@ void NtshEngn::Core::update() {
 		double currentFrame = std::chrono::duration<double, std::milli>(std::chrono::steady_clock::now().time_since_epoch()).count();
 		double dt = currentFrame - lastFrame;
 
-		if (m_maxFPS != 0) {
-			double maxFPSToMilliseconds = 1000.0 / static_cast<double>(m_maxFPS);
-			if (dt < maxFPSToMilliseconds) {
-				double busyWaitingNow = std::chrono::duration<double, std::milli>(std::chrono::steady_clock::now().time_since_epoch()).count();
-				while ((busyWaitingNow - currentFrame) < (maxFPSToMilliseconds - dt)) {
-					busyWaitingNow = std::chrono::duration<double, std::milli>(std::chrono::steady_clock::now().time_since_epoch()).count();
-				}
-
-				dt = maxFPSToMilliseconds;
-			}
-		}
+		dt = m_frameLimiter.wait(dt);
 
 		// Update modules
 		NTSHENGN_POINTER_EXECUTE(m_windowModule, update(dt));
@@ -89,6 +81,10 @@ NtshEngn::ECS* NtshEngn::Core::getECS() {
 
 NtshEngn::AssetManager* NtshEngn::Core::getAssetManager() {
 	return &m_assetManager;
+}
+
+NtshEngn::FrameLimiter* NtshEngn::Core::getFrameLimiter() {
+	return &m_frameLimiter;
 }
 
 void NtshEngn::Core::loadModules() {
@@ -199,10 +195,6 @@ void NtshEngn::Core::passAssetManager() {
 	NTSHENGN_POINTER_EXECUTE(m_audioModule, setAssetManager(&m_assetManager));
 }
 
-void NtshEngn::Core::setMaxFPS(uint32_t maxFPS) {
-	m_maxFPS = maxFPS;
-}
-
-uint32_t NtshEngn::Core::getMaxFPS() {
-	return m_maxFPS;
+void NtshEngn::Core::passFrameLimiter() {
+	m_scripting.setFrameLimiter(&m_frameLimiter);
 }

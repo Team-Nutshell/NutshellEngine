@@ -3,6 +3,7 @@
 #include "../external/Common/utils/ntshengn_enums.h"
 #include "../external/Common/ecs/ntshengn_ecs.h"
 #include "../external/Common/asset_manager/ntshengn_asset_manager.h"
+#include "../external/Common/frame_limiter/ntshengn_frame_limiter.h"
 #include "scripting/ntshengn_scripting.h"
 #include "utils/ntshengn_core_defines.h"
 #if defined(NTSHENGN_OS_WINDOWS)
@@ -28,8 +29,7 @@ namespace NtshEngn {
 
 		AssetManager* getAssetManager();
 
-		void setMaxFPS(uint32_t maxFPS); 
-		uint32_t getMaxFPS();
+		FrameLimiter* getFrameLimiter();
 
 	private:
 		void loadModules();
@@ -40,6 +40,8 @@ namespace NtshEngn {
 		void passECS();
 
 		void passAssetManager();
+
+		void passFrameLimiter();
 
 	private:
 		GraphicsModuleInterface* m_graphicsModule = nullptr;
@@ -55,7 +57,7 @@ namespace NtshEngn {
 
 		AssetManager m_assetManager;
 
-		uint32_t m_maxFPS = 0;
+		FrameLimiter m_frameLimiter;
 	};
 
 }

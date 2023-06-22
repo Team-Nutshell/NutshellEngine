@@ -35,6 +35,10 @@ void NtshEngn::Scripting::setAssetManager(AssetManager* assetManager) {
 	m_assetManager = assetManager;
 }
 
+void NtshEngn::Scripting::setFrameLimiter(FrameLimiter* frameLimiter) {
+	m_frameLimiter = frameLimiter;
+}
+
 void NtshEngn::Scripting::onEntityComponentAdded(Entity entity, Component componentID) {
 	if (componentID == m_ecs->getComponentId<Scriptable>()) {
 		const Scriptable& entityScript = m_ecs->getComponent<Scriptable>(entity);
@@ -43,6 +47,7 @@ void NtshEngn::Scripting::onEntityComponentAdded(Entity entity, Component compon
 		entityScript.script->setModules(m_graphicsModule, m_physicsModule, m_windowModule, m_audioModule);
 		entityScript.script->setECS(m_ecs);
 		entityScript.script->setAssetManager(m_assetManager);
+		entityScript.script->setFrameLimiter(m_frameLimiter);
 
 		m_entityScripts[entity] = entityScript.script.get();
 
