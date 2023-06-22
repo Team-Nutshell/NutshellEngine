@@ -1,6 +1,7 @@
 #pragma once
 #include "../../external/Common/ecs/ntshengn_ecs.h"
 #include "../../external/Common/asset_manager/ntshengn_asset_manager.h"
+#include "../../external/Common/frame_limiter/ntshengn_frame_limiter.h"
 #include <unordered_map>
 
 namespace NtshEngn {
@@ -14,6 +15,7 @@ namespace NtshEngn {
 		void setModules(GraphicsModuleInterface* graphicsModule, PhysicsModuleInterface* physicsModule, WindowModuleInterface* windowModule, AudioModuleInterface* audioModule);
 		void setECS(ECS* ecs);
 		void setAssetManager(AssetManager* assetManager);
+		void setFrameLimiter(FrameLimiter* frameLimiter);
 
 	public:
 		void onEntityComponentAdded(Entity entity, Component componentID);
@@ -28,6 +30,8 @@ namespace NtshEngn {
 		ECS* m_ecs = nullptr;
 
 		AssetManager* m_assetManager = nullptr;
+
+		FrameLimiter* m_frameLimiter = nullptr;
 
 	private:
 		std::unordered_map<Entity, Script*> m_entityScripts;
