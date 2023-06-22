@@ -32,8 +32,6 @@ void NtshEngn::Core::update() {
 		double currentFrame = std::chrono::duration<double, std::milli>(std::chrono::steady_clock::now().time_since_epoch()).count();
 		double dt = currentFrame - lastFrame;
 
-		dt = m_frameLimiter.wait(dt);
-
 		// Update modules
 		NTSHENGN_POINTER_EXECUTE(m_windowModule, update(dt));
 		m_scripting.update(dt);
@@ -42,6 +40,8 @@ void NtshEngn::Core::update() {
 		NTSHENGN_POINTER_EXECUTE(m_graphicsModule, update(dt));
 
 		applicationClose = m_windowModule ? !m_windowModule->isOpen(NTSHENGN_MAIN_WINDOW) : true;
+
+		m_frameLimiter.wait(currentFrame);
 
 		lastFrame = currentFrame;
 	}
