@@ -26,7 +26,7 @@ void NtshEngn::Core::init() {
 }
 
 void NtshEngn::Core::update() {
-	double lastFrame = std::chrono::duration<double, std::milli>(std::chrono::steady_clock::now().time_since_epoch()).count();;
+	double lastFrame = std::chrono::duration<double, std::milli>(std::chrono::steady_clock::now().time_since_epoch()).count();
 	bool applicationClose = false;
 	while (!applicationClose) {
 		double currentFrame = std::chrono::duration<double, std::milli>(std::chrono::steady_clock::now().time_since_epoch()).count();
