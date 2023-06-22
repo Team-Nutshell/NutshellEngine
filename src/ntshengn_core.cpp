@@ -55,7 +55,7 @@ void NtshEngn::Core::destroy() {
 	NTSHENGN_POINTER_EXECUTE(m_windowModule, destroy());
 	NTSHENGN_POINTER_EXECUTE(m_audioModule, destroy());
 
-	// Unload module
+	// Unload modules
 	unloadModules();
 }
 
