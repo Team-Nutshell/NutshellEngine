@@ -4,6 +4,7 @@
 #include "../external/Common/ecs/ntshengn_ecs.h"
 #include "../external/Common/asset_manager/ntshengn_asset_manager.h"
 #include "../external/Common/frame_limiter/ntshengn_frame_limiter.h"
+#include "../external/Common/job_system/ntshengn_job_system.h"
 #include "scripting/ntshengn_scripting.h"
 #include "utils/ntshengn_core_defines.h"
 #if defined(NTSHENGN_OS_WINDOWS)
@@ -31,6 +32,8 @@ namespace NtshEngn {
 
 		FrameLimiter* getFrameLimiter();
 
+		JobSystem* getJobSystem();
+
 	private:
 		void loadModules();
 		void unloadModules();
@@ -42,6 +45,8 @@ namespace NtshEngn {
 		void passAssetManager();
 
 		void passFrameLimiter();
+
+		void passJobSystem();
 
 	private:
 		GraphicsModuleInterface* m_graphicsModule = nullptr;
@@ -58,6 +63,8 @@ namespace NtshEngn {
 		AssetManager m_assetManager;
 
 		FrameLimiter m_frameLimiter;
+
+		JobSystem m_jobSystem;
 	};
 
 }
