@@ -16,6 +16,7 @@ namespace NtshEngn {
 		void setECS(ECS* ecs);
 		void setAssetManager(AssetManager* assetManager);
 		void setFrameLimiter(FrameLimiter* frameLimiter);
+		void setJobSystem(JobSystem* jobSystem);
 
 	public:
 		void onEntityComponentAdded(Entity entity, Component componentID);
@@ -32,6 +33,8 @@ namespace NtshEngn {
 		AssetManager* m_assetManager = nullptr;
 
 		FrameLimiter* m_frameLimiter = nullptr;
+
+		JobSystem* m_jobSystem = nullptr;
 
 	private:
 		std::unordered_map<Entity, Script*> m_entityScripts;

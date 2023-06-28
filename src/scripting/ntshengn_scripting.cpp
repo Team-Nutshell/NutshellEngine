@@ -39,6 +39,10 @@ void NtshEngn::Scripting::setFrameLimiter(FrameLimiter* frameLimiter) {
 	m_frameLimiter = frameLimiter;
 }
 
+void NtshEngn::Scripting::setJobSystem(JobSystem* jobSystem) {
+	m_jobSystem = jobSystem;
+}
+
 void NtshEngn::Scripting::onEntityComponentAdded(Entity entity, Component componentID) {
 	if (componentID == m_ecs->getComponentId<Scriptable>()) {
 		const Scriptable& entityScript = m_ecs->getComponent<Scriptable>(entity);

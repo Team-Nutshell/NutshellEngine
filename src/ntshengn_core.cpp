@@ -199,3 +199,11 @@ void NtshEngn::Core::passAssetManager() {
 void NtshEngn::Core::passFrameLimiter() {
 	m_scripting.setFrameLimiter(&m_frameLimiter);
 }
+
+void NtshEngn::Core::passJobSystem() {
+	NTSHENGN_POINTER_EXECUTE(m_graphicsModule, setJobSystem(&m_jobSystem));
+	NTSHENGN_POINTER_EXECUTE(m_physicsModule, setJobSystem(&m_jobSystem));
+	m_scripting.setJobSystem(&m_jobSystem);
+	NTSHENGN_POINTER_EXECUTE(m_windowModule, setJobSystem(&m_jobSystem));
+	NTSHENGN_POINTER_EXECUTE(m_audioModule, setJobSystem(&m_jobSystem));
+}
