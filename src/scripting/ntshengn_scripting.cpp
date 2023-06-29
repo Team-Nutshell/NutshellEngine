@@ -1,7 +1,6 @@
 #include "ntshengn_scripting.h"
 
 void NtshEngn::Scripting::init() {
-
 }
 
 void NtshEngn::Scripting::update(double dt) {
@@ -17,7 +16,6 @@ void NtshEngn::Scripting::update(double dt) {
 }
 
 void NtshEngn::Scripting::destroy() {
-
 }
 
 void NtshEngn::Scripting::setModules(GraphicsModuleInterface* graphicsModule, PhysicsModuleInterface* physicsModule, WindowModuleInterface* windowModule, AudioModuleInterface* audioModule) {
@@ -52,6 +50,7 @@ void NtshEngn::Scripting::onEntityComponentAdded(Entity entity, Component compon
 		entityScript.script->setECS(m_ecs);
 		entityScript.script->setAssetManager(m_assetManager);
 		entityScript.script->setFrameLimiter(m_frameLimiter);
+		entityScript.script->setJobSystem(m_jobSystem);
 
 		m_entityScripts[entity] = entityScript.script.get();
 
