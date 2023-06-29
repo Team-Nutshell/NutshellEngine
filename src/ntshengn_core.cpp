@@ -16,6 +16,9 @@ void NtshEngn::Core::init() {
 	// Pass Frame Limiter
 	passFrameLimiter();
 
+	// Pass Job System
+	passJobSystem();
+
 	// Initialize modules
 	NTSHENGN_POINTER_EXECUTE(m_windowModule, init());
 	NTSHENGN_POINTER_EXECUTE(m_windowModule, open(1280, 720, "NutshellEngine"));
