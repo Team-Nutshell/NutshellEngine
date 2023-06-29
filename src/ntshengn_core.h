@@ -46,6 +46,7 @@ namespace NtshEngn {
 
 		void passFrameLimiter();
 
+		void initializeJobSystem();
 		void passJobSystem();
 
 	private:

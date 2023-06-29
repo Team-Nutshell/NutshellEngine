@@ -16,8 +16,8 @@ void NtshEngn::Core::init() {
 	// Pass Frame Limiter
 	passFrameLimiter();
 
-	// Pass Job System
-	passJobSystem();
+	// Initialize Job System
+	initializeJobSystem();
 
 	// Initialize modules
 	NTSHENGN_POINTER_EXECUTE(m_windowModule, init());
@@ -51,6 +51,9 @@ void NtshEngn::Core::update() {
 }
 
 void NtshEngn::Core::destroy() {
+	// Destroy Job System
+	m_jobSystem.destroy();
+
 	// Destroy modules
 	NTSHENGN_POINTER_EXECUTE(m_graphicsModule, destroy());
 	NTSHENGN_POINTER_EXECUTE(m_physicsModule, destroy());
@@ -201,6 +204,12 @@ void NtshEngn::Core::passAssetManager() {
 
 void NtshEngn::Core::passFrameLimiter() {
 	m_scripting.setFrameLimiter(&m_frameLimiter);
+}
+
+void NtshEngn::Core::initializeJobSystem() {
+	m_jobSystem.init();
+
+	passJobSystem();
 }
 
 void NtshEngn::Core::passJobSystem() {
