@@ -42,7 +42,7 @@ void NtshEngn::Core::update() {
 		NTSHENGN_POINTER_EXECUTE(m_audioModule, update(dt));
 		NTSHENGN_POINTER_EXECUTE(m_graphicsModule, update(dt));
 
-		applicationClose = m_windowModule ? !m_windowModule->isOpen(NTSHENGN_MAIN_WINDOW) : true;
+		applicationClose = m_windowModule ? !m_windowModule->isOpen(m_windowModule->getMainWindowID()) : true;
 
 		m_frameLimiter.wait(currentFrame);
 
