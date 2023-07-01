@@ -1,7 +1,7 @@
 #pragma once
 #include "../../external/Common/ecs/ntshengn_ecs.h"
 #include "../../external/Common/asset_manager/ntshengn_asset_manager.h"
-#include "../../external/Common/frame_limiter/ntshengn_frame_limiter.h"
+#include "../frame_limiter/ntshengn_frame_limiter.h"
 #include <unordered_map>
 
 namespace NtshEngn {
