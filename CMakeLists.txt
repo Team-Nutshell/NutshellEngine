@@ -46,6 +46,9 @@ elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
 		src/module_loader/ntshengn_module_loader_linux.h)
 endif()
 
+set(FRAME_LIMITER_HEADERS
+	src/frame_limiter/ntshengn_frame_limiter.h)
+
 set(SCRIPTING_SOURCES
 	src/scripting/ntshengn_scripting.cpp)
 set(SCRIPTING_HEADERS
@@ -55,7 +58,7 @@ set(UTILS_HEADERS
 	src/utils/ntshengn_core_defines.h)
 
 set(SOURCES ${CORE_SOURCES} ${SCRIPTING_SOURCES})
-set(HEADERS ${CORE_HEADERS} ${MODULE_LOADER_HEADERS} ${SCRIPTING_HEADERS} ${UTILS_HEADERS})
+set(HEADERS ${CORE_HEADERS} ${MODULE_LOADER_HEADERS} ${FRAME_LIMITER_HEADERS} ${SCRIPTING_HEADERS} ${UTILS_HEADERS})
 
 add_library(${PROJECT_NAME} ${SOURCES} ${HEADERS})
 
