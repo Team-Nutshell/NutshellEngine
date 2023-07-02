@@ -1,7 +1,8 @@
 #pragma once
 #include "ntshengn_frame_limiter.h"
+#include <chrono>
 
-void FrameLimiter::wait(double frameStart) {
+void NtshEngn::FrameLimiter::wait(double frameStart) {
 	if (m_maxFPS != 0) {
 		double currentTime = std::chrono::duration<double, std::milli>(std::chrono::steady_clock::now().time_since_epoch()).count();
 		double maxFPSToMilliseconds = 1000.0 / static_cast<double>(m_maxFPS);
@@ -12,10 +13,10 @@ void FrameLimiter::wait(double frameStart) {
 	}
 }
 
-void FrameLimiter::setMaxFPS(uint32_t maxFPS) {
+void NtshEngn::FrameLimiter::setMaxFPS(uint32_t maxFPS) {
 	m_maxFPS = maxFPS;
 }
 
-uint32_t FrameLimiter::getMaxFPS() {
+uint32_t NtshEngn::FrameLimiter::getMaxFPS() {
 	return m_maxFPS;
 }
