@@ -93,6 +93,10 @@ NtshEngn::FrameLimiter* NtshEngn::Core::getFrameLimiter() {
 	return &m_frameLimiter;
 }
 
+NtshEngn::JobSystem* NtshEngn::Core::getJobSystem() {
+	return &m_jobSystem;
+}
+
 void NtshEngn::Core::loadModules() {
 #if defined(NTSHENGN_OS_WINDOWS)
 	const std::string graphicsModulePath = "./modules/NutshellEngine-GraphicsModule.dll";
