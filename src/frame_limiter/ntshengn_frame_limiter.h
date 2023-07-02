@@ -1,6 +1,5 @@
 #pragma once
 #include <cstdint>
-#include <chrono>
 
 namespace NtshEngn {
 
@@ -10,7 +9,7 @@ namespace NtshEngn {
 
 		void setMaxFPS(uint32_t maxFPS);
 		uint32_t getMaxFPS();
-		
+
 	private:
 		uint32_t m_maxFPS = 0;
 	};
