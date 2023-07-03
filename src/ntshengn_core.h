@@ -7,11 +7,7 @@
 #include "frame_limiter/ntshengn_frame_limiter.h"
 #include "scripting/ntshengn_scripting.h"
 #include "utils/ntshengn_core_defines.h"
-#if defined(NTSHENGN_OS_WINDOWS)
-#include "module_loader/ntshengn_module_loader_windows.h"
-#elif defined(NTSHENGN_OS_LINUX)
-#include "module_loader/ntshengn_module_loader_linux.h"
-#endif
+#include "module_loader/ntshengn_module_loader.h"
 
 namespace NtshEngn {
 

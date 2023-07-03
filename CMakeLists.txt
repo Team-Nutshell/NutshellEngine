@@ -37,12 +37,13 @@ set(CORE_SOURCES
 set(CORE_HEADERS
 	src/ntshengn_core.h)
 
-set(MODULE_LOADER_HEADERS "")
+set(MODULE_LOADER_HEADERS
+	src/module_loader/ntshengn_module_loader.h)
 if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
-	set(MODULE_LOADER_HEADERS
+	list(APPEND MODULE_LOADER_HEADERS
 		src/module_loader/ntshengn_module_loader_windows.h)
 elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
-	set(MODULE_LOADER_HEADERS
+	list(APPEND MODULE_LOADER_HEADERS
 		src/module_loader/ntshengn_module_loader_linux.h)
 endif()
 
