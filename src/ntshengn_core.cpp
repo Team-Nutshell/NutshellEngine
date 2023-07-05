@@ -19,6 +19,9 @@ void NtshEngn::Core::init() {
 	// Initialize Job System
 	initializeJobSystem();
 
+	// Initialize Networking
+	initializeNetworking();
+
 	// Initialize modules
 	NTSHENGN_POINTER_EXECUTE(m_windowModule, init());
 	NTSHENGN_POINTER_EXECUTE(m_windowModule, open(1280, 720, "NutshellEngine"));
@@ -36,6 +39,7 @@ void NtshEngn::Core::update() {
 		double dt = currentFrame - lastFrame;
 
 		// Update modules
+		m_networking.update();
 		NTSHENGN_POINTER_EXECUTE(m_windowModule, update(dt));
 		m_scripting.update(dt);
 		NTSHENGN_POINTER_EXECUTE(m_physicsModule, update(dt));
@@ -51,6 +55,9 @@ void NtshEngn::Core::update() {
 }
 
 void NtshEngn::Core::destroy() {
+	// Destroy Networking
+	m_networking.destroy();
+
 	// Destroy Job System
 	m_jobSystem.destroy();
 
@@ -95,6 +102,10 @@ NtshEngn::FrameLimiter* NtshEngn::Core::getFrameLimiter() {
 
 NtshEngn::JobSystem* NtshEngn::Core::getJobSystem() {
 	return &m_jobSystem;
+}
+
+NtshEngn::Networking* NtshEngn::Core::getNetworking() {
+	return &m_networking;
 }
 
 void NtshEngn::Core::loadModules() {
@@ -222,4 +233,14 @@ void NtshEngn::Core::passJobSystem() {
 	m_scripting.setJobSystem(&m_jobSystem);
 	NTSHENGN_POINTER_EXECUTE(m_windowModule, setJobSystem(&m_jobSystem));
 	NTSHENGN_POINTER_EXECUTE(m_audioModule, setJobSystem(&m_jobSystem));
+}
+
+void NtshEngn::Core::initializeNetworking() {
+	m_networking.init();
+
+	passNetworking();
+}
+
+void NtshEngn::Core::passNetworking() {
+	m_scripting.setNetworking(&m_networking);
 }

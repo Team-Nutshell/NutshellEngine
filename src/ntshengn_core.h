@@ -6,6 +6,7 @@
 #include "../external/Common/job_system/ntshengn_job_system.h"
 #include "frame_limiter/ntshengn_frame_limiter.h"
 #include "scripting/ntshengn_scripting.h"
+#include "networking/ntshengn_networking.h"
 #include "utils/ntshengn_core_defines.h"
 #include "module_loader/ntshengn_module_loader.h"
 
@@ -30,6 +31,8 @@ namespace NtshEngn {
 
 		JobSystem* getJobSystem();
 
+		Networking* getNetworking();
+
 	private:
 		void loadModules();
 		void unloadModules();
@@ -44,6 +47,9 @@ namespace NtshEngn {
 
 		void initializeJobSystem();
 		void passJobSystem();
+
+		void initializeNetworking();
+		void passNetworking();
 
 	private:
 		GraphicsModuleInterface* m_graphicsModule = nullptr;
@@ -62,6 +68,8 @@ namespace NtshEngn {
 		FrameLimiter m_frameLimiter;
 
 		JobSystem m_jobSystem;
+
+		Networking m_networking;
 	};
 
 }

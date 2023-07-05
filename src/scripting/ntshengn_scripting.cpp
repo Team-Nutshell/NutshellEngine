@@ -41,6 +41,10 @@ void NtshEngn::Scripting::setJobSystem(JobSystem* jobSystem) {
 	m_jobSystem = jobSystem;
 }
 
+void NtshEngn::Scripting::setNetworking(Networking* networking) {
+	m_networking = networking;
+}
+
 void NtshEngn::Scripting::onEntityComponentAdded(Entity entity, Component componentID) {
 	if (componentID == m_ecs->getComponentId<Scriptable>()) {
 		const Scriptable& entityScript = m_ecs->getComponent<Scriptable>(entity);
@@ -51,6 +55,7 @@ void NtshEngn::Scripting::onEntityComponentAdded(Entity entity, Component compon
 		entityScript.script->setAssetManager(m_assetManager);
 		entityScript.script->setFrameLimiter(m_frameLimiter);
 		entityScript.script->setJobSystem(m_jobSystem);
+		entityScript.script->setNetworking(m_networking);
 
 		m_entityScripts[entity] = entityScript.script.get();
 
