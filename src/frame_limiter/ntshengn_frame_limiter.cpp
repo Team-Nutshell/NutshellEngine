@@ -1,4 +1,3 @@
-#pragma once
 #include "ntshengn_frame_limiter.h"
 #include <chrono>
 
