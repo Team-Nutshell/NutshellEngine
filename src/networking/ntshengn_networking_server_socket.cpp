@@ -186,10 +186,11 @@ void NtshEngn::ServerSocket::updateTCP() {
 				if (m_clientDisconnectCallback) {
 					m_clientDisconnectCallback(it->first);
 				}
-				it = m_connectedClients.erase(it);
-				clientDisconnected = true;
 
 				NTSHENGN_NETWORKING_INFO("[SERVER / TCP] Client with ConnectedClientID " + std::to_string(it->first) + " disconnected from server.");
+
+				it = m_connectedClients.erase(it);
+				clientDisconnected = true;
 			}
 		}
 
