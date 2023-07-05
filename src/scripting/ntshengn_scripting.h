@@ -3,6 +3,7 @@
 #include "../../external/Common/asset_manager/ntshengn_asset_manager.h"
 #include "../../external/Common/job_system/ntshengn_job_system.h"
 #include "../frame_limiter/ntshengn_frame_limiter.h"
+#include "../networking/ntshengn_networking.h"
 #include <unordered_map>
 
 namespace NtshEngn {
@@ -18,6 +19,7 @@ namespace NtshEngn {
 		void setAssetManager(AssetManager* assetManager);
 		void setFrameLimiter(FrameLimiter* frameLimiter);
 		void setJobSystem(JobSystem* jobSystem);
+		void setNetworking(Networking* networking);
 
 	public:
 		void onEntityComponentAdded(Entity entity, Component componentID);
@@ -36,6 +38,8 @@ namespace NtshEngn {
 		FrameLimiter* m_frameLimiter = nullptr;
 
 		JobSystem* m_jobSystem = nullptr;
+
+		Networking* m_networking = nullptr;
 
 	private:
 		std::unordered_map<Entity, Script*> m_entityScripts;

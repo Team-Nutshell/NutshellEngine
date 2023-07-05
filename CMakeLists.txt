@@ -52,6 +52,16 @@ set(FRAME_LIMITER_SOURCES
 set(FRAME_LIMITER_HEADERS
 	src/frame_limiter/ntshengn_frame_limiter.h)
 
+set(NETWORKING_SOURCES
+	src/networking/ntshengn_networking_server_socket.cpp
+	src/networking/ntshengn_networking_client_socket.cpp
+	src/networking/ntshengn_networking.cpp)
+set(NETWORKING_HEADERS
+	src/networking/ntshengn_networking_common.h
+	src/networking/ntshengn_networking_server_socket.h
+	src/networking/ntshengn_networking_client_socket.h
+	src/networking/ntshengn_networking.h)
+
 set(SCRIPTING_SOURCES
 	src/scripting/ntshengn_scripting.cpp)
 set(SCRIPTING_HEADERS
@@ -60,8 +70,8 @@ set(SCRIPTING_HEADERS
 set(UTILS_HEADERS
 	src/utils/ntshengn_core_defines.h)
 
-set(SOURCES ${CORE_SOURCES} ${FRAME_LIMITER_SOURCES} ${SCRIPTING_SOURCES})
-set(HEADERS ${CORE_HEADERS} ${MODULE_LOADER_HEADERS} ${FRAME_LIMITER_HEADERS} ${SCRIPTING_HEADERS} ${UTILS_HEADERS})
+set(SOURCES ${CORE_SOURCES} ${FRAME_LIMITER_SOURCES} ${NETWORKING_SOURCES} ${SCRIPTING_SOURCES})
+set(HEADERS ${CORE_HEADERS} ${MODULE_LOADER_HEADERS} ${FRAME_LIMITER_HEADERS} ${NETWORKING_HEADERS} ${SCRIPTING_HEADERS} ${UTILS_HEADERS})
 
 add_library(${PROJECT_NAME} ${SOURCES} ${HEADERS})
 
