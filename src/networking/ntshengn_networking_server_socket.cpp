@@ -132,11 +132,11 @@ void NtshEngn::ServerSocket::updateUDP() {
 		uint16_t disconnectHeader = (static_cast<uint16_t>(buffer[1]) << 8) + static_cast<uint16_t>(buffer[0]);
 		if ((receive == sizeof(uint16_t)) && (disconnectHeader == 0xDEC0)) {
 			// Client disconnect
+			m_connectedClients.erase(currentConnectedClientID);
+
 			if (m_clientDisconnectCallback) {
 				m_clientDisconnectCallback(currentConnectedClientID);
 			}
-
-			m_connectedClients.erase(currentConnectedClientID);
 
 			NTSHENGN_NETWORKING_INFO("[SERVER / UDP] Client with ConnectedClientID " + std::to_string(currentConnectedClientID) + " disconnected from server.");
 		}
@@ -192,14 +192,16 @@ void NtshEngn::ServerSocket::updateTCP() {
 		else {
 			if ((receive == 0) || (WSAGetLastError() == WSAECONNRESET)) {
 				// Client disconnect
-				if (m_clientDisconnectCallback) {
-					m_clientDisconnectCallback(it->first);
-				}
-
-				NTSHENGN_NETWORKING_INFO("[SERVER / TCP] Client with ConnectedClientID " + std::to_string(it->first) + " disconnected from server.");
+				ConnectedClientID disconnectedClientID = it->first;
 
 				it = m_connectedClients.erase(it);
 				clientDisconnected = true;
+
+				if (m_clientDisconnectCallback) {
+					m_clientDisconnectCallback(disconnectedClientID);
+				}
+
+				NTSHENGN_NETWORKING_INFO("[SERVER / TCP] Client with ConnectedClientID " + std::to_string(disconnectedClientID) + " disconnected from server.");
 			}
 		}
 
