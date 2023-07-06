@@ -3,7 +3,6 @@
 #if defined(NTSHENGN_OS_WINDOWS)
 #include <winsock2.h>
 #elif defined(NTSHENGN_OS_LINUX)
-#include <sys/socket.h>
 #define SOCKET int
 #endif
 #include <functional>

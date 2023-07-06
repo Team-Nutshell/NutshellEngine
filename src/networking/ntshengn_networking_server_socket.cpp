@@ -5,6 +5,7 @@
 #include <ws2tcpip.h>
 #pragma comment(lib, "ws2_32.lib")
 #elif defined(NTSHENGN_OS_LINUX)
+#include <sys/socket.h>
 #include <arpa/inet.h>
 #include <netinet/in.h>
 #include <errno.h>
@@ -124,8 +125,8 @@ void NtshEngn::ServerSocket::updateUDP() {
 			NTSHENGN_NETWORKING_INFO("[SERVER / UDP] New client with ConnectedClientID " + std::to_string(currentConnectedClientID) + " connected to server.");
 		}
 
-		uint16_t deconnectionHeader = (static_cast<uint16_t>(buffer[1]) << 8) + static_cast<uint8_t>(buffer[0]);
-		if ((receive == sizeof(uint16_t)) && (deconnectionHeader == 0xDEC0)) {
+		uint16_t disconnectHeader = (static_cast<uint16_t>(buffer[1]) << 8) + static_cast<uint16_t>(buffer[0]);
+		if ((receive == sizeof(uint16_t)) && (disconnectHeader == 0xDEC0)) {
 			// Client disconnect
 			if (m_clientDisconnectCallback) {
 				m_clientDisconnectCallback(currentConnectedClientID);
@@ -207,18 +208,18 @@ void NtshEngn::ServerSocket::destroyUDP() {
 	}
 
 	if (closesocket(m_socket) == 0) {
-		NTSHENGN_NETWORKING_INFO("[SERVER] Server on port " + std::to_string(m_port) + " closed.");
+		NTSHENGN_NETWORKING_INFO("[SERVER / UDP] Server on port " + std::to_string(m_port) + " closed.");
 	}
 	else {
-		NTSHENGN_NETWORKING_INFO("[SERVER] Could not close server on port " + std::to_string(m_port) + ".");
+		NTSHENGN_NETWORKING_INFO("[SERVER / UDP] Could not close server on port " + std::to_string(m_port) + ".");
 	}
 }
 
 void NtshEngn::ServerSocket::destroyTCP() {
 	if (closesocket(m_socket) == 0) {
-		NTSHENGN_NETWORKING_INFO("[SERVER] Server on port " + std::to_string(m_port) + " closed.");
+		NTSHENGN_NETWORKING_INFO("[SERVER / TCP] Server on port " + std::to_string(m_port) + " closed.");
 	}
 	else {
-		NTSHENGN_NETWORKING_INFO("[SERVER] Could not close server on port " + std::to_string(m_port) + ".");
+		NTSHENGN_NETWORKING_INFO("[SERVER / TCP] Could not close server on port " + std::to_string(m_port) + ".");
 	}
 }
