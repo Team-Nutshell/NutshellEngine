@@ -47,6 +47,10 @@ void NtshEngn::ServerSocket::setDataReceivedCallback(std::function<void(Connecte
 	m_dataReceivedCallback = callback;
 }
 
+const std::unordered_map<NtshEngn::ConnectedClientID, NtshEngn::ConnectedClient>& NtshEngn::ServerSocket::getConnectedClients() {
+	return m_connectedClients;
+}
+
 void NtshEngn::ServerSocket::update() {
 	if (m_networkType == NetworkType::UDP) {
 		updateUDP();
@@ -158,6 +162,10 @@ void NtshEngn::ServerSocket::updateTCP() {
 		ConnectedClient connectedClient;
 		connectedClient.socket = newClientSocket;
 		connectedClient.port = ntohs(newClientSockaddr.sin_port);
+		std::array<char, 15> clientIPArray;
+		const char* ipAddress = inet_ntop(AF_INET, &newClientSockaddr.sin_addr, clientIPArray.data(), clientIPArray.size());
+		std::string clientIP(clientIPArray.data(), strlen(ipAddress));
+		connectedClient.ipAddress = clientIP;
 		m_connectedClients[m_connectedClientID++] = connectedClient;
 
 		if (m_clientConnectCallback) {
