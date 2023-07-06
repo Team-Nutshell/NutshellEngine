@@ -129,7 +129,7 @@ void NtshEngn::ServerSocket::updateUDP() {
 			NTSHENGN_NETWORKING_INFO("[SERVER / UDP] New client with ConnectedClientID " + std::to_string(currentConnectedClientID) + " connected to server.");
 		}
 
-		uint16_t disconnectHeader = (static_cast<uint16_t>(buffer[1]) << 8) + static_cast<uint16_t>(buffer[0]);
+		uint16_t disconnectHeader = (static_cast<uint16_t>(buffer[1]) << 8) + static_cast<uint8_t>(buffer[0]);
 		if ((receive == sizeof(uint16_t)) && (disconnectHeader == 0xDEC0)) {
 			// Client disconnect
 			m_connectedClients.erase(currentConnectedClientID);
