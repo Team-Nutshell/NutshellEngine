@@ -50,6 +50,10 @@ void NtshEngn::ClientSocket::setDataReceivedCallback(std::function<void(void*, s
 	m_dataReceivedCallback = callback;
 }
 
+const NtshEngn::ConnectedServer& NtshEngn::ClientSocket::getConnectedServer() {
+	return m_connectedServer;
+}
+
 void NtshEngn::ClientSocket::update() {
 	if (m_networkType == NetworkType::UDP) {
 		updateUDP();
@@ -117,6 +121,8 @@ void NtshEngn::ClientSocket::sendDataToServerTCP(void* data, size_t dataSize) {
 				m_serverDisconnectCallback();
 			}
 
+			m_connectedServer.ipAddress = "";
+
 			NTSHENGN_NETWORKING_WARNING("[CLIENT / TCP] Server has disconnected.");
 		}
 	}
@@ -153,21 +159,25 @@ void NtshEngn::ClientSocket::updateUDP() {
 void NtshEngn::ClientSocket::updateTCP() {
 	std::array<char, BUFFER_SIZE> buffer;
 
-	int receive = recv(m_socket, buffer.data(), BUFFER_SIZE, 0);
-	if ((receive != 0) && (receive != SOCKET_ERROR)) {
-		// Receive data
-		if (m_dataReceivedCallback) {
-			m_dataReceivedCallback(buffer.data(), receive);
-		}
-	}
-	else {
-		if ((receive == 0) || (WSAGetLastError() == WSAECONNRESET)) {
-			// Server disconnection
-			if (m_serverDisconnectCallback) {
-				m_serverDisconnectCallback();
+	if (m_connectedServer.ipAddress != "") {
+		int receive = recv(m_socket, buffer.data(), BUFFER_SIZE, 0);
+		if ((receive != 0) && (receive != SOCKET_ERROR)) {
+			// Receive data
+			if (m_dataReceivedCallback) {
+				m_dataReceivedCallback(buffer.data(), receive);
 			}
+		}
+		else {
+			if ((receive == 0) || (WSAGetLastError() == WSAECONNRESET)) {
+				// Server disconnection
+				if (m_serverDisconnectCallback) {
+					m_serverDisconnectCallback();
+				}
 
-			NTSHENGN_NETWORKING_INFO("[CLIENT / TCP] Client has been disconnected from server.");
+				m_connectedServer.ipAddress = "";
+
+				NTSHENGN_NETWORKING_INFO("[CLIENT / TCP] Client has been disconnected from server.");
+			}
 		}
 	}
 }
