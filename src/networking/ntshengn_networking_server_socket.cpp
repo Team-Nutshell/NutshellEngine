@@ -113,32 +113,35 @@ void NtshEngn::ServerSocket::updateUDP() {
 			}
 		}
 
-		// New connection
-		if (currentConnectedClientID == std::numeric_limits<ConnectedClientID>::max()) {
-			ConnectedClient connectedClient;
-			connectedClient.ipAddress = clientIP;
-			connectedClient.port = clientPort;
-			m_connectedClients[m_connectedClientID++] = connectedClient;
+		uint16_t header = (static_cast<uint16_t>(buffer[1]) << 8) + static_cast<uint8_t>(buffer[0]);
+		if (receive == sizeof(uint16_t)) {
+			if (header == 0xC044) {
+				if (currentConnectedClientID == std::numeric_limits<ConnectedClientID>::max()) {
+					// Client connection
+					ConnectedClient connectedClient;
+					connectedClient.ipAddress = clientIP;
+					connectedClient.port = clientPort;
+					m_connectedClients[m_connectedClientID++] = connectedClient;
 
-			currentConnectedClientID = m_connectedClientID - 1;
+					currentConnectedClientID = m_connectedClientID - 1;
 
-			if (m_clientConnectCallback) {
-				m_clientConnectCallback(currentConnectedClientID);
+					if (m_clientConnectCallback) {
+						m_clientConnectCallback(currentConnectedClientID);
+					}
+
+					NTSHENGN_NETWORKING_INFO("[SERVER / UDP] New client with ConnectedClientID " + std::to_string(currentConnectedClientID) + " connected to server.");
+				}
 			}
+			else if (header == 0xDEC0) {
+				// Client disconnection
+				m_connectedClients.erase(currentConnectedClientID);
 
-			NTSHENGN_NETWORKING_INFO("[SERVER / UDP] New client with ConnectedClientID " + std::to_string(currentConnectedClientID) + " connected to server.");
-		}
+				if (m_clientDisconnectCallback) {
+					m_clientDisconnectCallback(currentConnectedClientID);
+				}
 
-		uint16_t disconnectHeader = (static_cast<uint16_t>(buffer[1]) << 8) + static_cast<uint8_t>(buffer[0]);
-		if ((receive == sizeof(uint16_t)) && (disconnectHeader == 0xDEC0)) {
-			// Client disconnect
-			m_connectedClients.erase(currentConnectedClientID);
-
-			if (m_clientDisconnectCallback) {
-				m_clientDisconnectCallback(currentConnectedClientID);
+				NTSHENGN_NETWORKING_INFO("[SERVER / UDP] Client with ConnectedClientID " + std::to_string(currentConnectedClientID) + " disconnected from server.");
 			}
-
-			NTSHENGN_NETWORKING_INFO("[SERVER / UDP] Client with ConnectedClientID " + std::to_string(currentConnectedClientID) + " disconnected from server.");
 		}
 		else {
 			// Receive data
