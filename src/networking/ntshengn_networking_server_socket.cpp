@@ -157,11 +157,11 @@ void NtshEngn::ServerSocket::updateUDP() {
 void NtshEngn::ServerSocket::updateTCP() {
 	std::array<char, BUFFER_SIZE> buffer;
 
-	// New connection
 	sockaddr_in newClientSockaddr;
 	socklen_t sockaddrSize = static_cast<int>(sizeof(sockaddr_in));
 	SOCKET newClientSocket = accept(m_socket, reinterpret_cast<sockaddr*>(&newClientSockaddr), &sockaddrSize);
 	while ((newClientSocket != INVALID_SOCKET)) {
+		// Client connection
 		ConnectedClient connectedClient;
 		connectedClient.socket = newClientSocket;
 		connectedClient.port = ntohs(newClientSockaddr.sin_port);
@@ -194,7 +194,7 @@ void NtshEngn::ServerSocket::updateTCP() {
 		}
 		else {
 			if ((receive == 0) || (WSAGetLastError() == WSAECONNRESET)) {
-				// Client disconnect
+				// Client disconnection
 				ConnectedClientID disconnectedClientID = it->first;
 
 				it = m_connectedClients.erase(it);
