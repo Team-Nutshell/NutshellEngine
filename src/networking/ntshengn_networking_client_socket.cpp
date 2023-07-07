@@ -134,7 +134,7 @@ void NtshEngn::ClientSocket::updateUDP() {
 	if ((receive != 0) && (receive != SOCKET_ERROR)) {
 		uint16_t disconnectHeader = (static_cast<uint16_t>(buffer[1]) << 8) + static_cast<uint8_t>(buffer[0]);
 		if ((receive == sizeof(uint16_t)) && (disconnectHeader == 0xDEC0)) {
-			// Server disconnect
+			// Server disconnection
 			if (m_serverDisconnectCallback) {
 				m_serverDisconnectCallback();
 			}
@@ -162,7 +162,7 @@ void NtshEngn::ClientSocket::updateTCP() {
 	}
 	else {
 		if ((receive == 0) || (WSAGetLastError() == WSAECONNRESET)) {
-			// Server disconnect
+			// Server disconnection
 			if (m_serverDisconnectCallback) {
 				m_serverDisconnectCallback();
 			}
