@@ -25,6 +25,8 @@ namespace NtshEngn {
 		void setServerDisconnectCallback(std::function<void()> callback);
 		void setDataReceivedCallback(std::function<void(void*, size_t)> callback);
 
+		const ConnectedServer& getConnectedServer();
+
 		void update();
 		void destroy();
 
