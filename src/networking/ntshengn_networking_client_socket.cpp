@@ -72,6 +72,9 @@ void NtshEngn::ClientSocket::connectToServerUDP(const std::string& ipAddress, ui
 	m_connectedServer.ipAddress = ipAddress;
 	m_connectedServer.port = port;
 
+	uint16_t connectData = 0xC044;
+	sendDataToServer(&connectData, sizeof(uint16_t));
+
 	NTSHENGN_NETWORKING_INFO("[CLIENT / UDP] Registered information on server at IP address " + ipAddress + ".");
 }
 
