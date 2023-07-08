@@ -27,7 +27,6 @@ else()
 		GIT_REPOSITORY https://github.com/Team-Nutshell/NutshellEngine-Common
 		GIT_TAG main
 		SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/Common"
-		CONFIGURE_COMMAND ""
 	)
 
 	FetchContent_MakeAvailable(Common)
