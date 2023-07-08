@@ -1,7 +1,7 @@
 #pragma once
-#include "../../external/Common/ecs/ntshengn_ecs.h"
-#include "../../external/Common/asset_manager/ntshengn_asset_manager.h"
-#include "../../external/Common/job_system/ntshengn_job_system.h"
+#include "../../Common/ecs/ntshengn_ecs.h"
+#include "../../Common/asset_manager/ntshengn_asset_manager.h"
+#include "../../Common/job_system/ntshengn_job_system.h"
 #include "../frame_limiter/ntshengn_frame_limiter.h"
 #include "../networking/ntshengn_networking.h"
 #include <unordered_map>

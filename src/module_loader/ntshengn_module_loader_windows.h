@@ -1,9 +1,9 @@
 #pragma once
-#include "../../external/Common/module_interfaces/ntshengn_module_interface.h"
-#include "../../external/Common/module_interfaces/ntshengn_graphics_module_interface.h"
-#include "../../external/Common/module_interfaces/ntshengn_physics_module_interface.h"
-#include "../../external/Common/module_interfaces/ntshengn_window_module_interface.h"
-#include "../../external/Common/module_interfaces/ntshengn_audio_module_interface.h"
+#include "../../Common/module_interfaces/ntshengn_module_interface.h"
+#include "../../Common/module_interfaces/ntshengn_graphics_module_interface.h"
+#include "../../Common/module_interfaces/ntshengn_physics_module_interface.h"
+#include "../../Common/module_interfaces/ntshengn_window_module_interface.h"
+#include "../../Common/module_interfaces/ntshengn_audio_module_interface.h"
 #include "../utils/ntshengn_core_defines.h"
 #include <windows.h>
 #include <string>

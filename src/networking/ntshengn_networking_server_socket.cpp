@@ -1,6 +1,6 @@
 #include "ntshengn_networking_server_socket.h"
 #include "../utils/ntshengn_core_defines.h"
-#include "../../external/Common/utils/ntshengn_defines.h"
+#include "../../Common/utils/ntshengn_defines.h"
 #if defined(NTSHENGN_OS_WINDOWS)
 #include <ws2tcpip.h>
 #pragma comment(lib, "ws2_32.lib")
