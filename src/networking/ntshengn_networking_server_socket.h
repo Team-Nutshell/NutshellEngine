@@ -21,7 +21,7 @@ namespace NtshEngn {
 		ServerSocket(SOCKET socket, uint16_t port, NetworkType networkType):
 			m_socket(socket), m_port(port), m_networkType(networkType) {}
 
-		void sendDataToClient(ConnectedClientID clientID, void* data, size_t dataSize);
+		void sendDataToClient(ConnectedClientID clientID, const void* data, size_t dataSize);
 		void setClientConnectCallback(std::function<void(ConnectedClientID)> callback);
 		void setClientDisconnectCallback(std::function<void(ConnectedClientID)> callback);
 		void setDataReceivedCallback(std::function<void(ConnectedClientID, void*, size_t)> callback);
@@ -32,8 +32,8 @@ namespace NtshEngn {
 		void destroy();
 
 	private:
-		void sendDataToClientUDP(ConnectedClientID clientID, void* data, size_t dataSize);
-		void sendDataToClientTCP(ConnectedClientID clientID, void* data, size_t dataSize);
+		void sendDataToClientUDP(ConnectedClientID clientID, const void* data, size_t dataSize);
+		void sendDataToClientTCP(ConnectedClientID clientID, const void* data, size_t dataSize);
 
 		void updateUDP();
 		void updateTCP();
