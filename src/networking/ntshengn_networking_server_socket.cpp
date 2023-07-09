@@ -24,7 +24,7 @@
 
 #define BUFFER_SIZE 65536
 
-void NtshEngn::ServerSocket::sendDataToClient(ConnectedClientID clientID, void* data, size_t dataSize) {
+void NtshEngn::ServerSocket::sendDataToClient(ConnectedClientID clientID, const void* data, size_t dataSize) {
 	NTSHENGN_ASSERT(m_connectedClients.find(clientID) != m_connectedClients.end());
 
 	if (m_networkType == NetworkType::UDP) {
@@ -69,18 +69,18 @@ void NtshEngn::ServerSocket::destroy() {
 	}
 }
 
-void NtshEngn::ServerSocket::sendDataToClientUDP(ConnectedClientID clientID, void* data, size_t dataSize) {
+void NtshEngn::ServerSocket::sendDataToClientUDP(ConnectedClientID clientID, const void* data, size_t dataSize) {
 	sockaddr_in clientSockaddr;
 	clientSockaddr.sin_family = AF_INET;
 	clientSockaddr.sin_port = htons(m_connectedClients[clientID].port);
 	inet_pton(AF_INET, m_connectedClients[clientID].ipAddress.c_str(), &clientSockaddr.sin_addr.s_addr);
-	if (sendto(m_socket, static_cast<char*>(data), static_cast<int>(dataSize), 0, reinterpret_cast<sockaddr*>(&clientSockaddr), static_cast<int>(sizeof(sockaddr_in))) == SOCKET_ERROR) {
+	if (sendto(m_socket, static_cast<const char*>(data), static_cast<int>(dataSize), 0, reinterpret_cast<sockaddr*>(&clientSockaddr), static_cast<int>(sizeof(sockaddr_in))) == SOCKET_ERROR) {
 		NTSHENGN_NETWORKING_WARNING("[SERVER / UDP] Error sending data to client.");
 	}
 }
 
-void NtshEngn::ServerSocket::sendDataToClientTCP(ConnectedClientID clientID, void* data, size_t dataSize) {
-	if (send(m_connectedClients[clientID].socket, static_cast<char*>(data), static_cast<int>(dataSize), 0) < 0) {
+void NtshEngn::ServerSocket::sendDataToClientTCP(ConnectedClientID clientID, const void* data, size_t dataSize) {
+	if (send(m_connectedClients[clientID].socket, static_cast<const char*>(data), static_cast<int>(dataSize), 0) < 0) {
 		if (WSAGetLastError() == WSAECONNRESET) {
 			if (m_clientDisconnectCallback) {
 				m_clientDisconnectCallback(clientID);

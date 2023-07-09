@@ -28,7 +28,7 @@ void NtshEngn::ClientSocket::connectToServer(const std::string& ipAddress, uint1
 	}
 }
 
-void NtshEngn::ClientSocket::sendDataToServer(void* data, size_t dataSize) {
+void NtshEngn::ClientSocket::sendDataToServer(const void* data, size_t dataSize) {
 	if (m_connectedServer.ipAddress == "") {
 		NTSHENGN_NETWORKING_WARNING("[CLIENT] Client is not connected to any server.");
 		return;
@@ -104,18 +104,18 @@ void NtshEngn::ClientSocket::connectToServerTCP(const std::string& ipAddress, ui
 	m_connectedServer.port = port;
 }
 
-void NtshEngn::ClientSocket::sendDataToServerUDP(void* data, size_t dataSize) {
+void NtshEngn::ClientSocket::sendDataToServerUDP(const void* data, size_t dataSize) {
 	sockaddr_in serverSockaddr;
 	serverSockaddr.sin_family = AF_INET;
 	serverSockaddr.sin_port = htons(m_connectedServer.port);
 	inet_pton(AF_INET, m_connectedServer.ipAddress.c_str(), &serverSockaddr.sin_addr.s_addr);
-	if (sendto(m_socket, static_cast<char*>(data), static_cast<int>(dataSize), 0, reinterpret_cast<sockaddr*>(&serverSockaddr), static_cast<int>(sizeof(sockaddr_in))) == SOCKET_ERROR) {
+	if (sendto(m_socket, static_cast<const char*>(data), static_cast<int>(dataSize), 0, reinterpret_cast<sockaddr*>(&serverSockaddr), static_cast<int>(sizeof(sockaddr_in))) == SOCKET_ERROR) {
 		NTSHENGN_NETWORKING_WARNING("[CLIENT / UDP] Error sending data to server.");
 	}
 }
 
-void NtshEngn::ClientSocket::sendDataToServerTCP(void* data, size_t dataSize) {
-	if (send(m_socket, static_cast<char*>(data), static_cast<int>(dataSize), 0) < 0) {
+void NtshEngn::ClientSocket::sendDataToServerTCP(const void* data, size_t dataSize) {
+	if (send(m_socket, static_cast<const char*>(data), static_cast<int>(dataSize), 0) < 0) {
 		if (WSAGetLastError() == WSAECONNRESET) {
 			if (m_serverDisconnectCallback) {
 				m_serverDisconnectCallback();
