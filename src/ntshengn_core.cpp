@@ -24,7 +24,7 @@ void NtshEngn::Core::init() {
 	// Initialize Networking
 	initializeNetworking();
 
-	// Initialize modules
+	// Initialize System Modules
 	NTSHENGN_POINTER_EXECUTE(m_windowModule, init());
 	NTSHENGN_POINTER_EXECUTE(m_windowModule, open(1280, 720, "NutshellEngine"));
 	NTSHENGN_POINTER_EXECUTE(m_graphicsModule, init());
@@ -62,7 +62,7 @@ void NtshEngn::Core::destroy() {
 	// Destroy Job System
 	m_jobSystem.destroy();
 
-	// Destroy modules
+	// Destroy System Modules
 	NTSHENGN_POINTER_EXECUTE(m_graphicsModule, destroy());
 	NTSHENGN_POINTER_EXECUTE(m_physicsModule, destroy());
 	NTSHENGN_POINTER_EXECUTE(m_windowModule, destroy());
