@@ -1,6 +1,11 @@
 #pragma once
 #include "../Common/utils/ntshengn_defines.h"
 #include "../Common/utils/ntshengn_enums.h"
+#include "../Common/module_interfaces/ntshengn_module_interface.h"
+#include "../Common/module_interfaces/ntshengn_graphics_module_interface.h"
+#include "../Common/module_interfaces/ntshengn_physics_module_interface.h"
+#include "../Common/module_interfaces/ntshengn_window_module_interface.h"
+#include "../Common/module_interfaces/ntshengn_audio_module_interface.h"
 #include "../Common/ecs/ntshengn_ecs.h"
 #include "../Common/asset_manager/ntshengn_asset_manager.h"
 #include "../Common/job_system/ntshengn_job_system.h"
