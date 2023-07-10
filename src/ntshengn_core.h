@@ -1,7 +1,6 @@
 #pragma once
 #include "../Common/utils/ntshengn_defines.h"
 #include "../Common/utils/ntshengn_enums.h"
-#include "../Common/module_interfaces/ntshengn_module_interface.h"
 #include "../Common/module_interfaces/ntshengn_graphics_module_interface.h"
 #include "../Common/module_interfaces/ntshengn_physics_module_interface.h"
 #include "../Common/module_interfaces/ntshengn_window_module_interface.h"
@@ -41,7 +40,8 @@ namespace NtshEngn {
 	private:
 		void loadModules();
 		void unloadModules();
-		void passModules();
+
+		void passSystemModules();
 
 		void initializeECS();
 		void passECS();

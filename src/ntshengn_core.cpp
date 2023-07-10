@@ -5,7 +5,9 @@
 void NtshEngn::Core::init() {
 	// Load modules
 	loadModules();
-	passModules();
+
+	// Pass System Modules
+	passSystemModules();
 
 	// Initialize ECS
 	initializeECS();
@@ -25,7 +27,6 @@ void NtshEngn::Core::init() {
 	// Initialize modules
 	NTSHENGN_POINTER_EXECUTE(m_windowModule, init());
 	NTSHENGN_POINTER_EXECUTE(m_windowModule, open(1280, 720, "NutshellEngine"));
-	m_scripting.init();
 	NTSHENGN_POINTER_EXECUTE(m_graphicsModule, init());
 	NTSHENGN_POINTER_EXECUTE(m_physicsModule, init());
 	NTSHENGN_POINTER_EXECUTE(m_audioModule, init());
@@ -38,7 +39,7 @@ void NtshEngn::Core::update() {
 		double currentFrame = std::chrono::duration<double, std::milli>(std::chrono::steady_clock::now().time_since_epoch()).count();
 		double dt = currentFrame - lastFrame;
 
-		// Update modules
+		// Update
 		m_networking.update();
 		NTSHENGN_POINTER_EXECUTE(m_windowModule, update(dt));
 		m_scripting.update(dt);
@@ -64,7 +65,6 @@ void NtshEngn::Core::destroy() {
 	// Destroy modules
 	NTSHENGN_POINTER_EXECUTE(m_graphicsModule, destroy());
 	NTSHENGN_POINTER_EXECUTE(m_physicsModule, destroy());
-	m_scripting.destroy();
 	NTSHENGN_POINTER_EXECUTE(m_windowModule, destroy());
 	NTSHENGN_POINTER_EXECUTE(m_audioModule, destroy());
 
@@ -150,12 +150,12 @@ void NtshEngn::Core::unloadModules() {
 	}
 }
 
-void NtshEngn::Core::passModules() {
-	NTSHENGN_POINTER_EXECUTE(m_graphicsModule, setModules(m_graphicsModule, m_physicsModule, m_windowModule, m_audioModule));
-	NTSHENGN_POINTER_EXECUTE(m_physicsModule, setModules(m_graphicsModule, m_physicsModule, m_windowModule, m_audioModule));
-	m_scripting.setModules(m_graphicsModule, m_physicsModule, m_windowModule, m_audioModule);
-	NTSHENGN_POINTER_EXECUTE(m_windowModule, setModules(m_graphicsModule, m_physicsModule, m_windowModule, m_audioModule));
-	NTSHENGN_POINTER_EXECUTE(m_audioModule, setModules(m_graphicsModule, m_physicsModule, m_windowModule, m_audioModule));
+void NtshEngn::Core::passSystemModules() {
+	NTSHENGN_POINTER_EXECUTE(m_graphicsModule, setSystemModules(m_graphicsModule, m_physicsModule, m_windowModule, m_audioModule));
+	NTSHENGN_POINTER_EXECUTE(m_physicsModule, setSystemModules(m_graphicsModule, m_physicsModule, m_windowModule, m_audioModule));
+	m_scripting.setSystemModules(m_graphicsModule, m_physicsModule, m_windowModule, m_audioModule);
+	NTSHENGN_POINTER_EXECUTE(m_windowModule, setSystemModules(m_graphicsModule, m_physicsModule, m_windowModule, m_audioModule));
+	NTSHENGN_POINTER_EXECUTE(m_audioModule, setSystemModules(m_graphicsModule, m_physicsModule, m_windowModule, m_audioModule));
 }
 
 void NtshEngn::Core::initializeECS() {
