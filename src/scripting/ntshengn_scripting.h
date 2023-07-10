@@ -10,11 +10,9 @@ namespace NtshEngn {
 
 	class Scripting : public System {
 	public:
-		void init();
 		void update(double dt);
-		void destroy();
 
-		void setModules(GraphicsModuleInterface* graphicsModule, PhysicsModuleInterface* physicsModule, WindowModuleInterface* windowModule, AudioModuleInterface* audioModule);
+		void setSystemModules(GraphicsModuleInterface* graphicsModule, PhysicsModuleInterface* physicsModule, WindowModuleInterface* windowModule, AudioModuleInterface* audioModule);
 		void setECS(ECS* ecs);
 		void setAssetManager(AssetManager* assetManager);
 		void setFrameLimiter(FrameLimiter* frameLimiter);
