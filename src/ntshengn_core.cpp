@@ -9,6 +9,9 @@ void NtshEngn::Core::init() {
 	// Pass System Modules
 	passSystemModules();
 
+	// Pass Asset Loader Module
+	passAssetLoaderModule();
+
 	// Initialize ECS
 	initializeECS();
 
@@ -114,11 +117,13 @@ void NtshEngn::Core::loadModules() {
 	const std::string physicsModulePath = "./modules/NutshellEngine-PhysicsModule.dll";
 	const std::string windowModulePath = "./modules/NutshellEngine-WindowModule.dll";
 	const std::string audioModulePath = "./modules/NutshellEngine-AudioModule.dll";
+	const std::string assetLoaderModulePath = "./modules/NutshellEngine-AssetLoaderModule.dll";
 #elif defined(NTSHENGN_OS_LINUX)
 	const std::string graphicsModulePath = "./modules/libNutshellEngine-GraphicsModule.so";
 	const std::string physicsModulePath = "./modules/libNutshellEngine-PhysicsModule.so";
 	const std::string windowModulePath = "./modules/libNutshellEngine-WindowModule.so";
 	const std::string audioModulePath = "./modules/libNutshellEngine-AudioModule.so";
+	const std::string assetLoaderModulePath = "./modules/libNutshellEngine-AssetLoaderModule.so";
 #endif
 
 	if (std::filesystem::exists(std::filesystem::current_path().string() + "/" + graphicsModulePath)) {
@@ -132,6 +137,9 @@ void NtshEngn::Core::loadModules() {
 	}
 	if (std::filesystem::exists(std::filesystem::current_path().string() + "/" + audioModulePath)) {
 		m_audioModule = m_moduleLoader.loadModule<AudioModuleInterface>(audioModulePath);
+	}
+	if (std::filesystem::exists(std::filesystem::current_path().string() + "/" + assetLoaderModulePath)) {
+		m_assetLoaderModule = m_moduleLoader.loadModule<AssetLoaderModuleInterface>(assetLoaderModulePath);
 	}
 }
 
@@ -148,6 +156,9 @@ void NtshEngn::Core::unloadModules() {
 	if (m_audioModule) {
 		m_moduleLoader.unloadModule(m_audioModule);
 	}
+	if (m_assetLoaderModule) {
+		m_moduleLoader.unloadModule(m_assetLoaderModule);
+	}
 }
 
 void NtshEngn::Core::passSystemModules() {
@@ -156,6 +167,10 @@ void NtshEngn::Core::passSystemModules() {
 	m_scripting.setSystemModules(m_graphicsModule, m_physicsModule, m_windowModule, m_audioModule);
 	NTSHENGN_POINTER_EXECUTE(m_windowModule, setSystemModules(m_graphicsModule, m_physicsModule, m_windowModule, m_audioModule));
 	NTSHENGN_POINTER_EXECUTE(m_audioModule, setSystemModules(m_graphicsModule, m_physicsModule, m_windowModule, m_audioModule));
+}
+
+void NtshEngn::Core::passAssetLoaderModule() {
+	m_assetManager.setAssetLoaderModule(m_assetLoaderModule);
 }
 
 void NtshEngn::Core::initializeECS() {
