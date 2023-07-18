@@ -1,6 +1,8 @@
 #pragma once
 #include "../utils/ntshengn_core_defines.h"
 #include <windows.h>
+#undef far
+#undef near
 #include <string>
 #include <map>
 #include <type_traits>
