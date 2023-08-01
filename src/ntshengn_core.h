@@ -10,6 +10,7 @@
 #include "../Common/asset_manager/ntshengn_asset_manager.h"
 #include "../Common/job_system/ntshengn_job_system.h"
 #include "frame_limiter/ntshengn_frame_limiter.h"
+#include "scene_manager/ntshengn_scene_manager.h"
 #include "scripting/ntshengn_scripting.h"
 #include "networking/ntshengn_networking.h"
 #include "utils/ntshengn_core_defines.h"
@@ -38,6 +39,8 @@ namespace NtshEngn {
 
 		Networking* getNetworking();
 
+		SceneManager* getSceneManager();
+
 	private:
 		void loadModules();
 		void unloadModules();
@@ -57,6 +60,8 @@ namespace NtshEngn {
 
 		void initializeNetworking();
 		void passNetworking();
+
+		void passSceneManager();
 
 	private:
 		GraphicsModuleInterface* m_graphicsModule = nullptr;
@@ -79,6 +84,8 @@ namespace NtshEngn {
 		JobSystem m_jobSystem;
 
 		Networking m_networking;
+
+		SceneManager m_sceneManager;
 	};
 
 }
