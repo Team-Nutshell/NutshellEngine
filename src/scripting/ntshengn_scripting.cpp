@@ -64,6 +64,10 @@ void NtshEngn::Scripting::onEntityComponentAdded(Entity entity, Component compon
 		InternalScript internalScript;
 		internalScript.script = entityScript.script.get();
 		internalScript.justInitialized = true;
+		// A new entity with a script with the same ID as an old entity with a script that has been destroyed this frame has been created
+		if (m_entityScriptsToDestroy.find(entity) != m_entityScriptsToDestroy.end()) {
+			m_entityScriptsToDestroy.erase(entity);
+		}
 		m_entityScripts[entity] = internalScript;
 
 		m_entityScripts[entity].script->init();
