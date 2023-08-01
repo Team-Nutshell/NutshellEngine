@@ -239,10 +239,10 @@ void NtshEngn::SceneManager::goToScene(const std::string& filePath) {
 	}
 }
 
-void NtshEngn::SceneManager::setAssetManager(AssetManager* assetManager) {
-	m_assetManager = assetManager;
-}
-
 void NtshEngn::SceneManager::setECS(ECS* ecs) {
 	m_ecs = ecs;
+}
+
+void NtshEngn::SceneManager::setAssetManager(AssetManager* assetManager) {
+	m_assetManager = assetManager;
 }
