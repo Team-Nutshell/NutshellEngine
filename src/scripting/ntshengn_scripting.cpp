@@ -1,9 +1,14 @@
 #include "ntshengn_scripting.h"
 
 void NtshEngn::Scripting::update(double dt) {
-	for (auto entityScript : m_entityScripts) {
+	for (auto& entityScript : m_entityScripts) {
 		if (m_entityScriptsToDestroy.find(entityScript.first) == m_entityScriptsToDestroy.end()) {
-			entityScript.second->update(dt);
+			if (!entityScript.second.justInitialized) {
+				entityScript.second.script->update(dt);
+			}
+			else {
+				entityScript.second.justInitialized = false;
+			}
 		}
 	}
 
@@ -39,6 +44,10 @@ void NtshEngn::Scripting::setNetworking(Networking* networking) {
 	m_networking = networking;
 }
 
+void NtshEngn::Scripting::setSceneManager(SceneManager* sceneManager) {
+	m_sceneManager = sceneManager;
+}
+
 void NtshEngn::Scripting::onEntityComponentAdded(Entity entity, Component componentID) {
 	if (componentID == m_ecs->getComponentId<Scriptable>()) {
 		const Scriptable& entityScript = m_ecs->getComponent<Scriptable>(entity);
@@ -50,16 +59,20 @@ void NtshEngn::Scripting::onEntityComponentAdded(Entity entity, Component compon
 		entityScript.script->setFrameLimiter(m_frameLimiter);
 		entityScript.script->setJobSystem(m_jobSystem);
 		entityScript.script->setNetworking(m_networking);
+		entityScript.script->setSceneManager(m_sceneManager);
 
-		m_entityScripts[entity] = entityScript.script.get();
+		InternalScript internalScript;
+		internalScript.script = entityScript.script.get();
+		internalScript.justInitialized = true;
+		m_entityScripts[entity] = internalScript;
 
-		m_entityScripts[entity]->init();
+		m_entityScripts[entity].script->init();
 	}
 }
 
 void NtshEngn::Scripting::onEntityComponentRemoved(Entity entity, Component componentID) {
 	if (componentID == m_ecs->getComponentId<Scriptable>()) {
-		m_entityScripts[entity]->destroy();
+		m_entityScripts[entity].script->destroy();
 
 		m_entityScriptsToDestroy.insert(entity);
 	}

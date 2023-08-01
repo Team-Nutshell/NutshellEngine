@@ -4,9 +4,15 @@
 #include "../../Common/job_system/ntshengn_job_system.h"
 #include "../frame_limiter/ntshengn_frame_limiter.h"
 #include "../networking/ntshengn_networking.h"
+#include "../scene_manager/ntshengn_scene_manager.h"
 #include <unordered_map>
 
 namespace NtshEngn {
+
+	struct InternalScript {
+		Script* script;
+		bool justInitialized;
+	};
 
 	class Scripting : public System {
 	public:
@@ -18,6 +24,7 @@ namespace NtshEngn {
 		void setFrameLimiter(FrameLimiter* frameLimiter);
 		void setJobSystem(JobSystem* jobSystem);
 		void setNetworking(Networking* networking);
+		void setSceneManager(SceneManager* sceneManager);
 
 	public:
 		void onEntityComponentAdded(Entity entity, Component componentID);
@@ -39,8 +46,10 @@ namespace NtshEngn {
 
 		Networking* m_networking = nullptr;
 
+		SceneManager* m_sceneManager = nullptr;
+
 	private:
-		std::unordered_map<Entity, Script*> m_entityScripts;
+		std::unordered_map<Entity, InternalScript> m_entityScripts;
 		std::set<Entity> m_entityScriptsToDestroy;
 	};
 

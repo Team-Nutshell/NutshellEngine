@@ -27,6 +27,9 @@ void NtshEngn::Core::init() {
 	// Initialize Networking
 	initializeNetworking();
 
+	// Pass Scene Manager
+	passSceneManager();
+
 	// Initialize System Modules
 	NTSHENGN_POINTER_EXECUTE(m_windowModule, init());
 	NTSHENGN_POINTER_EXECUTE(m_windowModule, open(1280, 720, "NutshellEngine"));
@@ -109,6 +112,10 @@ NtshEngn::JobSystem* NtshEngn::Core::getJobSystem() {
 
 NtshEngn::Networking* NtshEngn::Core::getNetworking() {
 	return &m_networking;
+}
+
+NtshEngn::SceneManager* NtshEngn::Core::getSceneManager() {
+	return &m_sceneManager;
 }
 
 void NtshEngn::Core::loadModules() {
@@ -222,6 +229,8 @@ void NtshEngn::Core::passECS() {
 	m_scripting.setECS(&m_ecs);
 	NTSHENGN_POINTER_EXECUTE(m_windowModule, setECS(&m_ecs));
 	NTSHENGN_POINTER_EXECUTE(m_audioModule, setECS(&m_ecs));
+
+	m_sceneManager.setECS(&m_ecs);
 }
 
 void NtshEngn::Core::passAssetManager() {
@@ -230,6 +239,8 @@ void NtshEngn::Core::passAssetManager() {
 	m_scripting.setAssetManager(&m_assetManager);
 	NTSHENGN_POINTER_EXECUTE(m_windowModule, setAssetManager(&m_assetManager));
 	NTSHENGN_POINTER_EXECUTE(m_audioModule, setAssetManager(&m_assetManager));
+
+	m_sceneManager.setAssetManager(&m_assetManager);
 }
 
 void NtshEngn::Core::passFrameLimiter() {
@@ -258,4 +269,8 @@ void NtshEngn::Core::initializeNetworking() {
 
 void NtshEngn::Core::passNetworking() {
 	m_scripting.setNetworking(&m_networking);
+}
+
+void NtshEngn::Core::passSceneManager() {
+	m_scripting.setSceneManager(&m_sceneManager);
 }
