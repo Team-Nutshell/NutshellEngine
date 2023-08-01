@@ -9,8 +9,8 @@ namespace NtshEngn {
 	public:
 		void goToScene(const std::string& filePath);
 
-		void setAssetManager(AssetManager* assetManager);
 		void setECS(ECS* ecs);
+		void setAssetManager(AssetManager* assetManager);
 
 	private:
 		AssetManager* m_assetManager;
