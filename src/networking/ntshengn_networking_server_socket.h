@@ -5,6 +5,7 @@
 #elif defined(NTSHENGN_OS_LINUX)
 #define SOCKET int
 #endif
+#include <string>
 #include <unordered_map>
 #include <functional>
 
