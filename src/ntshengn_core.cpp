@@ -2,6 +2,103 @@
 #include <filesystem>
 #include <chrono>
 
+void NtshEngn::Core::launch(const std::string& optionsFilePath) {
+	std::string windowTitle = "NutshellEngine";
+	std::string windowIconImagePath = "";
+	std::string firstScenePath = "";
+
+	if (std::filesystem::exists(optionsFilePath)) {
+		JSON json;
+		const JSON::Node& optionsRoot = json.read(optionsFilePath);
+
+		if (optionsRoot.contains("windowTitle")) {
+			windowTitle = optionsRoot["windowTitle"].getString();
+		}
+
+		if (optionsRoot.contains("windowIconImagePath")) {
+			windowIconImagePath = optionsRoot["windowIconImagePath"].getString();
+		}
+
+		if (optionsRoot.contains("maxFPS")) {
+			m_frameLimiter.setMaxFPS(static_cast<uint32_t>(optionsRoot["maxFPS"].getNumber()));
+		}
+
+		if (optionsRoot.contains("firstScenePath")) {
+			firstScenePath = optionsRoot["firstScenePath"].getString();
+		}
+	}
+	else {
+		NTSHENGN_CORE_WARNING("Options file \"" + optionsFilePath + "\" does not exist.");
+	}
+
+	// Initialize
+	init();
+
+	Image* iconImage = nullptr;
+	if (windowIconImagePath != "") {
+		iconImage = m_assetManager.loadImage(windowIconImagePath);
+	}
+
+	if (m_windowModule && m_windowModule->isOpen(m_windowModule->getMainWindowID())) {
+		m_windowModule->setTitle(m_windowModule->getMainWindowID(), windowTitle);
+
+		if (iconImage) {
+			m_windowModule->setIcon(m_windowModule->getMainWindowID(), *iconImage);
+			m_assetManager.destroyImage(iconImage);
+		}
+	}
+
+	if (firstScenePath != "") {
+		m_sceneManager.goToScene(firstScenePath);
+	}
+
+	// Loop
+	update();
+
+	// Destroy
+	destroy();
+}
+
+NtshEngn::GraphicsModuleInterface* NtshEngn::Core::getGraphicsModule() {
+	return m_graphicsModule;
+}
+
+NtshEngn::PhysicsModuleInterface* NtshEngn::Core::getPhysicsModule() {
+	return m_physicsModule;
+}
+
+NtshEngn::WindowModuleInterface* NtshEngn::Core::getWindowModule() {
+	return m_windowModule;
+}
+
+NtshEngn::AudioModuleInterface* NtshEngn::Core::getAudioModule() {
+	return m_audioModule;
+}
+
+NtshEngn::ECS* NtshEngn::Core::getECS() {
+	return &m_ecs;
+}
+
+NtshEngn::AssetManager* NtshEngn::Core::getAssetManager() {
+	return &m_assetManager;
+}
+
+NtshEngn::FrameLimiter* NtshEngn::Core::getFrameLimiter() {
+	return &m_frameLimiter;
+}
+
+NtshEngn::JobSystem* NtshEngn::Core::getJobSystem() {
+	return &m_jobSystem;
+}
+
+NtshEngn::Networking* NtshEngn::Core::getNetworking() {
+	return &m_networking;
+}
+
+NtshEngn::SceneManager* NtshEngn::Core::getSceneManager() {
+	return &m_sceneManager;
+}
+
 void NtshEngn::Core::init() {
 	// Load modules
 	loadModules();
@@ -32,7 +129,7 @@ void NtshEngn::Core::init() {
 
 	// Initialize System Modules
 	NTSHENGN_POINTER_EXECUTE(m_windowModule, init());
-	NTSHENGN_POINTER_EXECUTE(m_windowModule, open(1280, 720, "NutshellEngine"));
+	NTSHENGN_POINTER_EXECUTE(m_windowModule, open(1280, 720, ""));
 	NTSHENGN_POINTER_EXECUTE(m_graphicsModule, init());
 	NTSHENGN_POINTER_EXECUTE(m_physicsModule, init());
 	NTSHENGN_POINTER_EXECUTE(m_audioModule, init());
@@ -76,46 +173,6 @@ void NtshEngn::Core::destroy() {
 
 	// Unload modules
 	unloadModules();
-}
-
-NtshEngn::GraphicsModuleInterface* NtshEngn::Core::getGraphicsModule() {
-	return m_graphicsModule;
-}
-
-NtshEngn::PhysicsModuleInterface* NtshEngn::Core::getPhysicsModule() {
-	return m_physicsModule;
-}
-
-NtshEngn::WindowModuleInterface* NtshEngn::Core::getWindowModule() {
-	return m_windowModule;
-}
-
-NtshEngn::AudioModuleInterface* NtshEngn::Core::getAudioModule() {
-	return m_audioModule;
-}
-
-NtshEngn::ECS* NtshEngn::Core::getECS() {
-	return &m_ecs;
-}
-
-NtshEngn::AssetManager* NtshEngn::Core::getAssetManager() {
-	return &m_assetManager;
-}
-
-NtshEngn::FrameLimiter* NtshEngn::Core::getFrameLimiter() {
-	return &m_frameLimiter;
-}
-
-NtshEngn::JobSystem* NtshEngn::Core::getJobSystem() {
-	return &m_jobSystem;
-}
-
-NtshEngn::Networking* NtshEngn::Core::getNetworking() {
-	return &m_networking;
-}
-
-NtshEngn::SceneManager* NtshEngn::Core::getSceneManager() {
-	return &m_sceneManager;
 }
 
 void NtshEngn::Core::loadModules() {

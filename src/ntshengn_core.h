@@ -1,6 +1,7 @@
 #pragma once
 #include "../Common/utils/ntshengn_defines.h"
 #include "../Common/utils/ntshengn_enums.h"
+#include "../Common/utils/ntshengn_utils_json.h"
 #include "../Common/module_interfaces/ntshengn_graphics_module_interface.h"
 #include "../Common/module_interfaces/ntshengn_physics_module_interface.h"
 #include "../Common/module_interfaces/ntshengn_window_module_interface.h"
@@ -15,14 +16,13 @@
 #include "networking/ntshengn_networking.h"
 #include "utils/ntshengn_core_defines.h"
 #include "module_loader/ntshengn_module_loader.h"
+#include <string>
 
 namespace NtshEngn {
 
 	class Core {
 	public:
-		void init();
-		void update();
-		void destroy();
+		void launch(const std::string& optionsFilePath);
 
 		GraphicsModuleInterface* getGraphicsModule();
 		PhysicsModuleInterface* getPhysicsModule();
@@ -42,6 +42,10 @@ namespace NtshEngn {
 		SceneManager* getSceneManager();
 
 	private:
+		void init();
+		void update();
+		void destroy();
+
 		void loadModules();
 		void unloadModules();
 
