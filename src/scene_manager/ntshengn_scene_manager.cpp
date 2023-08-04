@@ -48,7 +48,13 @@ void NtshEngn::SceneManager::goToScene(const std::string& filePath) {
 			}
 
 			if (entities.empty()) {
-				Entity entity = m_ecs->createEntity();
+				Entity entity;
+				if (entityName != "") {
+					entity = m_ecs->createEntity(entityName);
+				}
+				else {
+					entity = m_ecs->createEntity();
+				}
 				entities.push_back(entity);
 			}
 
@@ -157,8 +163,10 @@ void NtshEngn::SceneManager::goToScene(const std::string& filePath) {
 					if (rigidbodyNode.contains("restitution")) {
 						const JSON::Node& restitutionNode = rigidbodyNode["restitution"];
 
-						rigidbody.restitution = restitutionNode.getBoolean();
+						rigidbody.restitution = restitutionNode.getNumber();
 					}
+
+					m_ecs->addComponent(entity, rigidbody);
 				}
 
 				// Collidable
