@@ -1,6 +1,7 @@
 #include "ntshengn_scene_manager.h"
 #include "../../Common/asset_manager/ntshengn_asset_manager.h"
 #include "../../Common/utils/ntshengn_utils_json.h"
+#include "../../Common/utils/ntshengn_utils_math.h"
 #include "../../../scripts/ntshengn_scriptable_factory.h"
 
 void NtshEngn::SceneManager::goToScene(const std::string& filePath) {
@@ -181,6 +182,17 @@ void NtshEngn::SceneManager::goToScene(const std::string& filePath) {
 								collidable.collider.max = { maxNode[0].getNumber(), maxNode[1].getNumber(), maxNode[2].getNumber() };
 							}
 
+							if (!collidableNode.contains("min") && !collidableNode.contains("max")) {
+								// Calculate AABB from Renderable
+								if (m_ecs->hasComponent<Renderable>(entity)) {
+									const Renderable& renderable = m_ecs->getComponent<Renderable>(entity);
+									const std::array<std::array<float, 3>, 2> aabb = m_assetManager->calculateAABB(*renderable.mesh);
+
+									collidable.collider.min = aabb[0];
+									collidable.collider.max = aabb[1];
+								}
+							}
+
 							m_ecs->addComponent(entity, collidable);
 						}
 						else if (typeNode.getString() == "Sphere") {
@@ -195,6 +207,20 @@ void NtshEngn::SceneManager::goToScene(const std::string& filePath) {
 								const JSON::Node& radiusNode = collidableNode["radius"];
 
 								collidable.collider.radius = radiusNode.getNumber();
+							}
+
+							if (!collidableNode.contains("center") && !collidableNode.contains("radius")) {
+								// Calculate sphere from Renderable
+								if (m_ecs->hasComponent<Renderable>(entity)) {
+									const Renderable& renderable = m_ecs->getComponent<Renderable>(entity);
+									const std::array<std::array<float, 3>, 2> aabb = m_assetManager->calculateAABB(*renderable.mesh);
+
+									Math::vec3 min = Math::vec3(aabb[0].data());
+									Math::vec3 center = (Math::vec3(aabb[0].data()) + Math::vec3(aabb[1].data())) / 2.0f;
+
+									collidable.collider.center = { center[0], center[1], center[2] };
+									collidable.collider.radius = (center - min).length();
+								}
 							}
 
 							m_ecs->addComponent(entity, collidable);
