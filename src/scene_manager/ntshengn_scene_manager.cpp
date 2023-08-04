@@ -6,7 +6,7 @@
 
 void NtshEngn::SceneManager::goToScene(const std::string& filePath) {
 	JSON json;
-	JSON::Node sceneRoot = json.read(filePath);
+	const JSON::Node& sceneRoot = json.read(filePath);
 
 	m_ecs->destroyAllEntities();
 
