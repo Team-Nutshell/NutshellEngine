@@ -191,7 +191,7 @@ void NtshEngn::SceneManager::goToScene(const std::string& filePath) {
 							}
 
 							if (collidableNode.contains("max")) {
-								const JSON::Node& maxNode = collidableNode["min"];
+								const JSON::Node& maxNode = collidableNode["max"];
 
 								collidable.collider.max = { maxNode[0].getNumber(), maxNode[1].getNumber(), maxNode[2].getNumber() };
 							}
