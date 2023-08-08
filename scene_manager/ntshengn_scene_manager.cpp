@@ -162,7 +162,7 @@ void NtshEngn::SceneManager::goToScene(const std::string& filePath) {
 					if (rigidbodyNode.contains("mass")) {
 						const JSON::Node& massNode = rigidbodyNode["mass"];
 
-						rigidbody.mass = massNode.getBoolean();
+						rigidbody.mass = massNode.getNumber();
 					}
 
 					if (rigidbodyNode.contains("restitution")) {
