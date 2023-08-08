@@ -1,6 +1,6 @@
 #pragma once
-#include "../../Common/asset_manager/ntshengn_asset_manager.h"
-#include "../../Common/ecs/ntshengn_ecs.h"
+#include "../Common/asset_manager/ntshengn_asset_manager.h"
+#include "../Common/ecs/ntshengn_ecs.h"
 #include <string>
 
 namespace NtshEngn {

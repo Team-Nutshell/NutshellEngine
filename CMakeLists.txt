@@ -33,47 +33,47 @@ else()
 endif()
 
 set(CORE_SOURCES
-	src/ntshengn_core.cpp)
+	ntshengn_core.cpp)
 set(CORE_HEADERS
-	src/ntshengn_core.h)
+	ntshengn_core.h)
 
 set(MODULE_LOADER_HEADERS
-	src/module_loader/ntshengn_module_loader.h)
+	module_loader/ntshengn_module_loader.h)
 if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
 	list(APPEND MODULE_LOADER_HEADERS
-		src/module_loader/ntshengn_module_loader_windows.h)
+		module_loader/ntshengn_module_loader_windows.h)
 elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
 	list(APPEND MODULE_LOADER_HEADERS
-		src/module_loader/ntshengn_module_loader_linux.h)
+		module_loader/ntshengn_module_loader_linux.h)
 endif()
 
 set(FRAME_LIMITER_SOURCES
-	src/frame_limiter/ntshengn_frame_limiter.cpp)
+	frame_limiter/ntshengn_frame_limiter.cpp)
 set(FRAME_LIMITER_HEADERS
-	src/frame_limiter/ntshengn_frame_limiter.h)
+	frame_limiter/ntshengn_frame_limiter.h)
 
 set(NETWORKING_SOURCES
-	src/networking/ntshengn_networking_server_socket.cpp
-	src/networking/ntshengn_networking_client_socket.cpp
-	src/networking/ntshengn_networking.cpp)
+	networking/ntshengn_networking_server_socket.cpp
+	networking/ntshengn_networking_client_socket.cpp
+	networking/ntshengn_networking.cpp)
 set(NETWORKING_HEADERS
-	src/networking/ntshengn_networking_common.h
-	src/networking/ntshengn_networking_server_socket.h
-	src/networking/ntshengn_networking_client_socket.h
-	src/networking/ntshengn_networking.h)
+	networking/ntshengn_networking_common.h
+	networking/ntshengn_networking_server_socket.h
+	networking/ntshengn_networking_client_socket.h
+	networking/ntshengn_networking.h)
 
 set(SCENE_MANAGER_SOURCES
-	src/scene_manager/ntshengn_scene_manager.cpp)
+	scene_manager/ntshengn_scene_manager.cpp)
 set(SCENE_MANAGER_HEADERS
-	src/scene_manager/ntshengn_scene_manager.h)
+	scene_manager/ntshengn_scene_manager.h)
 
 set(SCRIPTING_SOURCES
-	src/scripting/ntshengn_scripting.cpp)
+	scripting/ntshengn_scripting.cpp)
 set(SCRIPTING_HEADERS
-	src/scripting/ntshengn_scripting.h)
+	scripting/ntshengn_scripting.h)
 
 set(UTILS_HEADERS
-	src/utils/ntshengn_core_defines.h)
+	utils/ntshengn_core_defines.h)
 
 set(SOURCES ${CORE_SOURCES} ${FRAME_LIMITER_SOURCES} ${NETWORKING_SOURCES} ${SCENE_MANAGER_SOURCES} ${SCRIPTING_SOURCES})
 set(HEADERS ${CORE_HEADERS} ${MODULE_LOADER_HEADERS} ${FRAME_LIMITER_HEADERS} ${NETWORKING_HEADERS} ${SCENE_MANAGER_HEADERS} ${SCRIPTING_HEADERS} ${UTILS_HEADERS})
