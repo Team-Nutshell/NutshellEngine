@@ -171,6 +171,18 @@ void NtshEngn::SceneManager::goToScene(const std::string& filePath) {
 						rigidbody.restitution = restitutionNode.getNumber();
 					}
 
+					if (rigidbodyNode.contains("staticFriction")) {
+						const JSON::Node& staticFrictionNode = rigidbodyNode["staticFriction"];
+
+						rigidbody.staticFriction = staticFrictionNode.getNumber();
+					}
+
+					if (rigidbodyNode.contains("dynamicFriction")) {
+						const JSON::Node& dynamicFrictionNode = rigidbodyNode["dynamicFriction"];
+
+						rigidbody.dynamicFriction = dynamicFrictionNode.getNumber();
+					}
+
 					m_ecs->addComponent(entity, rigidbody);
 				}
 
