@@ -1,8 +1,7 @@
 #include "ntshengn_scene_manager.h"
-#include "../../Common/asset_manager/ntshengn_asset_manager.h"
-#include "../../Common/utils/ntshengn_utils_json.h"
-#include "../../Common/utils/ntshengn_utils_math.h"
-#include "../../../scripts/ntshengn_scriptable_factory.h"
+#include "../Common/utils/ntshengn_utils_json.h"
+#include "../Common/utils/ntshengn_utils_math.h"
+#include "../../scripts/ntshengn_scriptable_factory.h"
 
 void NtshEngn::SceneManager::goToScene(const std::string& filePath) {
 	JSON json;
