@@ -7,7 +7,7 @@ void NtshEngn::SceneManager::goToScene(const std::string& filePath) {
 	JSON json;
 	const JSON::Node& sceneRoot = json.read(filePath);
 
-	m_ecs->destroyAllEntities();
+	m_ecs->destroyNonPersistentEntities();
 
 	if (sceneRoot.contains("entities")) {
 		const JSON::Node& entitiesNode = sceneRoot["entities"];
@@ -19,7 +19,13 @@ void NtshEngn::SceneManager::goToScene(const std::string& filePath) {
 				entityName = entityNode["name"].getString();
 			}
 
+			bool entityPersistent = false;
+			if (entityNode.contains("isPersistent")) {
+				entityPersistent = entityNode["isPersistent"].getBoolean();
+			}
+
 			std::vector<Entity> entities;
+
 			// Renderable
 			if (entityNode.contains("renderable")) {
 				const JSON::Node& renderableNode = entityNode["renderable"];
@@ -38,6 +44,8 @@ void NtshEngn::SceneManager::goToScene(const std::string& filePath) {
 							entities[j] = m_ecs->createEntity();
 						}
 
+						m_ecs->setEntityPersistent(entities[j], entityPersistent);
+
 						Renderable renderable;
 						renderable.mesh = &model->primitives[j].mesh;
 						renderable.material = &model->primitives[j].material;
@@ -54,6 +62,9 @@ void NtshEngn::SceneManager::goToScene(const std::string& filePath) {
 				else {
 					entity = m_ecs->createEntity();
 				}
+
+				m_ecs->setEntityPersistent(entity, entityPersistent);
+
 				entities.push_back(entity);
 			}
 
@@ -287,6 +298,12 @@ void NtshEngn::SceneManager::goToScene(const std::string& filePath) {
 			}
 		}
 	}
+
+	m_currentScenePath = filePath;
+}
+
+std::string NtshEngn::SceneManager::getCurrentScenePath() {
+	return m_currentScenePath;
 }
 
 void NtshEngn::SceneManager::setECS(ECS* ecs) {
