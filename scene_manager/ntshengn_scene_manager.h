@@ -9,6 +9,8 @@ namespace NtshEngn {
 	public:
 		void goToScene(const std::string& filePath);
 
+		std::string getCurrentScenePath();
+
 		void setECS(ECS* ecs);
 		void setAssetManager(AssetManager* assetManager);
 
@@ -16,6 +18,8 @@ namespace NtshEngn {
 		AssetManager* m_assetManager;
 
 		ECS* m_ecs;
+
+		std::string m_currentScenePath = "";
 	};
 
 }
