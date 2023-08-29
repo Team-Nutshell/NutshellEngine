@@ -44,7 +44,7 @@ void NtshEngn::SceneManager::goToScene(const std::string& filePath) {
 							entities[j] = m_ecs->createEntity();
 						}
 
-						m_ecs->setEntityPersistent(entities[j], entityPersistent);
+						m_ecs->setEntityPersistence(entities[j], entityPersistent);
 
 						Renderable renderable;
 						renderable.mesh = &model->primitives[j].mesh;
@@ -63,7 +63,7 @@ void NtshEngn::SceneManager::goToScene(const std::string& filePath) {
 					entity = m_ecs->createEntity();
 				}
 
-				m_ecs->setEntityPersistent(entity, entityPersistent);
+				m_ecs->setEntityPersistence(entity, entityPersistent);
 
 				entities.push_back(entity);
 			}
