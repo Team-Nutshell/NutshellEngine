@@ -39,11 +39,11 @@ void NtshEngn::Core::launch(const std::string& optionsFilePath) {
 		iconImage = m_assetManager.loadImage(windowIconImagePath);
 	}
 
-	if (m_windowModule && m_windowModule->isOpen(m_windowModule->getMainWindowID())) {
-		m_windowModule->setTitle(m_windowModule->getMainWindowID(), windowTitle);
+	if (m_windowModule && m_windowModule->isWindowOpen(m_windowModule->getMainWindowID())) {
+		m_windowModule->setWindowTitle(m_windowModule->getMainWindowID(), windowTitle);
 
 		if (iconImage) {
-			m_windowModule->setIcon(m_windowModule->getMainWindowID(), *iconImage);
+			m_windowModule->setWindowIcon(m_windowModule->getMainWindowID(), *iconImage);
 			m_assetManager.destroyImage(iconImage);
 		}
 	}
@@ -129,7 +129,7 @@ void NtshEngn::Core::init() {
 
 	// Initialize System Modules
 	NTSHENGN_POINTER_EXECUTE(m_windowModule, init());
-	NTSHENGN_POINTER_EXECUTE(m_windowModule, open(1280, 720, ""));
+	NTSHENGN_POINTER_EXECUTE(m_windowModule, openWindow(1280, 720, ""));
 	NTSHENGN_POINTER_EXECUTE(m_graphicsModule, init());
 	NTSHENGN_POINTER_EXECUTE(m_physicsModule, init());
 	NTSHENGN_POINTER_EXECUTE(m_audioModule, init());
@@ -150,7 +150,7 @@ void NtshEngn::Core::update() {
 		NTSHENGN_POINTER_EXECUTE(m_audioModule, update(dt));
 		NTSHENGN_POINTER_EXECUTE(m_graphicsModule, update(dt));
 
-		applicationClose = m_windowModule ? !m_windowModule->isOpen(m_windowModule->getMainWindowID()) : true;
+		applicationClose = m_windowModule ? !m_windowModule->isWindowOpen(m_windowModule->getMainWindowID()) : true;
 
 		m_frameLimiter.wait(currentFrame);
 
