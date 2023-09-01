@@ -615,3 +615,22 @@ void NtshEngn::ScriptingAPI::drawUIImage(ImageID imageID, ImageSamplerFilter ima
 
 	graphicsModule->drawUIImage(imageID, imageSamplerFilter, position, rotation, scale, color);
 }
+
+bool NtshEngn::ScriptingAPI::drawUIButton(const Math::vec2& position, const Math::vec2& size, const Math::vec4& color, InputMouseButton mouseButton) {
+	if (!graphicsModule || !windowModule) {
+		return false;
+	}
+
+	graphicsModule->drawUIRectangle(position, size, color);
+
+	if (getMouseButtonState(mouseButton) == InputState::Pressed) {
+		int cursorPositionX = getCursorPositionX();
+		int cursorPositionY = getCursorPositionY();
+		if ((cursorPositionX >= position.x) && (cursorPositionX <= (position.x + size.x)) &&
+			(cursorPositionY >= position.y) && (cursorPositionY <= (position.y + size.y))) {
+			return true;
+		}
+	}
+
+	return false;
+}
