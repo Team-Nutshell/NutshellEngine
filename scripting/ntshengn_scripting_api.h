@@ -41,20 +41,20 @@ namespace NtshEngn {
 		bool isEntityPersistent(Entity entity);
 
 		template <typename T>
-		void addComponent(Entity entity, T component) {
+		void addEntityComponent(Entity entity, T component) {
 			ecs->addComponent(entity, component);
 		}
 		template <typename T>
-		void removeComponent(Entity entity) {
+		void removeEntityComponent(Entity entity) {
 			ecs->removeComponent<T>(entity);
 		}
 		template <typename T>
-		bool hasComponent(Entity entity) {
+		bool hasEntityComponent(Entity entity) {
 			return ecs->hasComponent<T>(entity);
 		}
 		template <typename T>
-		T& getComponent(Entity entity) {
-			return ecs->hasComponent<T>(entity);
+		T& getEntityComponent(Entity entity) {
+			return ecs->getComponent<T>(entity);
 		}
 
 		// Input
