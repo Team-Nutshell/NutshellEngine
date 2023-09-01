@@ -68,9 +68,11 @@ set(SCENE_MANAGER_HEADERS
 	scene_manager/ntshengn_scene_manager.h)
 
 set(SCRIPTING_SOURCES
-	scripting/ntshengn_scripting.cpp)
+	scripting/ntshengn_scripting.cpp
+	scripting/ntshengn_scripting_api.cpp)
 set(SCRIPTING_HEADERS
-	scripting/ntshengn_scripting.h)
+	scripting/ntshengn_scripting.h
+	scripting/ntshengn_scripting_api.h)
 
 set(UTILS_HEADERS
 	utils/ntshengn_core_defines.h)
