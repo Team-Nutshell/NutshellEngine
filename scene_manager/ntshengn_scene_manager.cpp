@@ -147,7 +147,7 @@ void NtshEngn::SceneManager::goToScene(const std::string& filePath) {
 					if (lightNode.contains("cutoff")) {
 						const JSON::Node& cutoffNode = lightNode["cutoff"];
 
-						light.cutoff = { cutoffNode[0].getNumber(), cutoffNode[1].getNumber() };
+						light.cutoff = { Math::toRad(cutoffNode[0].getNumber()), Math::toRad(cutoffNode[1].getNumber()) };
 					}
 
 					m_ecs->addComponent(entity, light);
