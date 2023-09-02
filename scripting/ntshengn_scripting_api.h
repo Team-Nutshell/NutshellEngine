@@ -25,6 +25,11 @@ namespace NtshEngn {
 		Sound* loadSound(const std::string& filePath);
 		SoundID getSoundID(const Sound& sound);
 
+		// Scenes
+		void goToScene(const std::string& filePath);
+
+		std::string getCurrentScenePath();
+
 		// ECS
 		Entity createEntity(const std::string& name = "");
 		void destroyEntity(Entity entity);
@@ -140,6 +145,19 @@ namespace NtshEngn {
 		void drawUIImage(ImageID imageID, ImageSamplerFilter imageSamplerFilter, const Math::vec2& position, float rotation = 0.0f, const Math::vec2& scale = Math::vec2(1.0f, 1.0f), const Math::vec4& color = Math::vec4(1.0f, 1.0f, 1.0f, 1.0f));
 
 		bool drawUIButton(const Math::vec2& position, const Math::vec2& size, const Math::vec4& color = Math::vec4(1.0f, 1.0f, 1.0f, 1.0f), InputMouseButton mouseButton = InputMouseButton::One);
+
+		// Multithreading
+		void executeJob(const std::function<void()>& job);
+		void dispatchJob(uint32_t jobCount, uint32_t jobsPerWorker, const std::function<void(JobDispatchArguments)>& job);
+		void waitAllThreads();
+		uint32_t getNumThreads();
+
+		// Networking
+		ServerSocket* createServerSocket(uint16_t port, NetworkType networkType = NetworkType::UDP);
+		ClientSocket* createClientSocket(NetworkType networkType = NetworkType::UDP);
+
+		void closeServerSocket(ServerSocket* serverSocket);
+		void closeClientSocket(ClientSocket* clientSocket);
 	};
 
 }
