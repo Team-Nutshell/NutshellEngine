@@ -48,6 +48,14 @@ NtshEngn::SoundID NtshEngn::ScriptingAPI::getSoundID(const Sound& sound) {
 	return audioModule->load(sound);
 }
 
+void NtshEngn::ScriptingAPI::goToScene(const std::string& filePath) {
+	sceneManager->goToScene(filePath);
+}
+
+std::string NtshEngn::ScriptingAPI::getCurrentScenePath() {
+	return sceneManager->getCurrentScenePath();
+}
+
 NtshEngn::Entity NtshEngn::ScriptingAPI::createEntity(const std::string& name) {
 	if (name != "") {
 		return ecs->createEntity(name);
@@ -637,4 +645,36 @@ bool NtshEngn::ScriptingAPI::drawUIButton(const Math::vec2& position, const Math
 	}
 
 	return false;
+}
+
+void NtshEngn::ScriptingAPI::executeJob(const std::function<void()>& job) {
+	jobSystem->execute(job);
+}
+
+void NtshEngn::ScriptingAPI::dispatchJob(uint32_t jobCount, uint32_t jobsPerWorker, const std::function<void(JobDispatchArguments)>& job) {
+	jobSystem->dispatch(jobCount, jobsPerWorker, job);
+}
+
+void NtshEngn::ScriptingAPI::waitAllThreads() {
+	jobSystem->wait();
+}
+
+uint32_t NtshEngn::ScriptingAPI::getNumThreads() {
+	return jobSystem->getNumThreads();
+}
+
+NtshEngn::ServerSocket* NtshEngn::ScriptingAPI::createServerSocket(uint16_t port, NetworkType networkType) {
+	return networking->createServerSocket(port, networkType);
+}
+
+NtshEngn::ClientSocket* NtshEngn::ScriptingAPI::createClientSocket(NetworkType networkType) {
+	return networking->createClientSocket(networkType);
+}
+
+void NtshEngn::ScriptingAPI::closeServerSocket(ServerSocket* serverSocket) {
+	networking->closeServerSocket(serverSocket);
+}
+
+void NtshEngn::ScriptingAPI::closeClientSocket(ClientSocket* clientSocket) {
+	networking->closeClientSocket(clientSocket);
 }
