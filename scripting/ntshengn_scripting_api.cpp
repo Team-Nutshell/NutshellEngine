@@ -68,6 +68,10 @@ void NtshEngn::ScriptingAPI::destroyNonPersistentEntities() {
 	ecs->destroyNonPersistentEntities();
 }
 
+bool NtshEngn::ScriptingAPI::entityExists(Entity entity) {
+	return ecs->entityExists(entity);
+}
+
 void NtshEngn::ScriptingAPI::setEntityName(Entity entity, const std::string& name) {
 	ecs->setEntityName(entity, name);
 }
