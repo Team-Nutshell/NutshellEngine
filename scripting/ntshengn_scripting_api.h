@@ -32,6 +32,8 @@ namespace NtshEngn {
 		void destroyAllEntities();
 		void destroyNonPersistentEntities();
 
+		bool entityExists(Entity entity);
+
 		void setEntityName(Entity entity, const std::string& name);
 		bool entityHasName(Entity entity);
 		std::string getEntityName(Entity entity);
