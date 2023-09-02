@@ -628,23 +628,32 @@ void NtshEngn::ScriptingAPI::drawUIImage(ImageID imageID, ImageSamplerFilter ima
 	graphicsModule->drawUIImage(imageID, imageSamplerFilter, position, rotation, scale, color);
 }
 
-bool NtshEngn::ScriptingAPI::drawUIButton(const Math::vec2& position, const Math::vec2& size, const Math::vec4& color, InputMouseButton mouseButton) {
+NtshEngn::ScriptingAPI::UIElementState NtshEngn::ScriptingAPI::drawUIButton(const Math::vec2& position, const Math::vec2& size, const Math::vec4& color, InputMouseButton mouseButton) {
 	if (!graphicsModule || !windowModule) {
-		return false;
+		return UIElementState::None;
 	}
 
 	graphicsModule->drawUIRectangle(position, size, color);
 
-	if (getMouseButtonState(mouseButton) == InputState::Pressed) {
-		int cursorPositionX = getCursorPositionX();
-		int cursorPositionY = getCursorPositionY();
-		if ((cursorPositionX >= position.x) && (cursorPositionX <= (position.x + size.x)) &&
-			(cursorPositionY >= position.y) && (cursorPositionY <= (position.y + size.y))) {
-			return true;
+	int cursorPositionX = windowModule->getCursorPositionX(windowModule->getMainWindowID());
+	int cursorPositionY = windowModule->getCursorPositionY(windowModule->getMainWindowID());
+	if ((cursorPositionX >= position.x) && (cursorPositionX <= (position.x + size.x)) &&
+		(cursorPositionY >= position.y) && (cursorPositionY <= (position.y + size.y))) {
+		if (getMouseButtonState(mouseButton) == InputState::Pressed) {
+			return UIElementState::Pressed;
+		}
+		else if (getMouseButtonState(mouseButton) == InputState::Held) {
+			return UIElementState::Held;
+		}
+		else if (getMouseButtonState(mouseButton) == InputState::Released) {
+			return UIElementState::Released;
+		}
+		else {
+			return UIElementState::Hovered;
 		}
 	}
 
-	return false;
+	return UIElementState::None;
 }
 
 void NtshEngn::ScriptingAPI::executeJob(const std::function<void()>& job) {

@@ -139,12 +139,20 @@ namespace NtshEngn {
 		float getSoundPitch(SoundID soundID);
 
 		// UI
+		enum class UIElementState {
+			None,
+			Pressed,
+			Held,
+			Released,
+			Hovered
+		};
+
 		void drawUIText(FontID fontID, const std::string& text, const Math::vec2& position, const Math::vec4& color = Math::vec4(0.0f, 0.0f, 0.0f, 1.0f));
 		void drawUILine(const Math::vec2& start, const Math::vec2& end, const Math::vec4& color = Math::vec4(1.0f, 1.0f, 1.0f, 1.0f));
 		void drawUIRectangle(const Math::vec2& position, const Math::vec2& size, const Math::vec4& color = Math::vec4(1.0f, 1.0f, 1.0f, 1.0f));
 		void drawUIImage(ImageID imageID, ImageSamplerFilter imageSamplerFilter, const Math::vec2& position, float rotation = 0.0f, const Math::vec2& scale = Math::vec2(1.0f, 1.0f), const Math::vec4& color = Math::vec4(1.0f, 1.0f, 1.0f, 1.0f));
 
-		bool drawUIButton(const Math::vec2& position, const Math::vec2& size, const Math::vec4& color = Math::vec4(1.0f, 1.0f, 1.0f, 1.0f), InputMouseButton mouseButton = InputMouseButton::One);
+		UIElementState drawUIButton(const Math::vec2& position, const Math::vec2& size, const Math::vec4& color = Math::vec4(1.0f, 1.0f, 1.0f, 1.0f), InputMouseButton mouseButton = InputMouseButton::One);
 
 		// Multithreading
 		void executeJob(const std::function<void()>& job);
