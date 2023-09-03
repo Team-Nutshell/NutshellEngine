@@ -69,10 +69,10 @@ set(SCENE_MANAGER_HEADERS
 
 set(SCRIPTING_SOURCES
 	scripting/ntshengn_scripting.cpp
-	scripting/ntshengn_scripting_api.cpp)
+	scripting/ntshengn_script.cpp)
 set(SCRIPTING_HEADERS
 	scripting/ntshengn_scripting.h
-	scripting/ntshengn_scripting_api.h)
+	scripting/ntshengn_script.h)
 
 set(UTILS_HEADERS
 	utils/ntshengn_core_defines.h)

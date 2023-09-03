@@ -5,6 +5,7 @@
 #include "../frame_limiter/ntshengn_frame_limiter.h"
 #include "../networking/ntshengn_networking.h"
 #include "../scene_manager/ntshengn_scene_manager.h"
+#include "ntshengn_script.h"
 #include <unordered_map>
 
 namespace NtshEngn {

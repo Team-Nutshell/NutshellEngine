@@ -1,10 +1,10 @@
-#include "ntshengn_scripting_api.h"
+#include "ntshengn_script.h"
 
-NtshEngn::Model* NtshEngn::ScriptingAPI::loadModel(const std::string& filePath) {
+NtshEngn::Model* NtshEngn::Script::loadModel(const std::string& filePath) {
 	return assetManager->loadModel(filePath);
 }
 
-NtshEngn::MeshID NtshEngn::ScriptingAPI::getMeshID(const Mesh& mesh) {
+NtshEngn::MeshID NtshEngn::Script::getMeshID(const Mesh& mesh) {
 	if (!graphicsModule) {
 		return NTSHENGN_MESH_UNKNOWN;
 	}
@@ -12,11 +12,11 @@ NtshEngn::MeshID NtshEngn::ScriptingAPI::getMeshID(const Mesh& mesh) {
 	return graphicsModule->load(mesh);
 }
 
-NtshEngn::Image* NtshEngn::ScriptingAPI::loadImage(const std::string& filePath) {
+NtshEngn::Image* NtshEngn::Script::loadImage(const std::string& filePath) {
 	return assetManager->loadImage(filePath);
 }
 
-NtshEngn::ImageID NtshEngn::ScriptingAPI::getImageID(const Image& image) {
+NtshEngn::ImageID NtshEngn::Script::getImageID(const Image& image) {
 	if (!graphicsModule) {
 		return NTSHENGN_IMAGE_UNKNOWN;
 	}
@@ -24,11 +24,11 @@ NtshEngn::ImageID NtshEngn::ScriptingAPI::getImageID(const Image& image) {
 	return graphicsModule->load(image);
 }
 
-NtshEngn::Font* NtshEngn::ScriptingAPI::loadFont(const std::string& filePath, float fontHeight) {
+NtshEngn::Font* NtshEngn::Script::loadFont(const std::string& filePath, float fontHeight) {
 	return assetManager->loadFont(filePath, fontHeight);
 }
 
-NtshEngn::FontID NtshEngn::ScriptingAPI::getFontID(const Font& font) {
+NtshEngn::FontID NtshEngn::Script::getFontID(const Font& font) {
 	if (!graphicsModule) {
 		return NTSHENGN_FONT_UNKNOWN;
 	}
@@ -36,11 +36,11 @@ NtshEngn::FontID NtshEngn::ScriptingAPI::getFontID(const Font& font) {
 	return graphicsModule->load(font);
 }
 
-NtshEngn::Sound* NtshEngn::ScriptingAPI::loadSound(const std::string& filePath) {
+NtshEngn::Sound* NtshEngn::Script::loadSound(const std::string& filePath) {
 	return assetManager->loadSound(filePath);
 }
 
-NtshEngn::SoundID NtshEngn::ScriptingAPI::getSoundID(const Sound& sound) {
+NtshEngn::SoundID NtshEngn::Script::getSoundID(const Sound& sound) {
 	if (!audioModule) {
 		return NTSHENGN_SOUND_UNKNOWN;
 	}
@@ -48,15 +48,15 @@ NtshEngn::SoundID NtshEngn::ScriptingAPI::getSoundID(const Sound& sound) {
 	return audioModule->load(sound);
 }
 
-void NtshEngn::ScriptingAPI::goToScene(const std::string& filePath) {
+void NtshEngn::Script::goToScene(const std::string& filePath) {
 	sceneManager->goToScene(filePath);
 }
 
-std::string NtshEngn::ScriptingAPI::getCurrentScenePath() {
+std::string NtshEngn::Script::getCurrentScenePath() {
 	return sceneManager->getCurrentScenePath();
 }
 
-NtshEngn::Entity NtshEngn::ScriptingAPI::createEntity(const std::string& name) {
+NtshEngn::Entity NtshEngn::Script::createEntity(const std::string& name) {
 	if (name != "") {
 		return ecs->createEntity(name);
 	}
@@ -64,47 +64,47 @@ NtshEngn::Entity NtshEngn::ScriptingAPI::createEntity(const std::string& name) {
 	return ecs->createEntity();
 }
 
-void NtshEngn::ScriptingAPI::destroyEntity(Entity entity) {
+void NtshEngn::Script::destroyEntity(Entity entity) {
 	ecs->destroyEntity(entity);
 }
 
-void NtshEngn::ScriptingAPI::destroyAllEntities() {
+void NtshEngn::Script::destroyAllEntities() {
 	ecs->destroyAllEntities();
 }
 
-void NtshEngn::ScriptingAPI::destroyNonPersistentEntities() {
+void NtshEngn::Script::destroyNonPersistentEntities() {
 	ecs->destroyNonPersistentEntities();
 }
 
-bool NtshEngn::ScriptingAPI::entityExists(Entity entity) {
+bool NtshEngn::Script::entityExists(Entity entity) {
 	return ecs->entityExists(entity);
 }
 
-void NtshEngn::ScriptingAPI::setEntityName(Entity entity, const std::string& name) {
+void NtshEngn::Script::setEntityName(Entity entity, const std::string& name) {
 	ecs->setEntityName(entity, name);
 }
 
-bool NtshEngn::ScriptingAPI::entityHasName(Entity entity) {
+bool NtshEngn::Script::entityHasName(Entity entity) {
 	return ecs->entityHasName(entity);
 }
 
-std::string NtshEngn::ScriptingAPI::getEntityName(Entity entity) {
+std::string NtshEngn::Script::getEntityName(Entity entity) {
 	return ecs->getEntityName(entity);
 }
 
-NtshEngn::Entity NtshEngn::ScriptingAPI::findEntityByName(const std::string& name) {
+NtshEngn::Entity NtshEngn::Script::findEntityByName(const std::string& name) {
 	return ecs->findEntityByName(name);
 }
 
-void NtshEngn::ScriptingAPI::setEntityPersistence(Entity entity, bool persistent) {
+void NtshEngn::Script::setEntityPersistence(Entity entity, bool persistent) {
 	return ecs->setEntityPersistence(entity, persistent);
 }
 
-bool NtshEngn::ScriptingAPI::isEntityPersistent(Entity entity) {
+bool NtshEngn::Script::isEntityPersistent(Entity entity) {
 	return ecs->isEntityPersistent(entity);
 }
 
-NtshEngn::InputState NtshEngn::ScriptingAPI::getKeyState(InputKeyboardKey key, WindowID windowID) {
+NtshEngn::InputState NtshEngn::Script::getKeyState(InputKeyboardKey key, WindowID windowID) {
 	if (!windowModule) {
 		return NtshEngn::InputState::None;
 	}
@@ -116,7 +116,7 @@ NtshEngn::InputState NtshEngn::ScriptingAPI::getKeyState(InputKeyboardKey key, W
 	return windowModule->getKeyState(windowID, key);
 }
 
-NtshEngn::InputState NtshEngn::ScriptingAPI::getMouseButtonState(InputMouseButton mouseButton, WindowID windowID) {
+NtshEngn::InputState NtshEngn::Script::getMouseButtonState(InputMouseButton mouseButton, WindowID windowID) {
 	if (!windowModule) {
 		return NtshEngn::InputState::None;
 	}
@@ -128,7 +128,7 @@ NtshEngn::InputState NtshEngn::ScriptingAPI::getMouseButtonState(InputMouseButto
 	return windowModule->getMouseButtonState(windowID, mouseButton);
 }
 
-void NtshEngn::ScriptingAPI::setCursorPosition(int x, int y, WindowID windowID) {
+void NtshEngn::Script::setCursorPosition(int x, int y, WindowID windowID) {
 	if (!windowModule) {
 		return;
 	}
@@ -140,7 +140,7 @@ void NtshEngn::ScriptingAPI::setCursorPosition(int x, int y, WindowID windowID) 
 	windowModule->setCursorPosition(windowID, x, y);
 }
 
-int NtshEngn::ScriptingAPI::getCursorPositionX(WindowID windowID) {
+int NtshEngn::Script::getCursorPositionX(WindowID windowID) {
 	if (!windowModule) {
 		return 0;
 	}
@@ -152,7 +152,7 @@ int NtshEngn::ScriptingAPI::getCursorPositionX(WindowID windowID) {
 	return windowModule->getCursorPositionX(windowID);
 }
 
-int NtshEngn::ScriptingAPI::getCursorPositionY(WindowID windowID) {
+int NtshEngn::Script::getCursorPositionY(WindowID windowID) {
 	if (!windowModule) {
 		return 0;
 	}
@@ -164,7 +164,7 @@ int NtshEngn::ScriptingAPI::getCursorPositionY(WindowID windowID) {
 	return windowModule->getCursorPositionY(windowID);
 }
 
-float NtshEngn::ScriptingAPI::getMouseScrollOffsetX(WindowID windowID) {
+float NtshEngn::Script::getMouseScrollOffsetX(WindowID windowID) {
 	if (!windowModule) {
 		return 0.0f;
 	}
@@ -176,7 +176,7 @@ float NtshEngn::ScriptingAPI::getMouseScrollOffsetX(WindowID windowID) {
 	return windowModule->getMouseScrollOffsetX(windowID);
 }
 
-float NtshEngn::ScriptingAPI::getMouseScrollOffsetY(WindowID windowID) {
+float NtshEngn::Script::getMouseScrollOffsetY(WindowID windowID) {
 	if (!windowModule) {
 		return 0.0f;
 	}
@@ -188,7 +188,7 @@ float NtshEngn::ScriptingAPI::getMouseScrollOffsetY(WindowID windowID) {
 	return windowModule->getMouseScrollOffsetY(windowID);
 }
 
-void NtshEngn::ScriptingAPI::setCursorVisibility(bool visible, WindowID windowID) {
+void NtshEngn::Script::setCursorVisibility(bool visible, WindowID windowID) {
 	if (!windowModule) {
 		return;
 	}
@@ -200,7 +200,7 @@ void NtshEngn::ScriptingAPI::setCursorVisibility(bool visible, WindowID windowID
 	windowModule->setCursorVisibility(windowID, visible);
 }
 
-bool NtshEngn::ScriptingAPI::isCursorVisible(WindowID windowID) {
+bool NtshEngn::Script::isCursorVisible(WindowID windowID) {
 	if (!windowModule) {
 		return false;
 	}
@@ -212,7 +212,7 @@ bool NtshEngn::ScriptingAPI::isCursorVisible(WindowID windowID) {
 	return windowModule->isCursorVisible(windowID);
 }
 
-std::vector<NtshEngn::GamepadID> NtshEngn::ScriptingAPI::getConnectedGamepads() {
+std::vector<NtshEngn::GamepadID> NtshEngn::Script::getConnectedGamepads() {
 	if (!windowModule) {
 		return {};
 	}
@@ -220,7 +220,7 @@ std::vector<NtshEngn::GamepadID> NtshEngn::ScriptingAPI::getConnectedGamepads() 
 	return windowModule->getConnectedGamepads();
 }
 
-NtshEngn::InputState NtshEngn::ScriptingAPI::getGamepadButtonState(GamepadID gamepadID, InputGamepadButton button) {
+NtshEngn::InputState NtshEngn::Script::getGamepadButtonState(GamepadID gamepadID, InputGamepadButton button) {
 	if (!windowModule) {
 		return NtshEngn::InputState::None;
 	}
@@ -228,7 +228,7 @@ NtshEngn::InputState NtshEngn::ScriptingAPI::getGamepadButtonState(GamepadID gam
 	return windowModule->getGamepadButtonState(gamepadID, button);
 }
 
-float NtshEngn::ScriptingAPI::getGamepadStickAxisX(GamepadID gamepadID, InputGamepadStick stick) {
+float NtshEngn::Script::getGamepadStickAxisX(GamepadID gamepadID, InputGamepadStick stick) {
 	if (!windowModule) {
 		return 0.0f;
 	}
@@ -236,7 +236,7 @@ float NtshEngn::ScriptingAPI::getGamepadStickAxisX(GamepadID gamepadID, InputGam
 	return windowModule->getGamepadStickAxisX(gamepadID, stick);
 }
 
-float NtshEngn::ScriptingAPI::getGamepadStickAxisY(GamepadID gamepadID, InputGamepadStick stick) {
+float NtshEngn::Script::getGamepadStickAxisY(GamepadID gamepadID, InputGamepadStick stick) {
 	if (!windowModule) {
 		return 0.0f;
 	}
@@ -244,7 +244,7 @@ float NtshEngn::ScriptingAPI::getGamepadStickAxisY(GamepadID gamepadID, InputGam
 	return windowModule->getGamepadStickAxisY(gamepadID, stick);
 }
 
-float NtshEngn::ScriptingAPI::getGamepadLeftTrigger(GamepadID gamepadID) {
+float NtshEngn::Script::getGamepadLeftTrigger(GamepadID gamepadID) {
 	if (!windowModule) {
 		return 0.0f;
 	}
@@ -252,7 +252,7 @@ float NtshEngn::ScriptingAPI::getGamepadLeftTrigger(GamepadID gamepadID) {
 	return windowModule->getGamepadLeftTrigger(gamepadID);
 }
 
-float NtshEngn::ScriptingAPI::getGamepadRightTrigger(GamepadID gamepadID) {
+float NtshEngn::Script::getGamepadRightTrigger(GamepadID gamepadID) {
 	if (!windowModule) {
 		return 0.0f;
 	}
@@ -260,7 +260,7 @@ float NtshEngn::ScriptingAPI::getGamepadRightTrigger(GamepadID gamepadID) {
 	return windowModule->getGamepadRightTrigger(gamepadID);
 }
 
-std::string NtshEngn::ScriptingAPI::getGamepadName(GamepadID gamepadID) {
+std::string NtshEngn::Script::getGamepadName(GamepadID gamepadID) {
 	if (!windowModule) {
 		return "";
 	}
@@ -268,7 +268,7 @@ std::string NtshEngn::ScriptingAPI::getGamepadName(GamepadID gamepadID) {
 	return windowModule->getGamepadName(gamepadID);
 }
 
-NtshEngn::WindowID NtshEngn::ScriptingAPI::openWindow(int width, int height, const std::string& title) {
+NtshEngn::WindowID NtshEngn::Script::openWindow(int width, int height, const std::string& title) {
 	if (!windowModule) {
 		return NTSHENGN_WINDOW_UNKNOWN;
 	}
@@ -276,7 +276,7 @@ NtshEngn::WindowID NtshEngn::ScriptingAPI::openWindow(int width, int height, con
 	return windowModule->openWindow(width, height, title);
 }
 
-bool NtshEngn::ScriptingAPI::isWindowOpen(WindowID windowID) {
+bool NtshEngn::Script::isWindowOpen(WindowID windowID) {
 	if (!windowModule) {
 		return false;
 	}
@@ -288,7 +288,7 @@ bool NtshEngn::ScriptingAPI::isWindowOpen(WindowID windowID) {
 	return windowModule->isWindowOpen(windowID);
 }
 
-void NtshEngn::ScriptingAPI::closeWindow(WindowID windowID) {
+void NtshEngn::Script::closeWindow(WindowID windowID) {
 	if (!windowModule) {
 		return;
 	}
@@ -300,7 +300,7 @@ void NtshEngn::ScriptingAPI::closeWindow(WindowID windowID) {
 	windowModule->closeWindow(windowID);
 }
 
-NtshEngn::WindowID NtshEngn::ScriptingAPI::getMainWindowID() {
+NtshEngn::WindowID NtshEngn::Script::getMainWindowID() {
 	if (!windowModule) {
 		return NTSHENGN_WINDOW_UNKNOWN;
 	}
@@ -308,7 +308,7 @@ NtshEngn::WindowID NtshEngn::ScriptingAPI::getMainWindowID() {
 	return windowModule->getMainWindowID();
 }
 
-size_t NtshEngn::ScriptingAPI::windowCount() {
+size_t NtshEngn::Script::windowCount() {
 	if (!windowModule) {
 		return 0;
 	}
@@ -316,7 +316,7 @@ size_t NtshEngn::ScriptingAPI::windowCount() {
 	return windowModule->windowCount();
 }
 
-void NtshEngn::ScriptingAPI::setWindowSize(int width, int height, WindowID windowID) {
+void NtshEngn::Script::setWindowSize(int width, int height, WindowID windowID) {
 	if (!windowModule) {
 		return;
 	}
@@ -328,7 +328,7 @@ void NtshEngn::ScriptingAPI::setWindowSize(int width, int height, WindowID windo
 	windowModule->setWindowSize(windowID, width, height);
 }
 
-int NtshEngn::ScriptingAPI::getWindowWidth(WindowID windowID) {
+int NtshEngn::Script::getWindowWidth(WindowID windowID) {
 	if (!windowModule) {
 		return 0;
 	}
@@ -340,7 +340,7 @@ int NtshEngn::ScriptingAPI::getWindowWidth(WindowID windowID) {
 	return windowModule->getWindowWidth(windowID);
 }
 
-int NtshEngn::ScriptingAPI::getWindowHeight(WindowID windowID) {
+int NtshEngn::Script::getWindowHeight(WindowID windowID) {
 	if (!windowModule) {
 		return 0;
 	}
@@ -352,7 +352,7 @@ int NtshEngn::ScriptingAPI::getWindowHeight(WindowID windowID) {
 	return windowModule->getWindowHeight(windowID);
 }
 
-void NtshEngn::ScriptingAPI::setWindowPosition(int x, int y, WindowID windowID) {
+void NtshEngn::Script::setWindowPosition(int x, int y, WindowID windowID) {
 	if (!windowModule) {
 		return;
 	}
@@ -364,7 +364,7 @@ void NtshEngn::ScriptingAPI::setWindowPosition(int x, int y, WindowID windowID) 
 	windowModule->setWindowPosition(windowID, x, y);
 }
 
-int NtshEngn::ScriptingAPI::getWindowPositionX(WindowID windowID) {
+int NtshEngn::Script::getWindowPositionX(WindowID windowID) {
 	if (!windowModule) {
 		return 0;
 	}
@@ -376,7 +376,7 @@ int NtshEngn::ScriptingAPI::getWindowPositionX(WindowID windowID) {
 	return windowModule->getWindowPositionX(windowID);
 }
 
-int NtshEngn::ScriptingAPI::getWindowPositionY(WindowID windowID) {
+int NtshEngn::Script::getWindowPositionY(WindowID windowID) {
 	if (!windowModule) {
 		return 0;
 	}
@@ -388,7 +388,7 @@ int NtshEngn::ScriptingAPI::getWindowPositionY(WindowID windowID) {
 	return windowModule->getWindowPositionY(windowID);
 }
 
-void NtshEngn::ScriptingAPI::setWindowFullscreen(bool fullscreen, WindowID windowID) {
+void NtshEngn::Script::setWindowFullscreen(bool fullscreen, WindowID windowID) {
 	if (!windowModule) {
 		return;
 	}
@@ -400,7 +400,7 @@ void NtshEngn::ScriptingAPI::setWindowFullscreen(bool fullscreen, WindowID windo
 	windowModule->setWindowFullscreen(windowID, fullscreen);
 }
 
-bool NtshEngn::ScriptingAPI::isWindowFullscreen(WindowID windowID) {
+bool NtshEngn::Script::isWindowFullscreen(WindowID windowID) {
 	if (!windowModule) {
 		return false;
 	}
@@ -412,7 +412,7 @@ bool NtshEngn::ScriptingAPI::isWindowFullscreen(WindowID windowID) {
 	return windowModule->isWindowFullscreen(windowID);
 }
 
-void NtshEngn::ScriptingAPI::setWindowBorderless(bool borderless, WindowID windowID) {
+void NtshEngn::Script::setWindowBorderless(bool borderless, WindowID windowID) {
 	if (!windowModule) {
 		return;
 	}
@@ -424,7 +424,7 @@ void NtshEngn::ScriptingAPI::setWindowBorderless(bool borderless, WindowID windo
 	windowModule->setWindowBorderless(windowID, borderless);
 }
 
-bool NtshEngn::ScriptingAPI::isWindowBorderless(WindowID windowID) {
+bool NtshEngn::Script::isWindowBorderless(WindowID windowID) {
 	if (!windowModule) {
 		return false;
 	}
@@ -436,7 +436,7 @@ bool NtshEngn::ScriptingAPI::isWindowBorderless(WindowID windowID) {
 	return windowModule->isWindowBorderless(windowID);
 }
 
-void NtshEngn::ScriptingAPI::setWindowResizable(bool resizable, WindowID windowID) {
+void NtshEngn::Script::setWindowResizable(bool resizable, WindowID windowID) {
 	if (!windowModule) {
 		return;
 	}
@@ -448,7 +448,7 @@ void NtshEngn::ScriptingAPI::setWindowResizable(bool resizable, WindowID windowI
 	windowModule->setWindowResizable(windowID, resizable);
 }
 
-bool NtshEngn::ScriptingAPI::isWindowResizable(WindowID windowID) {
+bool NtshEngn::Script::isWindowResizable(WindowID windowID) {
 	if (!windowModule) {
 		return false;
 	}
@@ -460,7 +460,7 @@ bool NtshEngn::ScriptingAPI::isWindowResizable(WindowID windowID) {
 	return windowModule->isWindowResizable(windowID);
 }
 
-void NtshEngn::ScriptingAPI::setWindowTitle(const std::string& title, WindowID windowID) {
+void NtshEngn::Script::setWindowTitle(const std::string& title, WindowID windowID) {
 	if (!windowModule) {
 		return;
 	}
@@ -472,7 +472,7 @@ void NtshEngn::ScriptingAPI::setWindowTitle(const std::string& title, WindowID w
 	windowModule->setWindowTitle(windowID, title);
 }
 
-void NtshEngn::ScriptingAPI::setWindowIcon(const Image& image, WindowID windowID) {
+void NtshEngn::Script::setWindowIcon(const Image& image, WindowID windowID) {
 	if (!windowModule) {
 		return;
 	}
@@ -484,7 +484,7 @@ void NtshEngn::ScriptingAPI::setWindowIcon(const Image& image, WindowID windowID
 	windowModule->setWindowIcon(windowID, image);
 }
 
-int NtshEngn::ScriptingAPI::getMonitorWidth() {
+int NtshEngn::Script::getMonitorWidth() {
 	if (!windowModule) {
 		return 0 ;
 	}
@@ -492,7 +492,7 @@ int NtshEngn::ScriptingAPI::getMonitorWidth() {
 	return windowModule->getMonitorWidth();
 }
 
-int NtshEngn::ScriptingAPI::getMonitorHeight() {
+int NtshEngn::Script::getMonitorHeight() {
 	if (!windowModule) {
 		return 0;
 	}
@@ -500,7 +500,7 @@ int NtshEngn::ScriptingAPI::getMonitorHeight() {
 	return windowModule->getMonitorHeight();
 }
 
-int NtshEngn::ScriptingAPI::getMonitorRefreshRate() {
+int NtshEngn::Script::getMonitorRefreshRate() {
 	if (!windowModule) {
 		return 0;
 	}
@@ -508,7 +508,7 @@ int NtshEngn::ScriptingAPI::getMonitorRefreshRate() {
 	return windowModule->getMonitorRefreshRate();
 }
 
-float NtshEngn::ScriptingAPI::getMonitorDisplayScaling() {
+float NtshEngn::Script::getMonitorDisplayScaling() {
 	if (!windowModule) {
 		return 0.0f;
 	}
@@ -516,7 +516,7 @@ float NtshEngn::ScriptingAPI::getMonitorDisplayScaling() {
 	return windowModule->getMonitorDisplayScaling();
 }
 
-NtshEngn::IntersectionInformation NtshEngn::ScriptingAPI::intersect(const ColliderShape* shape1, const ColliderShape* shape2) {
+NtshEngn::IntersectionInformation NtshEngn::Script::intersect(const ColliderShape* shape1, const ColliderShape* shape2) {
 	if (!physicsModule) {
 		return NtshEngn::IntersectionInformation();
 	}
@@ -524,7 +524,7 @@ NtshEngn::IntersectionInformation NtshEngn::ScriptingAPI::intersect(const Collid
 	return physicsModule->intersect(shape1, shape2);
 }
 
-std::vector<NtshEngn::RaycastInformation> NtshEngn::ScriptingAPI::raycast(const Math::vec3& rayOrigin, const Math::vec3& rayDirection, float tMin, float tMax) {
+std::vector<NtshEngn::RaycastInformation> NtshEngn::Script::raycast(const Math::vec3& rayOrigin, const Math::vec3& rayDirection, float tMin, float tMax) {
 	if (!physicsModule) {
 		return {};
 	}
@@ -532,7 +532,7 @@ std::vector<NtshEngn::RaycastInformation> NtshEngn::ScriptingAPI::raycast(const 
 	return physicsModule->raycast(rayOrigin, rayDirection, tMin, tMax);
 }
 
-void NtshEngn::ScriptingAPI::playSound(SoundID soundID) {
+void NtshEngn::Script::playSound(SoundID soundID) {
 	if (!audioModule) {
 		return;
 	}
@@ -540,7 +540,7 @@ void NtshEngn::ScriptingAPI::playSound(SoundID soundID) {
 	audioModule->play(soundID);
 }
 
-void NtshEngn::ScriptingAPI::pauseSound(SoundID soundID) {
+void NtshEngn::Script::pauseSound(SoundID soundID) {
 	if (!audioModule) {
 		return;
 	}
@@ -548,7 +548,7 @@ void NtshEngn::ScriptingAPI::pauseSound(SoundID soundID) {
 	audioModule->pause(soundID);
 }
 
-void NtshEngn::ScriptingAPI::stopSound(SoundID soundID) {
+void NtshEngn::Script::stopSound(SoundID soundID) {
 	if (!audioModule) {
 		return;
 	}
@@ -556,7 +556,7 @@ void NtshEngn::ScriptingAPI::stopSound(SoundID soundID) {
 	audioModule->stop(soundID);
 }
 
-bool NtshEngn::ScriptingAPI::isSoundPlaying(SoundID soundID) {
+bool NtshEngn::Script::isSoundPlaying(SoundID soundID) {
 	if (!audioModule) {
 		return false;
 	}
@@ -564,7 +564,7 @@ bool NtshEngn::ScriptingAPI::isSoundPlaying(SoundID soundID) {
 	return audioModule->isPlaying(soundID);
 }
 
-void NtshEngn::ScriptingAPI::setSoundGain(SoundID soundID, float newGain) {
+void NtshEngn::Script::setSoundGain(SoundID soundID, float newGain) {
 	if (!audioModule) {
 		return;
 	}
@@ -572,7 +572,7 @@ void NtshEngn::ScriptingAPI::setSoundGain(SoundID soundID, float newGain) {
 	audioModule->setGain(soundID, newGain);
 }
 
-float NtshEngn::ScriptingAPI::getSoundGain(SoundID soundID) {
+float NtshEngn::Script::getSoundGain(SoundID soundID) {
 	if (!audioModule) {
 		return 0.0f;
 	}
@@ -580,7 +580,7 @@ float NtshEngn::ScriptingAPI::getSoundGain(SoundID soundID) {
 	return audioModule->getGain(soundID);
 }
 
-void NtshEngn::ScriptingAPI::setSoundPitch(SoundID soundID, float newPitch) {
+void NtshEngn::Script::setSoundPitch(SoundID soundID, float newPitch) {
 	if (!audioModule) {
 		return;
 	}
@@ -588,7 +588,7 @@ void NtshEngn::ScriptingAPI::setSoundPitch(SoundID soundID, float newPitch) {
 	audioModule->setPitch(soundID, newPitch);
 }
 
-float NtshEngn::ScriptingAPI::getSoundPitch(SoundID soundID) {
+float NtshEngn::Script::getSoundPitch(SoundID soundID) {
 	if (!audioModule) {
 		return 0.0f;
 	}
@@ -596,7 +596,7 @@ float NtshEngn::ScriptingAPI::getSoundPitch(SoundID soundID) {
 	return audioModule->getPitch(soundID);
 }
 
-void NtshEngn::ScriptingAPI::drawUIText(FontID fontID, const std::string& text, const Math::vec2& position, const Math::vec4& color) {
+void NtshEngn::Script::drawUIText(FontID fontID, const std::string& text, const Math::vec2& position, const Math::vec4& color) {
 	if (!graphicsModule) {
 		return;
 	}
@@ -604,7 +604,7 @@ void NtshEngn::ScriptingAPI::drawUIText(FontID fontID, const std::string& text, 
 	graphicsModule->drawUIText(fontID, text, position, color);
 }
 
-void NtshEngn::ScriptingAPI::drawUILine(const Math::vec2& start, const Math::vec2& end, const Math::vec4& color) {
+void NtshEngn::Script::drawUILine(const Math::vec2& start, const Math::vec2& end, const Math::vec4& color) {
 	if (!graphicsModule) {
 		return;
 	}
@@ -612,7 +612,7 @@ void NtshEngn::ScriptingAPI::drawUILine(const Math::vec2& start, const Math::vec
 	graphicsModule->drawUILine(start, end, color);
 }
 
-void NtshEngn::ScriptingAPI::drawUIRectangle(const Math::vec2& position, const Math::vec2& size, const Math::vec4& color) {
+void NtshEngn::Script::drawUIRectangle(const Math::vec2& position, const Math::vec2& size, const Math::vec4& color) {
 	if (!graphicsModule) {
 		return;
 	}
@@ -620,7 +620,7 @@ void NtshEngn::ScriptingAPI::drawUIRectangle(const Math::vec2& position, const M
 	graphicsModule->drawUIRectangle(position, size, color);
 }
 
-void NtshEngn::ScriptingAPI::drawUIImage(ImageID imageID, ImageSamplerFilter imageSamplerFilter, const Math::vec2& position, float rotation, const Math::vec2& scale, const Math::vec4& color) {
+void NtshEngn::Script::drawUIImage(ImageID imageID, ImageSamplerFilter imageSamplerFilter, const Math::vec2& position, float rotation, const Math::vec2& scale, const Math::vec4& color) {
 	if (!graphicsModule) {
 		return;
 	}
@@ -628,7 +628,7 @@ void NtshEngn::ScriptingAPI::drawUIImage(ImageID imageID, ImageSamplerFilter ima
 	graphicsModule->drawUIImage(imageID, imageSamplerFilter, position, rotation, scale, color);
 }
 
-NtshEngn::ScriptingAPI::UIElementState NtshEngn::ScriptingAPI::drawUIButton(const Math::vec2& position, const Math::vec2& size, const Math::vec4& color, InputMouseButton mouseButton) {
+NtshEngn::Script::UIElementState NtshEngn::Script::drawUIButton(const Math::vec2& position, const Math::vec2& size, const Math::vec4& color, InputMouseButton mouseButton) {
 	if (!graphicsModule || !windowModule) {
 		return UIElementState::None;
 	}
@@ -656,42 +656,42 @@ NtshEngn::ScriptingAPI::UIElementState NtshEngn::ScriptingAPI::drawUIButton(cons
 	return UIElementState::None;
 }
 
-void NtshEngn::ScriptingAPI::setMaxFPS(uint32_t maxFPS) {
+void NtshEngn::Script::setMaxFPS(uint32_t maxFPS) {
 	frameLimiter->setMaxFPS(maxFPS);
 }
 
-uint32_t NtshEngn::ScriptingAPI::getMaxFPS() {
+uint32_t NtshEngn::Script::getMaxFPS() {
 	return frameLimiter->getMaxFPS();
 }
 
-void NtshEngn::ScriptingAPI::executeJob(const std::function<void()>& job) {
+void NtshEngn::Script::executeJob(const std::function<void()>& job) {
 	jobSystem->execute(job);
 }
 
-void NtshEngn::ScriptingAPI::dispatchJob(uint32_t jobCount, uint32_t jobsPerWorker, const std::function<void(JobDispatchArguments)>& job) {
+void NtshEngn::Script::dispatchJob(uint32_t jobCount, uint32_t jobsPerWorker, const std::function<void(JobDispatchArguments)>& job) {
 	jobSystem->dispatch(jobCount, jobsPerWorker, job);
 }
 
-void NtshEngn::ScriptingAPI::waitAllThreads() {
+void NtshEngn::Script::waitAllThreads() {
 	jobSystem->wait();
 }
 
-uint32_t NtshEngn::ScriptingAPI::getNumThreads() {
+uint32_t NtshEngn::Script::getNumThreads() {
 	return jobSystem->getNumThreads();
 }
 
-NtshEngn::ServerSocket* NtshEngn::ScriptingAPI::createServerSocket(uint16_t port, NetworkType networkType) {
+NtshEngn::ServerSocket* NtshEngn::Script::createServerSocket(uint16_t port, NetworkType networkType) {
 	return networking->createServerSocket(port, networkType);
 }
 
-NtshEngn::ClientSocket* NtshEngn::ScriptingAPI::createClientSocket(NetworkType networkType) {
+NtshEngn::ClientSocket* NtshEngn::Script::createClientSocket(NetworkType networkType) {
 	return networking->createClientSocket(networkType);
 }
 
-void NtshEngn::ScriptingAPI::closeServerSocket(ServerSocket* serverSocket) {
+void NtshEngn::Script::closeServerSocket(ServerSocket* serverSocket) {
 	networking->closeServerSocket(serverSocket);
 }
 
-void NtshEngn::ScriptingAPI::closeClientSocket(ClientSocket* clientSocket) {
+void NtshEngn::Script::closeClientSocket(ClientSocket* clientSocket) {
 	networking->closeClientSocket(clientSocket);
 }
