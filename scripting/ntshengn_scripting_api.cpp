@@ -656,6 +656,14 @@ NtshEngn::ScriptingAPI::UIElementState NtshEngn::ScriptingAPI::drawUIButton(cons
 	return UIElementState::None;
 }
 
+void NtshEngn::ScriptingAPI::setMaxFPS(uint32_t maxFPS) {
+	frameLimiter->setMaxFPS(maxFPS);
+}
+
+uint32_t NtshEngn::ScriptingAPI::getMaxFPS() {
+	return frameLimiter->getMaxFPS();
+}
+
 void NtshEngn::ScriptingAPI::executeJob(const std::function<void()>& job) {
 	jobSystem->execute(job);
 }
