@@ -13,7 +13,12 @@
 
 namespace NtshEngn {
 	
-	struct ScriptingAPI : public Script {
+	struct Script : public ScriptBase {
+	public:
+		virtual void init() = 0;
+		virtual void update(double dt) = 0;
+		virtual void destroy() = 0;
+
 	protected:
 		// Resources
 		Model* loadModel(const std::string& filePath);
@@ -170,6 +175,41 @@ namespace NtshEngn {
 
 		void closeServerSocket(ServerSocket* serverSocket);
 		void closeClientSocket(ClientSocket* clientSocket);
+	
+	public:
+		void setEntityID(Entity passEntityID) { entityID = passEntityID; }
+		void setSystemModules(GraphicsModuleInterface* passGraphicsModule, PhysicsModuleInterface* passPhysicsModule, WindowModuleInterface* passWindowModule, AudioModuleInterface* passAudioModule) {
+			graphicsModule = passGraphicsModule;
+			physicsModule = passPhysicsModule;
+			windowModule = passWindowModule;
+			audioModule = passAudioModule;
+		}
+		void setECS(ECS* passECS) { ecs = passECS; }
+		void setAssetManager(AssetManager* passAssetManager) { assetManager = passAssetManager; }
+		void setFrameLimiter(FrameLimiter* passFrameLimiter) { frameLimiter = passFrameLimiter; }
+		void setJobSystem(JobSystem* passJobSystem) { jobSystem = passJobSystem; }
+		void setNetworking(Networking* passNetworking) { networking = passNetworking; }
+		void setSceneManager(SceneManager* passSceneManager) { sceneManager = passSceneManager; }
+
+	protected:
+		Entity entityID = 0;
+
+		GraphicsModuleInterface* graphicsModule = nullptr;
+		PhysicsModuleInterface* physicsModule = nullptr;
+		WindowModuleInterface* windowModule = nullptr;
+		AudioModuleInterface* audioModule = nullptr;
+
+		ECS* ecs = nullptr;
+
+		AssetManager* assetManager = nullptr;
+
+		FrameLimiter* frameLimiter = nullptr;
+
+		JobSystem* jobSystem = nullptr;
+
+		Networking* networking = nullptr;
+
+		SceneManager* sceneManager = nullptr;
 	};
 
 }

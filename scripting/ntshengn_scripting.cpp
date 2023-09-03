@@ -52,17 +52,16 @@ void NtshEngn::Scripting::onEntityComponentAdded(Entity entity, Component compon
 	if (componentID == m_ecs->getComponentId<Scriptable>()) {
 		const Scriptable& entityScript = m_ecs->getComponent<Scriptable>(entity);
 
-		entityScript.script->setEntityID(entity);
-		entityScript.script->setSystemModules(m_graphicsModule, m_physicsModule, m_windowModule, m_audioModule);
-		entityScript.script->setECS(m_ecs);
-		entityScript.script->setAssetManager(m_assetManager);
-		entityScript.script->setFrameLimiter(m_frameLimiter);
-		entityScript.script->setJobSystem(m_jobSystem);
-		entityScript.script->setNetworking(m_networking);
-		entityScript.script->setSceneManager(m_sceneManager);
-
 		InternalScript internalScript;
-		internalScript.script = entityScript.script.get();
+		internalScript.script = static_cast<Script*>(entityScript.script.get());
+		internalScript.script->setEntityID(entity);
+		internalScript.script->setSystemModules(m_graphicsModule, m_physicsModule, m_windowModule, m_audioModule);
+		internalScript.script->setECS(m_ecs);
+		internalScript.script->setAssetManager(m_assetManager);
+		internalScript.script->setFrameLimiter(m_frameLimiter);
+		internalScript.script->setJobSystem(m_jobSystem);
+		internalScript.script->setNetworking(m_networking);
+		internalScript.script->setSceneManager(m_sceneManager);
 		internalScript.justInitialized = true;
 		// A new entity with a script with the same ID as an old entity with a script that has been destroyed this frame has been created
 		if (m_entityScriptsToDestroy.find(entity) != m_entityScriptsToDestroy.end()) {
