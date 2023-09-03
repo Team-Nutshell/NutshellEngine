@@ -154,6 +154,10 @@ namespace NtshEngn {
 
 		UIElementState drawUIButton(const Math::vec2& position, const Math::vec2& size, const Math::vec4& color = Math::vec4(1.0f, 1.0f, 1.0f, 1.0f), InputMouseButton mouseButton = InputMouseButton::One);
 
+		// Frame Limiter
+		void setMaxFPS(uint32_t maxFPS);
+		uint32_t getMaxFPS();
+
 		// Multithreading
 		void executeJob(const std::function<void()>& job);
 		void dispatchJob(uint32_t jobCount, uint32_t jobsPerWorker, const std::function<void(JobDispatchArguments)>& job);
