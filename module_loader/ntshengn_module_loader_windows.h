@@ -4,7 +4,7 @@
 #undef far
 #undef near
 #include <string>
-#include <map>
+#include <unordered_map>
 #include <type_traits>
 
 typedef void* (__stdcall* createModule_t)();
@@ -55,7 +55,7 @@ namespace NtshEngn {
 		}
 
 	private:
-		std::map<std::string, HINSTANCE> m_modules;
+		std::unordered_map<std::string, HINSTANCE> m_modules;
 	};
 
 }
