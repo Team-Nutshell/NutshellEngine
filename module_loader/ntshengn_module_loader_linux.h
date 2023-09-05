@@ -2,7 +2,7 @@
 #include "../utils/ntshengn_core_defines.h"
 #include <dlfcn.h>
 #include <string>
-#include <map>
+#include <unordered_map>
 #include <type_traits>
 
 typedef void* createModule_t();
@@ -56,7 +56,7 @@ namespace NtshEngn {
 		}
 
 	private:
-		std::map<std::string, void*> m_modules;
+		std::unordered_map<std::string, void*> m_modules;
 	};
 
 }
