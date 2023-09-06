@@ -38,7 +38,7 @@
 
 namespace NtshEngn {
 
-	typedef uint64_t ConnectedClientID;
+	typedef uint32_t ConnectedClientID;
 
 	enum class NetworkType {
 		UDP,
