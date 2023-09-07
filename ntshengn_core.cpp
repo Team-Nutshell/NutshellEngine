@@ -266,7 +266,7 @@ void NtshEngn::Core::initializeECS() {
 
 	m_ecs.registerSystem<Scripting>(&m_scripting);
 	ComponentMask scriptingComponents;
-	scriptingComponents.set(m_ecs.getComponentId<Scriptable>());
+	scriptingComponents.set(m_ecs.getComponentID<Scriptable>());
 	m_ecs.setSystemComponents<Scripting>(scriptingComponents);
 
 	if (m_windowModule) {
