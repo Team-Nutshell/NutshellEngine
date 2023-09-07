@@ -49,7 +49,7 @@ void NtshEngn::Scripting::setSceneManager(SceneManager* sceneManager) {
 }
 
 void NtshEngn::Scripting::onEntityComponentAdded(Entity entity, Component componentID) {
-	if (componentID == m_ecs->getComponentId<Scriptable>()) {
+	if (componentID == m_ecs->getComponentID<Scriptable>()) {
 		const Scriptable& entityScript = m_ecs->getComponent<Scriptable>(entity);
 
 		InternalScript internalScript;
@@ -74,7 +74,7 @@ void NtshEngn::Scripting::onEntityComponentAdded(Entity entity, Component compon
 }
 
 void NtshEngn::Scripting::onEntityComponentRemoved(Entity entity, Component componentID) {
-	if (componentID == m_ecs->getComponentId<Scriptable>()) {
+	if (componentID == m_ecs->getComponentID<Scriptable>()) {
 		m_entityScripts[entity].script->destroy();
 
 		m_entityScriptsToDestroy.insert(entity);
