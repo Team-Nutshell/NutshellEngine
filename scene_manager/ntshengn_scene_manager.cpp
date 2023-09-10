@@ -222,7 +222,7 @@ void NtshEngn::SceneManager::goToScene(const std::string& filePath) {
 								// Calculate AABB from Renderable
 								if (m_ecs->hasComponent<Renderable>(entity)) {
 									const Renderable& renderable = m_ecs->getComponent<Renderable>(entity);
-									const std::array<Math::vec3, 2> aabb = m_assetManager->calculateAABB(*renderable.mesh);
+									const std::array<Math::vec3, 2> aabb = m_assetManager->calculateAABB(renderable.model->primitives[renderable.modelPrimitiveIndex].mesh);
 
 									collidable.collider.min = aabb[0];
 									collidable.collider.max = aabb[1];
@@ -249,7 +249,7 @@ void NtshEngn::SceneManager::goToScene(const std::string& filePath) {
 								// Calculate sphere from Renderable
 								if (m_ecs->hasComponent<Renderable>(entity)) {
 									const Renderable& renderable = m_ecs->getComponent<Renderable>(entity);
-									const std::array<Math::vec3, 2> aabb = m_assetManager->calculateAABB(*renderable.mesh);
+									const std::array<Math::vec3, 2> aabb = m_assetManager->calculateAABB(renderable.model->primitives[renderable.modelPrimitiveIndex].mesh);
 
 									const Math::vec3 min = aabb[0];
 
