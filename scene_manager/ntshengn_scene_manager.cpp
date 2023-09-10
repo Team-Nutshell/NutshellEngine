@@ -38,7 +38,7 @@ void NtshEngn::SceneManager::goToScene(const std::string& filePath) {
 					entities.resize(model->primitives.size());
 					for (size_t j = 0; j < model->primitives.size(); j++) {
 						if (entityName != "") {
-							entities[j] = m_ecs->createEntity(entityName + std::to_string(j));
+							entities[j] = m_ecs->createEntity(entityName + "_" + std::to_string(j));
 						}
 						else {
 							entities[j] = m_ecs->createEntity();
@@ -47,8 +47,8 @@ void NtshEngn::SceneManager::goToScene(const std::string& filePath) {
 						m_ecs->setEntityPersistence(entities[j], entityPersistent);
 
 						Renderable renderable;
-						renderable.mesh = &model->primitives[j].mesh;
-						renderable.material = &model->primitives[j].material;
+						renderable.model = model;
+						renderable.modelPrimitiveIndex = static_cast<uint32_t>(j);
 						m_ecs->addComponent(entities[j], renderable);
 					}
 				}
