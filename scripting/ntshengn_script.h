@@ -143,6 +143,13 @@ namespace NtshEngn {
 		void setSoundPitch(SoundID soundID, float newPitch);
 		float getSoundPitch(SoundID soundID);
 
+		// Animation
+		void playAnimation(Entity entity, uint32_t animationIndex);
+		void pauseAnimation(Entity entity);
+		void stopAnimation(Entity entity);
+
+		bool isAnimationPlaying(Entity entity, uint32_t animationIndex);
+
 		// UI
 		enum class UIElementState {
 			None,

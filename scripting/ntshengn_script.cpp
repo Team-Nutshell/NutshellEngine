@@ -596,6 +596,38 @@ float NtshEngn::Script::getSoundPitch(SoundID soundID) {
 	return audioModule->getPitch(soundID);
 }
 
+void NtshEngn::Script::playAnimation(Entity entity, uint32_t animationIndex) {
+	if (!graphicsModule) {
+		return;
+	}
+
+	graphicsModule->playAnimation(entity, animationIndex);
+}
+
+void NtshEngn::Script::pauseAnimation(Entity entity) {
+	if (!graphicsModule) {
+		return;
+	}
+
+	graphicsModule->pauseAnimation(entity);
+}
+
+void NtshEngn::Script::stopAnimation(Entity entity) {
+	if (!graphicsModule) {
+		return;
+	}
+
+	graphicsModule->stopAnimation(entity);
+}
+
+bool NtshEngn::Script::isAnimationPlaying(Entity entity, uint32_t animationIndex) {
+	if (!graphicsModule) {
+		return false;
+	}
+
+	return graphicsModule->isAnimationPlaying(entity, animationIndex);
+}
+
 void NtshEngn::Script::drawUIText(FontID fontID, const std::string& text, const Math::vec2& position, const Math::vec4& color) {
 	if (!graphicsModule) {
 		return;
