@@ -201,21 +201,24 @@ void NtshEngn::SceneManager::goToScene(const std::string& filePath) {
 				if (entityNode.contains("collidable")) {
 					const JSON::Node& collidableNode = entityNode["collidable"];
 
+					Collidable collidable;
 					if (collidableNode.contains("type")) {
 						const JSON::Node& typeNode = collidableNode["type"];
 
 						if (typeNode.getString() == "AABB") {
-							AABBCollidable collidable;
+							collidable.collider = std::make_unique<ColliderAABB>();
+							ColliderAABB* colliderAABB = static_cast<ColliderAABB*>(collidable.collider.get());
+
 							if (collidableNode.contains("min")) {
 								const JSON::Node& minNode = collidableNode["min"];
 
-								collidable.collider.min = { minNode[0].getNumber(), minNode[1].getNumber(), minNode[2].getNumber() };
+								colliderAABB->min = { minNode[0].getNumber(), minNode[1].getNumber(), minNode[2].getNumber() };
 							}
 
 							if (collidableNode.contains("max")) {
 								const JSON::Node& maxNode = collidableNode["max"];
 
-								collidable.collider.max = { maxNode[0].getNumber(), maxNode[1].getNumber(), maxNode[2].getNumber() };
+								colliderAABB->max = { maxNode[0].getNumber(), maxNode[1].getNumber(), maxNode[2].getNumber() };
 							}
 
 							if (!collidableNode.contains("min") && !collidableNode.contains("max")) {
@@ -224,25 +227,25 @@ void NtshEngn::SceneManager::goToScene(const std::string& filePath) {
 									const Renderable& renderable = m_ecs->getComponent<Renderable>(entity);
 									const std::array<Math::vec3, 2> aabb = m_assetManager->calculateAABB(renderable.model->primitives[renderable.modelPrimitiveIndex].mesh);
 
-									collidable.collider.min = aabb[0];
-									collidable.collider.max = aabb[1];
+									colliderAABB->min = aabb[0];
+									colliderAABB->max = aabb[1];
 								}
 							}
-
-							m_ecs->addComponent(entity, collidable);
 						}
 						else if (typeNode.getString() == "Sphere") {
-							SphereCollidable collidable;
+							collidable.collider = std::make_unique<ColliderSphere>();
+							ColliderSphere* colliderSphere = static_cast<ColliderSphere*>(collidable.collider.get());
+
 							if (collidableNode.contains("center")) {
 								const JSON::Node& centerNode = collidableNode["center"];
 
-								collidable.collider.center = { centerNode[0].getNumber(), centerNode[1].getNumber(), centerNode[2].getNumber() };
+								colliderSphere->center = { centerNode[0].getNumber(), centerNode[1].getNumber(), centerNode[2].getNumber() };
 							}
 
 							if (collidableNode.contains("radius")) {
 								const JSON::Node& radiusNode = collidableNode["radius"];
 
-								collidable.collider.radius = radiusNode.getNumber();
+								colliderSphere->radius = radiusNode.getNumber();
 							}
 
 							if (!collidableNode.contains("center") && !collidableNode.contains("radius")) {
@@ -253,36 +256,36 @@ void NtshEngn::SceneManager::goToScene(const std::string& filePath) {
 
 									const Math::vec3 min = aabb[0];
 
-									collidable.collider.center = (aabb[0] + aabb[1]) / 2.0f;
-									collidable.collider.radius = (collidable.collider.center - min).length();
+									colliderSphere->center = (aabb[0] + aabb[1]) / 2.0f;
+									colliderSphere->radius = (colliderSphere->center - min).length();
 								}
 							}
-
-							m_ecs->addComponent(entity, collidable);
 						}
 						else if (typeNode.getString() == "Capsule") {
-							CapsuleCollidable collidable;
+							collidable.collider = std::make_unique<ColliderCapsule>();
+							ColliderCapsule* colliderCapsule = static_cast<ColliderCapsule*>(collidable.collider.get());
+
 							if (collidableNode.contains("base")) {
 								const JSON::Node& baseNode = collidableNode["base"];
 
-								collidable.collider.base = { baseNode[0].getNumber(), baseNode[1].getNumber(), baseNode[2].getNumber() };
+								colliderCapsule->base = { baseNode[0].getNumber(), baseNode[1].getNumber(), baseNode[2].getNumber() };
 							}
 
 							if (collidableNode.contains("tip")) {
 								const JSON::Node& tipNode = collidableNode["tip"];
 
-								collidable.collider.tip = { tipNode[0].getNumber(), tipNode[1].getNumber(), tipNode[2].getNumber() };
+								colliderCapsule->tip = { tipNode[0].getNumber(), tipNode[1].getNumber(), tipNode[2].getNumber() };
 							}
 
 							if (collidableNode.contains("radius")) {
 								const JSON::Node& radiusNode = collidableNode["radius"];
 
-								collidable.collider.radius = radiusNode.getNumber();
+								colliderCapsule->radius = radiusNode.getNumber();
 							}
-
-							m_ecs->addComponent(entity, collidable);
 						}
 					}
+					
+					m_ecs->addComponent(entity, collidable);
 				}
 
 				// Scriptable
