@@ -248,8 +248,6 @@ void NtshEngn::Core::initializeECS() {
 	m_ecs.registerComponent<Light>();
 	m_ecs.registerComponent<Rigidbody>();
 	m_ecs.registerComponent<Collidable>();
-	m_ecs.registerComponent<AudioEmitter>();
-	m_ecs.registerComponent<AudioListener>();
 	m_ecs.registerComponent<Scriptable>();
 
 	if (m_graphicsModule) {
