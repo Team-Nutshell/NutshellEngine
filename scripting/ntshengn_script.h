@@ -131,17 +131,22 @@ namespace NtshEngn {
 		std::vector<RaycastInformation> raycast(const Math::vec3& rayOrigin, const Math::vec3& rayDirection, float tMin = 0.0001f, float tMax = 1000000.0f);
 
 		// Audio
-		void playSound(SoundID soundID);
-		void pauseSound(SoundID soundID);
-		void stopSound(SoundID soundID);
+		SoundSourceID playSound(SoundID soundID, float gain = 1.0f, float pitch = 1.0f);
+		SoundSourceID playSoundAtPosition(SoundID soundID, const Math::vec3& position, float gain = 1.0f, float pitch = 1.0f);
+		void resumeSoundSource(SoundSourceID soundSourceID);
+		void pauseSoundSource(SoundSourceID soundSourceID);
+		void stopSoundSource(SoundSourceID soundSourceID);
 
+		SoundSourceState getSoundSourceState(SoundSourceID soundSourceID);
 		bool isSoundPlaying(SoundID soundID);
 
-		void setSoundGain(SoundID soundID, float newGain);
-		float getSoundGain(SoundID soundID);
+		void setSoundSourceGain(SoundSourceID soundSourceID, float newGain);
+		float getSoundSourceGain(SoundSourceID soundSourceID);
 
-		void setSoundPitch(SoundID soundID, float newPitch);
-		float getSoundPitch(SoundID soundID);
+		void setSoundSourcePitch(SoundSourceID soundSourceID, float newPitch);
+		float getSoundSourcePitch(SoundSourceID soundSourceID);
+
+		void setSoundListenerEntity(Entity entity);
 
 		// Animation
 		void playAnimation(Entity entity, uint32_t animationIndex);
