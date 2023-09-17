@@ -532,28 +532,52 @@ std::vector<NtshEngn::RaycastInformation> NtshEngn::Script::raycast(const Math::
 	return physicsModule->raycast(rayOrigin, rayDirection, tMin, tMax);
 }
 
-void NtshEngn::Script::playSound(SoundID soundID) {
+NtshEngn::SoundSourceID NtshEngn::Script::playSound(SoundID soundID, float gain, float pitch) {
 	if (!audioModule) {
-		return;
+		return NTSHENGN_SOUND_SOURCE_UNKNOWN;
 	}
 
-	audioModule->play(soundID);
+	return audioModule->playSound(soundID, gain, pitch);
 }
 
-void NtshEngn::Script::pauseSound(SoundID soundID) {
+NtshEngn::SoundSourceID NtshEngn::Script::playSoundAtPosition(SoundID soundID, const Math::vec3& position, float gain, float pitch) {
 	if (!audioModule) {
-		return;
+		return NTSHENGN_SOUND_SOURCE_UNKNOWN;
 	}
 
-	audioModule->pause(soundID);
+	return audioModule->playSoundAtPosition(soundID, position, gain, pitch);
 }
 
-void NtshEngn::Script::stopSound(SoundID soundID) {
+void NtshEngn::Script::resumeSoundSource(SoundSourceID soundSourceID) {
 	if (!audioModule) {
 		return;
 	}
 
-	audioModule->stop(soundID);
+	audioModule->resumeSoundSource(soundSourceID);
+}
+
+void NtshEngn::Script::pauseSoundSource(SoundSourceID soundSourceID) {
+	if (!audioModule) {
+		return;
+	}
+
+	audioModule->pauseSoundSource(soundSourceID);
+}
+
+void NtshEngn::Script::stopSoundSource(SoundSourceID soundSourceID) {
+	if (!audioModule) {
+		return;
+	}
+
+	audioModule->stopSoundSource(soundSourceID);
+}
+
+NtshEngn::SoundSourceState NtshEngn::Script::getSoundSourceState(SoundSourceID soundSourceID) {
+	if (!audioModule) {
+		return SoundSourceState::Stopped;
+	}
+
+	return audioModule->getSoundSourceState(soundSourceID);
 }
 
 bool NtshEngn::Script::isSoundPlaying(SoundID soundID) {
@@ -561,39 +585,47 @@ bool NtshEngn::Script::isSoundPlaying(SoundID soundID) {
 		return false;
 	}
 
-	return audioModule->isPlaying(soundID);
+	return audioModule->isSoundPlaying(soundID);
 }
 
-void NtshEngn::Script::setSoundGain(SoundID soundID, float newGain) {
+void NtshEngn::Script::setSoundSourceGain(SoundSourceID soundSourceID, float newGain) {
 	if (!audioModule) {
 		return;
 	}
 
-	audioModule->setGain(soundID, newGain);
+	audioModule->setSoundSourceGain(soundSourceID, newGain);
 }
 
-float NtshEngn::Script::getSoundGain(SoundID soundID) {
+float NtshEngn::Script::getSoundSourceGain(SoundSourceID soundSourceID) {
 	if (!audioModule) {
 		return 0.0f;
 	}
 
-	return audioModule->getGain(soundID);
+	return audioModule->getSoundSourceGain(soundSourceID);
 }
 
-void NtshEngn::Script::setSoundPitch(SoundID soundID, float newPitch) {
+void NtshEngn::Script::setSoundSourcePitch(SoundSourceID soundSourceID, float newPitch) {
 	if (!audioModule) {
 		return;
 	}
 
-	audioModule->setPitch(soundID, newPitch);
+	audioModule->setSoundSourcePitch(soundSourceID, newPitch);
 }
 
-float NtshEngn::Script::getSoundPitch(SoundID soundID) {
+float NtshEngn::Script::getSoundSourcePitch(SoundSourceID soundSourceID) {
 	if (!audioModule) {
 		return 0.0f;
 	}
 
-	return audioModule->getPitch(soundID);
+	return audioModule->getSoundSourcePitch(soundSourceID);
+}
+
+void NtshEngn::Script::setSoundListenerEntity(Entity entity) {
+	if (!audioModule) {
+		return;
+	}
+
+	audioModule->setSoundListenerEntity(entity);
 }
 
 void NtshEngn::Script::playAnimation(Entity entity, uint32_t animationIndex) {
