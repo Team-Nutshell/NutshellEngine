@@ -205,6 +205,35 @@ void NtshEngn::SceneManager::goToScene(const std::string& filePath) {
 					if (collidableNode.contains("type")) {
 						const JSON::Node& typeNode = collidableNode["type"];
 
+						if (typeNode.getString() == "Sphere") {
+							collidable.collider = std::make_unique<ColliderSphere>();
+							ColliderSphere* colliderSphere = static_cast<ColliderSphere*>(collidable.collider.get());
+
+							if (collidableNode.contains("center")) {
+								const JSON::Node& centerNode = collidableNode["center"];
+
+								colliderSphere->center = { centerNode[0].getNumber(), centerNode[1].getNumber(), centerNode[2].getNumber() };
+							}
+
+							if (collidableNode.contains("radius")) {
+								const JSON::Node& radiusNode = collidableNode["radius"];
+
+								colliderSphere->radius = radiusNode.getNumber();
+							}
+
+							if (!collidableNode.contains("center") && !collidableNode.contains("radius")) {
+								// Calculate sphere from Renderable
+								if (m_ecs->hasComponent<Renderable>(entity)) {
+									const Renderable& renderable = m_ecs->getComponent<Renderable>(entity);
+									const std::array<Math::vec3, 2> aabb = m_assetManager->calculateAABB(renderable.model->primitives[renderable.modelPrimitiveIndex].mesh);
+
+									const Math::vec3 min = aabb[0];
+
+									colliderSphere->center = (aabb[0] + aabb[1]) / 2.0f;
+									colliderSphere->radius = (colliderSphere->center - min).length();
+								}
+							}
+						}
 						if (typeNode.getString() == "AABB") {
 							collidable.collider = std::make_unique<ColliderAABB>();
 							ColliderAABB* colliderAABB = static_cast<ColliderAABB*>(collidable.collider.get());
@@ -232,33 +261,26 @@ void NtshEngn::SceneManager::goToScene(const std::string& filePath) {
 								}
 							}
 						}
-						else if (typeNode.getString() == "Sphere") {
-							collidable.collider = std::make_unique<ColliderSphere>();
-							ColliderSphere* colliderSphere = static_cast<ColliderSphere*>(collidable.collider.get());
+						if (typeNode.getString() == "OBB") {
+							collidable.collider = std::make_unique<ColliderOBB>();
+							ColliderOBB* colliderOBB = static_cast<ColliderOBB*>(collidable.collider.get());
 
 							if (collidableNode.contains("center")) {
 								const JSON::Node& centerNode = collidableNode["center"];
 
-								colliderSphere->center = { centerNode[0].getNumber(), centerNode[1].getNumber(), centerNode[2].getNumber() };
+								colliderOBB->center = { centerNode[0].getNumber(), centerNode[1].getNumber(), centerNode[2].getNumber() };
 							}
 
-							if (collidableNode.contains("radius")) {
-								const JSON::Node& radiusNode = collidableNode["radius"];
+							if (collidableNode.contains("halfExtent")) {
+								const JSON::Node& halfExtentNode = collidableNode["halfExtent"];
 
-								colliderSphere->radius = radiusNode.getNumber();
+								colliderOBB->halfExtent = { halfExtentNode[0].getNumber(), halfExtentNode[1].getNumber(), halfExtentNode[2].getNumber() };
 							}
 
-							if (!collidableNode.contains("center") && !collidableNode.contains("radius")) {
-								// Calculate sphere from Renderable
-								if (m_ecs->hasComponent<Renderable>(entity)) {
-									const Renderable& renderable = m_ecs->getComponent<Renderable>(entity);
-									const std::array<Math::vec3, 2> aabb = m_assetManager->calculateAABB(renderable.model->primitives[renderable.modelPrimitiveIndex].mesh);
+							if (collidableNode.contains("rotation")) {
+								const JSON::Node& rotationNode = collidableNode["rotation"];
 
-									const Math::vec3 min = aabb[0];
-
-									colliderSphere->center = (aabb[0] + aabb[1]) / 2.0f;
-									colliderSphere->radius = (colliderSphere->center - min).length();
-								}
+								colliderOBB->rotation = { Math::toRad(rotationNode[0].getNumber()), Math::toRad(rotationNode[1].getNumber()), Math::toRad(rotationNode[2].getNumber()) };
 							}
 						}
 						else if (typeNode.getString() == "Capsule") {
