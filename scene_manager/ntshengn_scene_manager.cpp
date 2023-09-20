@@ -282,6 +282,18 @@ void NtshEngn::SceneManager::goToScene(const std::string& filePath) {
 
 								colliderOBB->rotation = { Math::toRad(rotationNode[0].getNumber()), Math::toRad(rotationNode[1].getNumber()), Math::toRad(rotationNode[2].getNumber()) };
 							}
+
+							if (!collidableNode.contains("center") && !collidableNode.contains("halfExtent") && !collidableNode.contains("rotation")) {
+								// Calculate OBB from Renderable
+								if (m_ecs->hasComponent<Renderable>(entity)) {
+									const Renderable& renderable = m_ecs->getComponent<Renderable>(entity);
+									const std::array<Math::vec3, 2> aabb = m_assetManager->calculateAABB(renderable.model->primitives[renderable.modelPrimitiveIndex].mesh);
+
+									colliderOBB->center = (aabb[0] + aabb[1]) / 2.0f;
+									colliderOBB->halfExtent = (aabb[1] - aabb[0]) / 2.0f;
+									colliderOBB->rotation = Math::vec3(0.0f, 0.0f, 0.0f);
+								}
+							}
 						}
 						else if (typeNode.getString() == "Capsule") {
 							collidable.collider = std::make_unique<ColliderCapsule>();
