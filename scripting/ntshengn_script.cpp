@@ -588,6 +588,22 @@ bool NtshEngn::Script::isSoundPlaying(SoundID soundID) {
 	return audioModule->isSoundPlaying(soundID);
 }
 
+void NtshEngn::Script::setSoundSourcePosition(SoundSourceID soundSourceID, const Math::vec3& position) {
+	if (!audioModule) {
+		return;
+	}
+
+	audioModule->setSoundSourcePosition(soundSourceID, position);
+}
+
+NtshEngn::Math::vec3 NtshEngn::Script::getSoundSourcePosition(SoundSourceID soundSourceID) {
+	if (!audioModule) {
+		return Math::vec3(0.0f, 0.0f, 0.0f);
+	}
+
+	return audioModule->getSoundSourcePosition(soundSourceID);
+}
+
 void NtshEngn::Script::setSoundSourceGain(SoundSourceID soundSourceID, float newGain) {
 	if (!audioModule) {
 		return;
