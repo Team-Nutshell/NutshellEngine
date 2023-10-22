@@ -588,12 +588,12 @@ bool NtshEngn::Script::isSoundPlaying(SoundID soundID) {
 	return audioModule->isSoundPlaying(soundID);
 }
 
-void NtshEngn::Script::setSoundSourcePosition(SoundSourceID soundSourceID, const Math::vec3& position) {
+void NtshEngn::Script::setSoundSourcePosition(SoundSourceID soundSourceID, const Math::vec3& newPosition) {
 	if (!audioModule) {
 		return;
 	}
 
-	audioModule->setSoundSourcePosition(soundSourceID, position);
+	audioModule->setSoundSourcePosition(soundSourceID, newPosition);
 }
 
 NtshEngn::Math::vec3 NtshEngn::Script::getSoundSourcePosition(SoundSourceID soundSourceID) {

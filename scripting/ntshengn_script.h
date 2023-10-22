@@ -140,7 +140,7 @@ namespace NtshEngn {
 		SoundSourceState getSoundSourceState(SoundSourceID soundSourceID);
 		bool isSoundPlaying(SoundID soundID);
 
-		void setSoundSourcePosition(SoundSourceID soundSourceID, const Math::vec3& position);
+		void setSoundSourcePosition(SoundSourceID soundSourceID, const Math::vec3& newPosition);
 		Math::vec3 getSoundSourcePosition(SoundSourceID soundSourceID);
 
 		void setSoundSourceGain(SoundSourceID soundSourceID, float newGain);
