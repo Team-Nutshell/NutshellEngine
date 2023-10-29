@@ -132,7 +132,7 @@ void NtshEngn::ServerSocket::updateUDP() {
 					NTSHENGN_NETWORKING_INFO("[SERVER / UDP] New client with ConnectedClientID " + std::to_string(currentConnectedClientID) + " connected to server.");
 				}
 			}
-			else if (header == 0xDEC0) {
+			else if (header == 0xD15C) {
 				// Client disconnection
 				m_connectedClients.erase(currentConnectedClientID);
 
@@ -216,7 +216,7 @@ void NtshEngn::ServerSocket::updateTCP() {
 
 void NtshEngn::ServerSocket::destroyUDP() {
 	for (auto& it : m_connectedClients) {
-		uint16_t disconnectData = 0xDEC0;
+		uint16_t disconnectData = 0xD15C;
 		sendDataToClient(it.first, &disconnectData, sizeof(uint16_t));
 	}
 

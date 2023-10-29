@@ -139,7 +139,7 @@ void NtshEngn::ClientSocket::updateUDP() {
 	int receive = recvfrom(m_socket, buffer.data(), BUFFER_SIZE, 0, reinterpret_cast<sockaddr*>(&serverSockaddr), &sockaddrSize);
 	if ((receive != 0) && (receive != SOCKET_ERROR)) {
 		uint16_t disconnectHeader = (static_cast<uint16_t>(buffer[1]) << 8) + static_cast<uint8_t>(buffer[0]);
-		if ((receive == sizeof(uint16_t)) && (disconnectHeader == 0xDEC0)) {
+		if ((receive == sizeof(uint16_t)) && (disconnectHeader == 0xD15C)) {
 			// Server disconnection
 			if (m_serverDisconnectCallback) {
 				m_serverDisconnectCallback();
@@ -183,7 +183,7 @@ void NtshEngn::ClientSocket::updateTCP() {
 }
 
 void NtshEngn::ClientSocket::destroyUDP() {
-	uint16_t disconnectData = 0xDEC0;
+	uint16_t disconnectData = 0xD15C;
 	sendDataToServer(&disconnectData, sizeof(uint16_t));
 
 	if (closesocket(m_socket) == 0) {
