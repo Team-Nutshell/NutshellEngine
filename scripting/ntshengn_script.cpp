@@ -708,34 +708,6 @@ void NtshEngn::Script::drawUIImage(ImageID imageID, ImageSamplerFilter imageSamp
 	graphicsModule->drawUIImage(imageID, imageSamplerFilter, position, rotation, scale, color);
 }
 
-NtshEngn::Script::UIElementState NtshEngn::Script::drawUIButton(const Math::vec2& position, const Math::vec2& size, const Math::vec4& color, InputMouseButton mouseButton) {
-	if (!graphicsModule || !windowModule) {
-		return UIElementState::None;
-	}
-
-	graphicsModule->drawUIRectangle(position, size, color);
-
-	int cursorPositionX = windowModule->getCursorPositionX(windowModule->getMainWindowID());
-	int cursorPositionY = windowModule->getCursorPositionY(windowModule->getMainWindowID());
-	if ((cursorPositionX >= position.x) && (cursorPositionX <= (position.x + size.x)) &&
-		(cursorPositionY >= position.y) && (cursorPositionY <= (position.y + size.y))) {
-		if (getMouseButtonState(mouseButton) == InputState::Pressed) {
-			return UIElementState::Pressed;
-		}
-		else if (getMouseButtonState(mouseButton) == InputState::Held) {
-			return UIElementState::Held;
-		}
-		else if (getMouseButtonState(mouseButton) == InputState::Released) {
-			return UIElementState::Released;
-		}
-		else {
-			return UIElementState::Hovered;
-		}
-	}
-
-	return UIElementState::None;
-}
-
 void NtshEngn::Script::setMaxFPS(uint32_t maxFPS) {
 	frameLimiter->setMaxFPS(maxFPS);
 }
