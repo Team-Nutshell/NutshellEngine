@@ -76,7 +76,7 @@ void NtshEngn::ClientSocket::connectToServerUDP(const std::string& ipAddress, ui
 	m_connectedServer.ipAddress = ipAddress;
 	m_connectedServer.port = port;
 
-	uint16_t connectData = 0xC044;
+	uint16_t connectData = NTSHENGN_NETWORKING_HEADER_CONNECTION;
 	sendDataToServer(&connectData, sizeof(uint16_t));
 
 	NTSHENGN_NETWORKING_INFO("[CLIENT / UDP] Registered information on server at IP address " + ipAddress + ".");
@@ -139,7 +139,7 @@ void NtshEngn::ClientSocket::updateUDP() {
 	int receive = recvfrom(m_socket, buffer.data(), BUFFER_SIZE, 0, reinterpret_cast<sockaddr*>(&serverSockaddr), &sockaddrSize);
 	if ((receive != 0) && (receive != SOCKET_ERROR)) {
 		uint16_t disconnectHeader = (static_cast<uint16_t>(buffer[1]) << 8) + static_cast<uint8_t>(buffer[0]);
-		if ((receive == sizeof(uint16_t)) && (disconnectHeader == 0xD15C)) {
+		if ((receive == sizeof(uint16_t)) && (disconnectHeader == NTSHENGN_NETWORKING_HEADER_DISCONNECTION)) {
 			// Server disconnection
 			if (m_serverDisconnectCallback) {
 				m_serverDisconnectCallback();
@@ -183,7 +183,7 @@ void NtshEngn::ClientSocket::updateTCP() {
 }
 
 void NtshEngn::ClientSocket::destroyUDP() {
-	uint16_t disconnectData = 0xD15C;
+	uint16_t disconnectData = NTSHENGN_NETWORKING_HEADER_DISCONNECTION;
 	sendDataToServer(&disconnectData, sizeof(uint16_t));
 
 	if (closesocket(m_socket) == 0) {

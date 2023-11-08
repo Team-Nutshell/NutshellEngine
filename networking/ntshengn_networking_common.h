@@ -36,6 +36,9 @@
 	} while(0)
 #endif
 
+#define NTSHENGN_NETWORKING_HEADER_CONNECTION 0xC044
+#define NTSHENGN_NETWORKING_HEADER_DISCONNECTION 0xD15C
+
 namespace NtshEngn {
 
 	typedef uint32_t ConnectedClientID;
