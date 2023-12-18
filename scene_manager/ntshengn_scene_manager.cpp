@@ -271,10 +271,8 @@ void NtshEngn::SceneManager::goToScene(const std::string& filePath) {
 									const Renderable& renderable = m_ecs->getComponent<Renderable>(entity);
 									const std::array<Math::vec3, 2> aabb = m_assetManager->calculateAABB(renderable.model->primitives[renderable.modelPrimitiveIndex].mesh);
 
-									const Math::vec3 min = aabb[0];
-
 									colliderSphere->center = (aabb[0] + aabb[1]) / 2.0f;
-									colliderSphere->radius = (colliderSphere->center - min).length();
+									colliderSphere->radius = (colliderSphere->center - aabb[0]).length();
 								}
 								else {
 									// Default sphere collider
