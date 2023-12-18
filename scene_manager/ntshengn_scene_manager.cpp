@@ -2,6 +2,8 @@
 #include "../Common/utils/ntshengn_utils_json.h"
 #include "../Common/utils/ntshengn_utils_math.h"
 #include "../../scripts/ntshengn_scriptable_factory.h"
+#include <algorithm>
+#include <limits>
 
 void NtshEngn::SceneManager::goToScene(const std::string& filePath) {
 	JSON json;
@@ -132,10 +134,10 @@ void NtshEngn::SceneManager::goToScene(const std::string& filePath) {
 						if (typeNode.getString() == "Directional") {
 							light.type = LightType::Directional;
 						}
-						else if  (typeNode.getString() == "Point") {
+						else if (typeNode.getString() == "Point") {
 							light.type = LightType::Point;
 						}
-						else if  (typeNode.getString() == "Spot") {
+						else if (typeNode.getString() == "Spot") {
 							light.type = LightType::Spot;
 						}
 					}
@@ -207,7 +209,47 @@ void NtshEngn::SceneManager::goToScene(const std::string& filePath) {
 					if (collidableNode.contains("type")) {
 						const JSON::Node& typeNode = collidableNode["type"];
 
-						if (typeNode.getString() == "Sphere") {
+						if (typeNode.getString() == "Box") {
+							collidable.collider = std::make_unique<ColliderBox>();
+							ColliderBox* colliderBox = static_cast<ColliderBox*>(collidable.collider.get());
+
+							if (collidableNode.contains("center")) {
+								const JSON::Node& centerNode = collidableNode["center"];
+
+								colliderBox->center = { centerNode[0].getNumber(), centerNode[1].getNumber(), centerNode[2].getNumber() };
+							}
+
+							if (collidableNode.contains("halfExtent")) {
+								const JSON::Node& halfExtentNode = collidableNode["halfExtent"];
+
+								colliderBox->halfExtent = { halfExtentNode[0].getNumber(), halfExtentNode[1].getNumber(), halfExtentNode[2].getNumber() };
+							}
+
+							if (collidableNode.contains("rotation")) {
+								const JSON::Node& rotationNode = collidableNode["rotation"];
+
+								colliderBox->rotation = { Math::toRad(rotationNode[0].getNumber()), Math::toRad(rotationNode[1].getNumber()), Math::toRad(rotationNode[2].getNumber()) };
+							}
+
+							if (!collidableNode.contains("center") && !collidableNode.contains("halfExtent") && !collidableNode.contains("rotation")) {
+								if (m_ecs->hasComponent<Renderable>(entity)) {
+									// Calculate box from Renderable
+									const Renderable& renderable = m_ecs->getComponent<Renderable>(entity);
+									const std::array<Math::vec3, 2> aabb = m_assetManager->calculateAABB(renderable.model->primitives[renderable.modelPrimitiveIndex].mesh);
+
+									colliderBox->center = (aabb[0] + aabb[1]) / 2.0f;
+									colliderBox->halfExtent = (aabb[1] - aabb[0]) / 2.0f;
+									colliderBox->rotation = Math::vec3(0.0f, 0.0f, 0.0f);
+								}
+								else {
+									// Default box collider
+									colliderBox->center = Math::vec3(0.0f, 0.0f, 0.0f);
+									colliderBox->halfExtent = Math::vec3(0.5f, 0.5f, 0.5f);
+									colliderBox->rotation = Math::vec3(0.0f, 0.0f, 0.0f);
+								}
+							}
+						}
+						else if (typeNode.getString() == "Sphere") {
 							collidable.collider = std::make_unique<ColliderSphere>();
 							ColliderSphere* colliderSphere = static_cast<ColliderSphere*>(collidable.collider.get());
 
@@ -224,8 +266,8 @@ void NtshEngn::SceneManager::goToScene(const std::string& filePath) {
 							}
 
 							if (!collidableNode.contains("center") && !collidableNode.contains("radius")) {
-								// Calculate sphere from Renderable
 								if (m_ecs->hasComponent<Renderable>(entity)) {
+									// Calculate sphere from Renderable
 									const Renderable& renderable = m_ecs->getComponent<Renderable>(entity);
 									const std::array<Math::vec3, 2> aabb = m_assetManager->calculateAABB(renderable.model->primitives[renderable.modelPrimitiveIndex].mesh);
 
@@ -234,66 +276,10 @@ void NtshEngn::SceneManager::goToScene(const std::string& filePath) {
 									colliderSphere->center = (aabb[0] + aabb[1]) / 2.0f;
 									colliderSphere->radius = (colliderSphere->center - min).length();
 								}
-							}
-						}
-						if (typeNode.getString() == "AABB") {
-							collidable.collider = std::make_unique<ColliderAABB>();
-							ColliderAABB* colliderAABB = static_cast<ColliderAABB*>(collidable.collider.get());
-
-							if (collidableNode.contains("min")) {
-								const JSON::Node& minNode = collidableNode["min"];
-
-								colliderAABB->min = { minNode[0].getNumber(), minNode[1].getNumber(), minNode[2].getNumber() };
-							}
-
-							if (collidableNode.contains("max")) {
-								const JSON::Node& maxNode = collidableNode["max"];
-
-								colliderAABB->max = { maxNode[0].getNumber(), maxNode[1].getNumber(), maxNode[2].getNumber() };
-							}
-
-							if (!collidableNode.contains("min") && !collidableNode.contains("max")) {
-								// Calculate AABB from Renderable
-								if (m_ecs->hasComponent<Renderable>(entity)) {
-									const Renderable& renderable = m_ecs->getComponent<Renderable>(entity);
-									const std::array<Math::vec3, 2> aabb = m_assetManager->calculateAABB(renderable.model->primitives[renderable.modelPrimitiveIndex].mesh);
-
-									colliderAABB->min = aabb[0];
-									colliderAABB->max = aabb[1];
-								}
-							}
-						}
-						if (typeNode.getString() == "OBB") {
-							collidable.collider = std::make_unique<ColliderOBB>();
-							ColliderOBB* colliderOBB = static_cast<ColliderOBB*>(collidable.collider.get());
-
-							if (collidableNode.contains("center")) {
-								const JSON::Node& centerNode = collidableNode["center"];
-
-								colliderOBB->center = { centerNode[0].getNumber(), centerNode[1].getNumber(), centerNode[2].getNumber() };
-							}
-
-							if (collidableNode.contains("halfExtent")) {
-								const JSON::Node& halfExtentNode = collidableNode["halfExtent"];
-
-								colliderOBB->halfExtent = { halfExtentNode[0].getNumber(), halfExtentNode[1].getNumber(), halfExtentNode[2].getNumber() };
-							}
-
-							if (collidableNode.contains("rotation")) {
-								const JSON::Node& rotationNode = collidableNode["rotation"];
-
-								colliderOBB->rotation = { Math::toRad(rotationNode[0].getNumber()), Math::toRad(rotationNode[1].getNumber()), Math::toRad(rotationNode[2].getNumber()) };
-							}
-
-							if (!collidableNode.contains("center") && !collidableNode.contains("halfExtent") && !collidableNode.contains("rotation")) {
-								// Calculate OBB from Renderable
-								if (m_ecs->hasComponent<Renderable>(entity)) {
-									const Renderable& renderable = m_ecs->getComponent<Renderable>(entity);
-									const std::array<Math::vec3, 2> aabb = m_assetManager->calculateAABB(renderable.model->primitives[renderable.modelPrimitiveIndex].mesh);
-
-									colliderOBB->center = (aabb[0] + aabb[1]) / 2.0f;
-									colliderOBB->halfExtent = (aabb[1] - aabb[0]) / 2.0f;
-									colliderOBB->rotation = Math::vec3(0.0f, 0.0f, 0.0f);
+								else {
+									// Default sphere collider
+									colliderSphere->center = Math::vec3(0.0f, 0.0f, 0.0f);
+									colliderSphere->radius = 0.5f;
 								}
 							}
 						}
@@ -318,9 +304,43 @@ void NtshEngn::SceneManager::goToScene(const std::string& filePath) {
 
 								colliderCapsule->radius = radiusNode.getNumber();
 							}
+
+							if (!collidableNode.contains("base") && !collidableNode.contains("tip") && !collidableNode.contains("radius")) {
+								if (m_ecs->hasComponent<Renderable>(entity)) {
+									// Calculate capsule from Renderable
+									const Renderable& renderable = m_ecs->getComponent<Renderable>(entity);
+									std::array<Math::vec3, 2> aabb = m_assetManager->calculateAABB(renderable.model->primitives[renderable.modelPrimitiveIndex].mesh);
+
+									const Math::vec3 aabbCenter = (aabb[0] + aabb[1]) / 2.0f;
+									const Math::vec3 aabbExtent = aabb[1] - aabb[0];
+									std::vector<float> extentAsVector = { aabbExtent.x, aabbExtent.y, aabbExtent.z };
+									std::vector<float>::iterator extentMaxIt = std::max_element(extentAsVector.begin(), extentAsVector.end());
+									uint8_t extentMax = static_cast<uint8_t>(std::distance(extentAsVector.begin(), extentMaxIt));
+									extentAsVector[extentMax] = std::numeric_limits<float>::lowest();
+									extentMaxIt = std::max_element(extentAsVector.begin(), extentAsVector.end());
+									uint8_t extentSecondMax = static_cast<uint8_t>(std::distance(extentAsVector.begin(), extentMaxIt));
+
+									colliderCapsule->radius = std::abs(aabbExtent[extentSecondMax]) / 2.0f;
+									colliderCapsule->base = aabbCenter;
+									colliderCapsule->base[extentMax] = aabb[0][extentMax] + colliderCapsule->radius;
+									colliderCapsule->tip = aabbCenter;
+									colliderCapsule->tip[extentMax] -= aabb[1][extentMax] - colliderCapsule->radius;
+
+									if (colliderCapsule->base[extentMax] == colliderCapsule->tip[extentMax]) {
+										colliderCapsule->base[extentMax] -= 0.0001f;
+										colliderCapsule->tip[extentMax] += 0.0001f;
+									}
+								}
+								else {
+									// Default capsule collider
+									colliderCapsule->base = Math::vec3(0.0f, 0.25f, 0.0f);
+									colliderCapsule->tip = Math::vec3(0.0f, 0.75f, 0.0f);
+									colliderCapsule->radius = 0.25f;
+								}
+							}
 						}
 					}
-					
+
 					m_ecs->addComponent(entity, collidable);
 				}
 
