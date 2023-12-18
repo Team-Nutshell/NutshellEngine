@@ -35,21 +35,23 @@ void NtshEngn::SceneManager::goToScene(const std::string& filePath) {
 
 					Model* model = m_assetManager->loadModel(modelPathNode.getString());
 
-					entities.resize(model->primitives.size());
-					for (size_t j = 0; j < model->primitives.size(); j++) {
-						if (entityName != "") {
-							entities[j] = m_ecs->createEntity(entityName + "_" + std::to_string(j));
-						}
-						else {
-							entities[j] = m_ecs->createEntity();
-						}
+					if (model) {
+						entities.resize(model->primitives.size());
+						for (size_t j = 0; j < model->primitives.size(); j++) {
+							if (entityName != "") {
+								entities[j] = m_ecs->createEntity(entityName + "_" + std::to_string(j));
+							}
+							else {
+								entities[j] = m_ecs->createEntity();
+							}
 
-						m_ecs->setEntityPersistence(entities[j], entityPersistent);
+							m_ecs->setEntityPersistence(entities[j], entityPersistent);
 
-						Renderable renderable;
-						renderable.model = model;
-						renderable.modelPrimitiveIndex = static_cast<uint32_t>(j);
-						m_ecs->addComponent(entities[j], renderable);
+							Renderable renderable;
+							renderable.model = model;
+							renderable.modelPrimitiveIndex = static_cast<uint32_t>(j);
+							m_ecs->addComponent(entities[j], renderable);
+						}
 					}
 				}
 			}
