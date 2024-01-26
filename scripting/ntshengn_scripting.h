@@ -10,11 +10,6 @@
 
 namespace NtshEngn {
 
-	struct InternalScript {
-		Script* script;
-		bool justInitialized;
-	};
-
 	class Scripting : public System {
 	public:
 		void update(double dt);
@@ -50,7 +45,7 @@ namespace NtshEngn {
 		SceneManager* m_sceneManager = nullptr;
 
 	private:
-		std::unordered_map<Entity, InternalScript> m_entityScripts;
+		std::unordered_map<Entity, bool> m_entityScriptsJustInitialized;
 		std::set<Entity> m_entityScriptsToDestroy;
 	};
 

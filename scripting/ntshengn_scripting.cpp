@@ -1,20 +1,23 @@
 #include "ntshengn_scripting.h"
 
 void NtshEngn::Scripting::update(double dt) {
-	for (auto& entityScript : m_entityScripts) {
+	for (auto& entityScript : m_entityScriptsJustInitialized) {
 		if (m_entityScriptsToDestroy.find(entityScript.first) == m_entityScriptsToDestroy.end()) {
-			if (!entityScript.second.justInitialized) {
-				entityScript.second.script->update(dt);
+			if (!entityScript.second) {
+				const Scriptable& entityScriptable = m_ecs->getComponent<Scriptable>(entityScript.first);
+				Script* script = static_cast<Script*>(entityScriptable.script.get());
+				script->update(dt);
 			}
 			else {
-				entityScript.second.justInitialized = false;
+				entityScript.second = false;
 			}
 		}
 	}
 
 	for (auto destroyedEntity : m_entityScriptsToDestroy) {
-		m_entityScripts.erase(destroyedEntity);
+		m_entityScriptsJustInitialized.erase(destroyedEntity);
 	}
+	m_entityScriptsToDestroy.clear();
 }
 
 void NtshEngn::Scripting::setSystemModules(GraphicsModuleInterface* graphicsModule, PhysicsModuleInterface* physicsModule, WindowModuleInterface* windowModule, AudioModuleInterface* audioModule) {
@@ -50,32 +53,32 @@ void NtshEngn::Scripting::setSceneManager(SceneManager* sceneManager) {
 
 void NtshEngn::Scripting::onEntityComponentAdded(Entity entity, Component componentID) {
 	if (componentID == m_ecs->getComponentID<Scriptable>()) {
-		const Scriptable& entityScript = m_ecs->getComponent<Scriptable>(entity);
+		const Scriptable& entityScriptable = m_ecs->getComponent<Scriptable>(entity);
 
-		InternalScript internalScript;
-		internalScript.script = static_cast<Script*>(entityScript.script.get());
-		internalScript.script->setEntityID(entity);
-		internalScript.script->setSystemModules(m_graphicsModule, m_physicsModule, m_windowModule, m_audioModule);
-		internalScript.script->setECS(m_ecs);
-		internalScript.script->setAssetManager(m_assetManager);
-		internalScript.script->setFrameLimiter(m_frameLimiter);
-		internalScript.script->setJobSystem(m_jobSystem);
-		internalScript.script->setNetworking(m_networking);
-		internalScript.script->setSceneManager(m_sceneManager);
-		internalScript.justInitialized = true;
+		Script* script = static_cast<Script*>(entityScriptable.script.get());
+		script->setEntityID(entity);
+		script->setSystemModules(m_graphicsModule, m_physicsModule, m_windowModule, m_audioModule);
+		script->setECS(m_ecs);
+		script->setAssetManager(m_assetManager);
+		script->setFrameLimiter(m_frameLimiter);
+		script->setJobSystem(m_jobSystem);
+		script->setNetworking(m_networking);
+		script->setSceneManager(m_sceneManager);
 		// A new entity with a script with the same ID as an old entity with a script that has been destroyed this frame has been created
 		if (m_entityScriptsToDestroy.find(entity) != m_entityScriptsToDestroy.end()) {
 			m_entityScriptsToDestroy.erase(entity);
 		}
-		m_entityScripts[entity] = internalScript;
+		m_entityScriptsJustInitialized[entity] = true;
 
-		m_entityScripts[entity].script->init();
+		script->init();
 	}
 }
 
 void NtshEngn::Scripting::onEntityComponentRemoved(Entity entity, Component componentID) {
 	if (componentID == m_ecs->getComponentID<Scriptable>()) {
-		m_entityScripts[entity].script->destroy();
+		const Scriptable& scriptable = m_ecs->getComponent<Scriptable>(entity);
+		Script* script = static_cast<Script*>(scriptable.script.get());
+		script->destroy();
 
 		m_entityScriptsToDestroy.insert(entity);
 	}
