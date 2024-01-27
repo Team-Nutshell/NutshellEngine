@@ -174,6 +174,12 @@ void NtshEngn::SceneManager::goToScene(const std::string& filePath) {
 						rigidbody.isAffectedByConstants = isAffectedByConstantsNode.getBoolean();
 					}
 
+					if (rigidbodyNode.contains("lockRotation")) {
+						const JSON::Node& lockRotationNode = rigidbodyNode["lockRotation"];
+
+						rigidbody.lockRotation = lockRotationNode.getBoolean();
+					}
+
 					if (rigidbodyNode.contains("mass")) {
 						const JSON::Node& massNode = rigidbodyNode["mass"];
 
