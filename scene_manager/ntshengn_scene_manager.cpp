@@ -41,7 +41,12 @@ void NtshEngn::SceneManager::goToScene(const std::string& filePath) {
 						entities.resize(model->primitives.size());
 						for (size_t j = 0; j < model->primitives.size(); j++) {
 							if (entityName != "") {
-								entities[j] = m_ecs->createEntity(entityName + "_" + std::to_string(j));
+								if (model->primitives.size() > 1) {
+									entities[j] = m_ecs->createEntity(entityName + "_" + std::to_string(j));
+								}
+								else {
+									entities[j] = m_ecs->createEntity(entityName);
+								}
 							}
 							else {
 								entities[j] = m_ecs->createEntity();
