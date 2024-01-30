@@ -1,11 +1,15 @@
 #include "ntshengn_scripting.h"
 
+void NtshEngn::Scripting::init() {
+	m_sceneManager->setScriptKeeper(&m_scriptKeeper);
+}
+
 void NtshEngn::Scripting::update(double dt) {
 	for (auto& entityScript : m_entityScriptsJustInitialized) {
 		if (m_entityScriptsToDestroy.find(entityScript.first) == m_entityScriptsToDestroy.end()) {
 			if (!entityScript.second) {
 				const Scriptable& entityScriptable = m_ecs->getComponent<Scriptable>(entityScript.first);
-				Script* script = static_cast<Script*>(entityScriptable.script.get());
+				Script* script = static_cast<Script*>(entityScriptable.script);
 				script->update(dt);
 			}
 			else {
@@ -55,7 +59,7 @@ void NtshEngn::Scripting::onEntityComponentAdded(Entity entity, Component compon
 	if (componentID == m_ecs->getComponentID<Scriptable>()) {
 		const Scriptable& entityScriptable = m_ecs->getComponent<Scriptable>(entity);
 
-		Script* script = static_cast<Script*>(entityScriptable.script.get());
+		Script* script = static_cast<Script*>(entityScriptable.script);
 		script->setEntityID(entity);
 		script->setSystemModules(m_graphicsModule, m_physicsModule, m_windowModule, m_audioModule);
 		script->setECS(m_ecs);
@@ -64,6 +68,7 @@ void NtshEngn::Scripting::onEntityComponentAdded(Entity entity, Component compon
 		script->setJobSystem(m_jobSystem);
 		script->setNetworking(m_networking);
 		script->setSceneManager(m_sceneManager);
+		script->setScriptKeeper(&m_scriptKeeper);
 		// A new entity with a script with the same ID as an old entity with a script that has been destroyed this frame has been created
 		if (m_entityScriptsToDestroy.find(entity) != m_entityScriptsToDestroy.end()) {
 			m_entityScriptsToDestroy.erase(entity);
@@ -77,8 +82,9 @@ void NtshEngn::Scripting::onEntityComponentAdded(Entity entity, Component compon
 void NtshEngn::Scripting::onEntityComponentRemoved(Entity entity, Component componentID) {
 	if (componentID == m_ecs->getComponentID<Scriptable>()) {
 		const Scriptable& scriptable = m_ecs->getComponent<Scriptable>(entity);
-		Script* script = static_cast<Script*>(scriptable.script.get());
+		Script* script = static_cast<Script*>(scriptable.script);
 		script->destroy();
+		m_scriptKeeper.destroyScript(script);
 
 		m_entityScriptsToDestroy.insert(entity);
 	}

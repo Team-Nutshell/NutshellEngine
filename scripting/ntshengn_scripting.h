@@ -6,12 +6,15 @@
 #include "../networking/ntshengn_networking.h"
 #include "../scene_manager/ntshengn_scene_manager.h"
 #include "ntshengn_script.h"
+#include "ntshengn_script_keeper.h"
 #include <unordered_map>
+#include <set>
 
 namespace NtshEngn {
 
 	class Scripting : public System {
 	public:
+		void init();
 		void update(double dt);
 
 		void setSystemModules(GraphicsModuleInterface* graphicsModule, PhysicsModuleInterface* physicsModule, WindowModuleInterface* windowModule, AudioModuleInterface* audioModule);
@@ -21,6 +24,8 @@ namespace NtshEngn {
 		void setJobSystem(JobSystem* jobSystem);
 		void setNetworking(Networking* networking);
 		void setSceneManager(SceneManager* sceneManager);
+
+		ScriptKeeper* getScriptKeeper();
 
 	public:
 		void onEntityComponentAdded(Entity entity, Component componentID);
@@ -45,6 +50,7 @@ namespace NtshEngn {
 		SceneManager* m_sceneManager = nullptr;
 
 	private:
+		ScriptKeeper m_scriptKeeper;
 		std::unordered_map<Entity, bool> m_entityScriptsJustInitialized;
 		std::set<Entity> m_entityScriptsToDestroy;
 	};

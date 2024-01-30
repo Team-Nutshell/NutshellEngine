@@ -360,7 +360,7 @@ void NtshEngn::SceneManager::goToScene(const std::string& filePath) {
 					if (scriptableNode.contains("scriptName")) {
 						const JSON::Node& scriptNameNode = scriptableNode["scriptName"];
 
-						m_ecs->addComponent(entity, ScriptableFactory::createScriptable(scriptNameNode.getString()));
+						m_ecs->addComponent(entity, ScriptableFactory::createScriptable(m_scriptKeeper, scriptNameNode.getString()));
 					}
 				}
 			}
@@ -380,4 +380,8 @@ void NtshEngn::SceneManager::setECS(ECS* ecs) {
 
 void NtshEngn::SceneManager::setAssetManager(AssetManager* assetManager) {
 	m_assetManager = assetManager;
+}
+
+void NtshEngn::SceneManager::setScriptKeeper(ScriptKeeper* scriptKeeper) {
+	m_scriptKeeper = scriptKeeper;
 }

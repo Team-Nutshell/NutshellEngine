@@ -72,7 +72,8 @@ set(SCRIPTING_SOURCES
 	scripting/ntshengn_script.cpp)
 set(SCRIPTING_HEADERS
 	scripting/ntshengn_scripting.h
-	scripting/ntshengn_script.h)
+	scripting/ntshengn_script.h
+	scripting/ntshengn_script_keeper.h)
 
 set(UTILS_HEADERS
 	utils/ntshengn_core_defines.h)

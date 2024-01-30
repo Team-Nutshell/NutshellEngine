@@ -10,6 +10,7 @@
 #include "../frame_limiter/ntshengn_frame_limiter.h"
 #include "../networking/ntshengn_networking.h"
 #include "../scene_manager/ntshengn_scene_manager.h"
+#include "../scripting/ntshengn_script_keeper.h"
 
 namespace NtshEngn {
 	
@@ -180,6 +181,12 @@ namespace NtshEngn {
 
 		void closeServerSocket(ServerSocket* serverSocket);
 		void closeClientSocket(ClientSocket* clientSocket);
+
+		// Scripting
+		template <typename T>
+		T* createScript() {
+			return scriptKeeper->createScript<T>();
+		}
 	
 	public:
 		void setEntityID(Entity passEntityID) { entityID = passEntityID; }
@@ -195,6 +202,7 @@ namespace NtshEngn {
 		void setJobSystem(JobSystem* passJobSystem) { jobSystem = passJobSystem; }
 		void setNetworking(Networking* passNetworking) { networking = passNetworking; }
 		void setSceneManager(SceneManager* passSceneManager) { sceneManager = passSceneManager; }
+		void setScriptKeeper(ScriptKeeper* passScriptKeeper) { scriptKeeper = passScriptKeeper; }
 
 	protected:
 		Entity entityID = 0;
@@ -215,6 +223,8 @@ namespace NtshEngn {
 		Networking* networking = nullptr;
 
 		SceneManager* sceneManager = nullptr;
+		
+		ScriptKeeper* scriptKeeper = nullptr;
 	};
 
 }
