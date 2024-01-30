@@ -127,6 +127,9 @@ void NtshEngn::Core::init() {
 	// Pass Scene Manager
 	passSceneManager();
 
+	// Initialize Scripting
+	m_scripting.init();
+
 	// Initialize System Modules
 	NTSHENGN_POINTER_EXECUTE(m_windowModule, init());
 	NTSHENGN_POINTER_EXECUTE(m_windowModule, openWindow(1280, 720, ""));
