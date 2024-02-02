@@ -55,8 +55,8 @@ void NtshEngn::SceneManager::goToScene(const std::string& filePath) {
 							m_ecs->setEntityPersistence(entities[j], entityPersistent);
 
 							Renderable renderable;
-							renderable.model = model;
-							renderable.modelPrimitiveIndex = static_cast<uint32_t>(j);
+							renderable.mesh = &model->primitives[j].mesh;
+							renderable.material = model->primitives[j].material;
 							m_ecs->addComponent(entities[j], renderable);
 						}
 					}
@@ -246,7 +246,7 @@ void NtshEngn::SceneManager::goToScene(const std::string& filePath) {
 								if (m_ecs->hasComponent<Renderable>(entity)) {
 									// Calculate box from Renderable
 									const Renderable& renderable = m_ecs->getComponent<Renderable>(entity);
-									const std::array<Math::vec3, 2> aabb = m_assetManager->calculateAABB(renderable.model->primitives[renderable.modelPrimitiveIndex].mesh);
+									const std::array<Math::vec3, 2> aabb = m_assetManager->calculateAABB(*renderable.mesh);
 
 									colliderBox->center = (aabb[0] + aabb[1]) / 2.0f;
 									colliderBox->halfExtent = (aabb[1] - aabb[0]) / 2.0f;
@@ -280,7 +280,7 @@ void NtshEngn::SceneManager::goToScene(const std::string& filePath) {
 								if (m_ecs->hasComponent<Renderable>(entity)) {
 									// Calculate sphere from Renderable
 									const Renderable& renderable = m_ecs->getComponent<Renderable>(entity);
-									const std::array<Math::vec3, 2> aabb = m_assetManager->calculateAABB(renderable.model->primitives[renderable.modelPrimitiveIndex].mesh);
+									const std::array<Math::vec3, 2> aabb = m_assetManager->calculateAABB(*renderable.mesh);
 
 									colliderSphere->center = (aabb[0] + aabb[1]) / 2.0f;
 									colliderSphere->radius = (colliderSphere->center - aabb[0]).length();
@@ -318,7 +318,7 @@ void NtshEngn::SceneManager::goToScene(const std::string& filePath) {
 								if (m_ecs->hasComponent<Renderable>(entity)) {
 									// Calculate capsule from Renderable
 									const Renderable& renderable = m_ecs->getComponent<Renderable>(entity);
-									std::array<Math::vec3, 2> aabb = m_assetManager->calculateAABB(renderable.model->primitives[renderable.modelPrimitiveIndex].mesh);
+									std::array<Math::vec3, 2> aabb = m_assetManager->calculateAABB(*renderable.mesh);
 
 									const Math::vec3 aabbCenter = (aabb[0] + aabb[1]) / 2.0f;
 									const Math::vec3 aabbExtent = aabb[1] - aabb[0];
