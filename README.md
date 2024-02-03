@@ -1,4 +1,6 @@
 # NutshellEngine
+![NutshellEngine](https://www.team-nutshell.dev/nutshellengine/assets/images/nutshellengine-logo-full-dark-theme.png)
+
 **NutshellEngine** is a **modular game engine** designed to **enable game and engine developers to work together** efficiently by providing **easy to replace modules** implementing the game engine’s principal systems such as rendering, physics and audio.
 
 This repository contains **NutshellEngine's core**.
