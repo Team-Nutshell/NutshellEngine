@@ -92,7 +92,7 @@ void NtshEngn::SceneManager::goToScene(const std::string& filePath) {
 					if (transformNode.contains("rotation")) {
 						const JSON::Node& rotationNode = transformNode["rotation"];
 
-						transform.rotation = { rotationNode[0].getNumber(), rotationNode[1].getNumber(), rotationNode[2].getNumber() };
+						transform.rotation = { Math::toRad(rotationNode[0].getNumber()), Math::toRad(rotationNode[1].getNumber()), Math::toRad(rotationNode[2].getNumber()) };
 					}
 
 					if (transformNode.contains("scale")) {
@@ -107,10 +107,22 @@ void NtshEngn::SceneManager::goToScene(const std::string& filePath) {
 					const JSON::Node& cameraNode = entityNode["camera"];
 
 					Camera camera;
+					if (cameraNode.contains("forward")) {
+						const JSON::Node& forwardNode = cameraNode["forward"];
+
+						camera.forward = { forwardNode[0].getNumber(), forwardNode[1].getNumber(), forwardNode[2].getNumber() };
+					}
+
+					if (cameraNode.contains("up")) {
+						const JSON::Node& upNode = cameraNode["up"];
+
+						camera.up = { upNode[0].getNumber(), upNode[1].getNumber(), upNode[2].getNumber() };
+					}
+
 					if (cameraNode.contains("fov")) {
 						const JSON::Node& fovNode = cameraNode["fov"];
 
-						camera.fov = fovNode.getNumber();
+						camera.fov = Math::toRad(fovNode.getNumber());
 					}
 
 					if (cameraNode.contains("nearPlane")) {
@@ -151,6 +163,12 @@ void NtshEngn::SceneManager::goToScene(const std::string& filePath) {
 						const JSON::Node& colorNode = lightNode["color"];
 
 						light.color = { colorNode[0].getNumber(), colorNode[1].getNumber(), colorNode[2].getNumber() };
+					}
+
+					if (lightNode.contains("direction")) {
+						const JSON::Node& directionNode = lightNode["direction"];
+
+						light.direction = { directionNode[0].getNumber(), directionNode[1].getNumber(), directionNode[2].getNumber() };
 					}
 
 					if (lightNode.contains("cutoff")) {
