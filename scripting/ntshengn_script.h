@@ -119,6 +119,8 @@ namespace NtshEngn {
 		void setWindowResizable(bool resizable, WindowID windowID = NTSHENGN_WINDOW_UNKNOWN);
 		bool isWindowResizable(WindowID windowID = NTSHENGN_WINDOW_UNKNOWN);
 
+		std::vector<std::string> getWindowDroppedFiles(WindowID windowID = NTSHENGN_WINDOW_UNKNOWN);
+
 		void setWindowTitle(const std::string& title, WindowID windowID = NTSHENGN_WINDOW_UNKNOWN);
 		void setWindowIcon(const Image& image, WindowID windowID = NTSHENGN_WINDOW_UNKNOWN);
 
