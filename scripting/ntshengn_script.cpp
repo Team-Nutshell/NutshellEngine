@@ -460,6 +460,18 @@ bool NtshEngn::Script::isWindowResizable(WindowID windowID) {
 	return windowModule->isWindowResizable(windowID);
 }
 
+std::vector<std::string> NtshEngn::Script::getWindowDroppedFiles(WindowID windowID) {
+	if (!windowModule) {
+		return std::vector<std::string>();
+	}
+
+	if (windowID == NTSHENGN_WINDOW_UNKNOWN) {
+		windowID = windowModule->getMainWindowID();
+	}
+
+	return windowModule->getWindowDroppedFiles(windowID);
+}
+
 void NtshEngn::Script::setWindowTitle(const std::string& title, WindowID windowID) {
 	if (!windowModule) {
 		return;
