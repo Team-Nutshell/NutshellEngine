@@ -193,6 +193,7 @@ namespace NtshEngn {
 
 		// Profiling
 		void startProfiling(const std::string& profilingSessionName);
+		Profiler::ResultNode getProfilingResults();
 		Profiler::ResultNode endProfiling();
 		bool isProfilerRunning();
 		void startProfilingBlock(const std::string& profilingBlockName);
