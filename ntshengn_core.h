@@ -10,6 +10,7 @@
 #include "Common/ecs/ntshengn_ecs.h"
 #include "Common/asset_manager/ntshengn_asset_manager.h"
 #include "Common/job_system/ntshengn_job_system.h"
+#include "Common/profiler/ntshengn_profiler.h"
 #include "frame_limiter/ntshengn_frame_limiter.h"
 #include "scene_manager/ntshengn_scene_manager.h"
 #include "scripting/ntshengn_scripting.h"
@@ -37,6 +38,8 @@ namespace NtshEngn {
 
 		JobSystem* getJobSystem();
 
+		Profiler* getProfiler();
+
 		Networking* getNetworking();
 
 		SceneManager* getSceneManager();
@@ -62,6 +65,8 @@ namespace NtshEngn {
 		void initializeJobSystem();
 		void passJobSystem();
 
+		void passProfiler();
+
 		void initializeNetworking();
 		void passNetworking();
 
@@ -86,6 +91,8 @@ namespace NtshEngn {
 		FrameLimiter m_frameLimiter;
 
 		JobSystem m_jobSystem;
+
+		Profiler m_profiler;
 
 		Networking m_networking;
 

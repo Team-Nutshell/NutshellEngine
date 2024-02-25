@@ -47,6 +47,10 @@ void NtshEngn::Scripting::setJobSystem(JobSystem* jobSystem) {
 	m_jobSystem = jobSystem;
 }
 
+void NtshEngn::Scripting::setProfiler(Profiler* profiler) {
+	m_profiler = profiler;
+}
+
 void NtshEngn::Scripting::setNetworking(Networking* networking) {
 	m_networking = networking;
 }
@@ -66,6 +70,7 @@ void NtshEngn::Scripting::onEntityComponentAdded(Entity entity, Component compon
 		script->setAssetManager(m_assetManager);
 		script->setFrameLimiter(m_frameLimiter);
 		script->setJobSystem(m_jobSystem);
+		script->setProfiler(m_profiler);
 		script->setNetworking(m_networking);
 		script->setSceneManager(m_sceneManager);
 		script->setScriptKeeper(&m_scriptKeeper);

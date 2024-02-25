@@ -6,6 +6,7 @@ void NtshEngn::Core::launch(const std::string& optionsFilePath) {
 	std::string windowTitle = "NutshellEngine";
 	std::string windowIconImagePath = "";
 	std::string firstScenePath = "";
+	bool startProfiling = false;
 
 	if (std::filesystem::exists(optionsFilePath)) {
 		JSON json;
@@ -25,6 +26,13 @@ void NtshEngn::Core::launch(const std::string& optionsFilePath) {
 
 		if (optionsRoot.contains("firstScenePath")) {
 			firstScenePath = optionsRoot["firstScenePath"].getString();
+		}
+
+		if (optionsRoot.contains("startProfiling")) {
+			startProfiling = optionsRoot["startProfiling"].getBoolean();
+			if (startProfiling) {
+				m_profiler.start(windowTitle);
+			}
 		}
 	}
 	else {
@@ -57,6 +65,10 @@ void NtshEngn::Core::launch(const std::string& optionsFilePath) {
 
 	// Destroy
 	destroy();
+
+	if (startProfiling) {
+		NTSHENGN_CORE_INFO("Profiling session: \n" + Profiler::to_string(m_profiler.end()));
+	}
 }
 
 NtshEngn::GraphicsModuleInterface* NtshEngn::Core::getGraphicsModule() {
@@ -91,6 +103,10 @@ NtshEngn::JobSystem* NtshEngn::Core::getJobSystem() {
 	return &m_jobSystem;
 }
 
+NtshEngn::Profiler* NtshEngn::Core::getProfiler() {
+	return &m_profiler;
+}
+
 NtshEngn::Networking* NtshEngn::Core::getNetworking() {
 	return &m_networking;
 }
@@ -120,6 +136,9 @@ void NtshEngn::Core::init() {
 
 	// Initialize Job System
 	initializeJobSystem();
+
+	// Pass Profiler
+	passProfiler();
 
 	// Initialize Networking
 	initializeNetworking();
@@ -315,6 +334,15 @@ void NtshEngn::Core::passJobSystem() {
 	m_scripting.setJobSystem(&m_jobSystem);
 	NTSHENGN_POINTER_EXECUTE(m_windowModule, setJobSystem(&m_jobSystem));
 	NTSHENGN_POINTER_EXECUTE(m_audioModule, setJobSystem(&m_jobSystem));
+}
+
+void NtshEngn::Core::passProfiler() {
+	NTSHENGN_POINTER_EXECUTE(m_graphicsModule, setProfiler(&m_profiler));
+	NTSHENGN_POINTER_EXECUTE(m_physicsModule, setProfiler(&m_profiler));
+	m_scripting.setProfiler(&m_profiler);
+	NTSHENGN_POINTER_EXECUTE(m_windowModule, setProfiler(&m_profiler));
+	NTSHENGN_POINTER_EXECUTE(m_audioModule, setProfiler(&m_profiler));
+	NTSHENGN_POINTER_EXECUTE(m_assetLoaderModule, setProfiler(&m_profiler));
 }
 
 void NtshEngn::Core::initializeNetworking() {
