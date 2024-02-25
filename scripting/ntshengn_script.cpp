@@ -764,6 +764,10 @@ void NtshEngn::Script::startProfiling(const std::string& profilingSessionName) {
 	profiler->start(profilingSessionName);
 }
 
+NtshEngn::Profiler::ResultNode NtshEngn::Script::getProfilingResults() {
+	return profiler->getResults();
+}
+
 NtshEngn::Profiler::ResultNode NtshEngn::Script::endProfiling() {
 	return profiler->end();
 }

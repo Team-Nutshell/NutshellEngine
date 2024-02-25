@@ -6,7 +6,6 @@ void NtshEngn::Core::launch(const std::string& optionsFilePath) {
 	std::string windowTitle = "NutshellEngine";
 	std::string windowIconImagePath = "";
 	std::string firstScenePath = "";
-	bool startProfiling = false;
 
 	if (std::filesystem::exists(optionsFilePath)) {
 		JSON json;
@@ -29,8 +28,7 @@ void NtshEngn::Core::launch(const std::string& optionsFilePath) {
 		}
 
 		if (optionsRoot.contains("startProfiling")) {
-			startProfiling = optionsRoot["startProfiling"].getBoolean();
-			if (startProfiling) {
+			if (optionsRoot["startProfiling"].getBoolean()) {
 				m_profiler.start(windowTitle);
 			}
 		}
@@ -66,7 +64,7 @@ void NtshEngn::Core::launch(const std::string& optionsFilePath) {
 	// Destroy
 	destroy();
 
-	if (startProfiling) {
+	if (m_profiler.isRunning()) {
 		NTSHENGN_CORE_INFO("Profiling session: \n" + Profiler::to_string(m_profiler.end()));
 	}
 }
