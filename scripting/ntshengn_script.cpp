@@ -759,3 +759,23 @@ void NtshEngn::Script::closeServerSocket(ServerSocket* serverSocket) {
 void NtshEngn::Script::closeClientSocket(ClientSocket* clientSocket) {
 	networking->closeClientSocket(clientSocket);
 }
+
+void NtshEngn::Script::startProfiling(const std::string& profilingSessionName) {
+	profiler->start(profilingSessionName);
+}
+
+NtshEngn::Profiler::ResultNode NtshEngn::Script::endProfiling() {
+	return profiler->end();
+}
+
+bool NtshEngn::Script::isProfilerRunning() {
+	return profiler->isRunning();
+}
+
+void NtshEngn::Script::startProfilingBlock(const std::string& profilingBlockName) {
+	profiler->startBlock(profilingBlockName);
+}
+
+void NtshEngn::Script::endProfilingBlock() {
+	profiler->endBlock();
+}

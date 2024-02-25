@@ -7,6 +7,7 @@
 #include "../Common/ecs/ntshengn_ecs.h"
 #include "../Common/asset_manager/ntshengn_asset_manager.h"
 #include "../Common/job_system/ntshengn_job_system.h"
+#include "../Common/profiler/ntshengn_profiler.h"
 #include "../frame_limiter/ntshengn_frame_limiter.h"
 #include "../networking/ntshengn_networking.h"
 #include "../scene_manager/ntshengn_scene_manager.h"
@@ -189,6 +190,13 @@ namespace NtshEngn {
 		T* createScript() {
 			return scriptKeeper->createScript<T>();
 		}
+
+		// Profiling
+		void startProfiling(const std::string& profilingSessionName);
+		Profiler::ResultNode endProfiling();
+		bool isProfilerRunning();
+		void startProfilingBlock(const std::string& profilingBlockName);
+		void endProfilingBlock();
 	
 	public:
 		void setEntityID(Entity passEntityID) { entityID = passEntityID; }
@@ -202,6 +210,7 @@ namespace NtshEngn {
 		void setAssetManager(AssetManager* passAssetManager) { assetManager = passAssetManager; }
 		void setFrameLimiter(FrameLimiter* passFrameLimiter) { frameLimiter = passFrameLimiter; }
 		void setJobSystem(JobSystem* passJobSystem) { jobSystem = passJobSystem; }
+		void setProfiler(Profiler* passProfiler) { profiler = passProfiler; }
 		void setNetworking(Networking* passNetworking) { networking = passNetworking; }
 		void setSceneManager(SceneManager* passSceneManager) { sceneManager = passSceneManager; }
 		void setScriptKeeper(ScriptKeeper* passScriptKeeper) { scriptKeeper = passScriptKeeper; }
@@ -221,6 +230,8 @@ namespace NtshEngn {
 		FrameLimiter* frameLimiter = nullptr;
 
 		JobSystem* jobSystem = nullptr;
+
+		Profiler* profiler = nullptr;
 
 		Networking* networking = nullptr;
 
