@@ -209,6 +209,12 @@ void NtshEngn::SceneManager::goToScene(const std::string& filePath) {
 						rigidbody.mass = massNode.getNumber();
 					}
 
+					if (rigidbodyNode.contains("inertia")) {
+						const JSON::Node& inertiaNode = rigidbodyNode["inertia"];
+
+						rigidbody.inertia = inertiaNode.getNumber();
+					}
+
 					if (rigidbodyNode.contains("restitution")) {
 						const JSON::Node& restitutionNode = rigidbodyNode["restitution"];
 
