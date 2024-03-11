@@ -11,6 +11,7 @@ This repository contains **NutshellEngine's core**.
 ## NutshellEngine's repositories
 - [**NutshellEngine**](https://github.com/Team-Nutshell/NutshellEngine): Core of NutshellEngine, manages the modules and various systems.
 - [**Application**](https://github.com/Team-Nutshell/NutshellEngine-Application): Base of NutshellEngine's applications.
+- [**Editor**](https://github.com/Team-Nutshell/NutshellEngine-Editor): NutshellEngine's editor.
 - [**Graphics Module**](https://github.com/Team-Nutshell/NutshellEngine-GraphicsModule): Module managing NutshellEngine's graphics engine.
 - [**Physics Module**](https://github.com/Team-Nutshell/NutshellEngine-PhysicsModule): Module managing NutshellEngine's physics engine.
 - [**Window Module**](https://github.com/Team-Nutshell/NutshellEngine-WindowModule): Module managing NutshellEngine's windows and inputs.
