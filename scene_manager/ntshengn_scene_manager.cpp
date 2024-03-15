@@ -382,9 +382,11 @@ void NtshEngn::SceneManager::goToScene(const std::string& filePath) {
 					const JSON::Node& scriptableNode = entityNode["scriptable"];
 
 					if (scriptableNode.contains("scriptName")) {
-						const JSON::Node& scriptNameNode = scriptableNode["scriptName"];
+						if (scriptableNode["scriptName"].getString() != "") {
+							const JSON::Node& scriptNameNode = scriptableNode["scriptName"];
 
-						m_ecs->addComponent(entity, ScriptableFactory::createScriptable(m_scriptKeeper, scriptNameNode.getString()));
+							m_ecs->addComponent(entity, ScriptableFactory::createScriptable(m_scriptKeeper, scriptNameNode.getString()));
+						}
 					}
 				}
 			}
