@@ -312,6 +312,7 @@ void NtshEngn::Core::passAssetManager() {
 	m_scripting.setAssetManager(&m_assetManager);
 	NTSHENGN_POINTER_EXECUTE(m_windowModule, setAssetManager(&m_assetManager));
 	NTSHENGN_POINTER_EXECUTE(m_audioModule, setAssetManager(&m_assetManager));
+	NTSHENGN_POINTER_EXECUTE(m_assetLoaderModule, setAssetManager(&m_assetManager));
 
 	m_sceneManager.setAssetManager(&m_assetManager);
 }
