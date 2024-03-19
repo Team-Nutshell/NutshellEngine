@@ -132,7 +132,9 @@ namespace NtshEngn {
 
 		// Physics
 		IntersectionInformation intersect(const ColliderShape* shape1, const ColliderShape* shape2);
-		std::vector<RaycastInformation> raycast(const Math::vec3& rayOrigin, const Math::vec3& rayDirection, float tMin = 0.0001f, float tMax = 1000000.0f);
+		
+		RaycastInformation raycast(const Math::vec3& rayOrigin, const Math::vec3& rayDirection, const ColliderShape* shape, float tMin = 0.0001f, float tMax = 1000000.0f);
+		std::vector<std::pair<Entity, RaycastInformation>> raycastAll(const Math::vec3& rayOrigin, const Math::vec3& rayDirection, float tMin = 0.0001f, float tMax = 1000000.0f);
 
 		// Audio
 		SoundSourceID playSound(SoundID soundID, float gain = 1.0f, float pitch = 1.0f);
