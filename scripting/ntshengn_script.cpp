@@ -530,18 +530,26 @@ float NtshEngn::Script::getMonitorDisplayScaling() {
 
 NtshEngn::IntersectionInformation NtshEngn::Script::intersect(const ColliderShape* shape1, const ColliderShape* shape2) {
 	if (!physicsModule) {
-		return NtshEngn::IntersectionInformation();
+		return IntersectionInformation();
 	}
 
 	return physicsModule->intersect(shape1, shape2);
 }
 
-std::vector<NtshEngn::RaycastInformation> NtshEngn::Script::raycast(const Math::vec3& rayOrigin, const Math::vec3& rayDirection, float tMin, float tMax) {
+NtshEngn::RaycastInformation NtshEngn::Script::raycast(const Math::vec3& rayOrigin, const Math::vec3& rayDirection, const ColliderShape* shape, float tMin, float tMax) {
+	if (!physicsModule) {
+		return RaycastInformation();
+	}
+
+	return physicsModule->raycast(rayOrigin, rayDirection, tMin, tMax, shape);
+}
+
+std::vector<std::pair<NtshEngn::Entity, NtshEngn::RaycastInformation>> NtshEngn::Script::raycastAll(const Math::vec3& rayOrigin, const Math::vec3& rayDirection, float tMin, float tMax) {
 	if (!physicsModule) {
 		return {};
 	}
 
-	return physicsModule->raycast(rayOrigin, rayDirection, tMin, tMax);
+	return physicsModule->raycastAll(rayOrigin, rayDirection, tMin, tMax);
 }
 
 NtshEngn::SoundSourceID NtshEngn::Script::playSound(SoundID soundID, float gain, float pitch) {
