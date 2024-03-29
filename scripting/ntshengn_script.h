@@ -219,7 +219,7 @@ namespace NtshEngn {
 		void setScriptKeeper(ScriptKeeper* passScriptKeeper) { scriptKeeper = passScriptKeeper; }
 
 	protected:
-		Entity entityID = 0;
+		Entity entityID = NTSHENGN_ENTITY_UNKNOWN;
 
 		GraphicsModuleInterface* graphicsModule = nullptr;
 		PhysicsModuleInterface* physicsModule = nullptr;
