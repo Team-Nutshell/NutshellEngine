@@ -27,8 +27,6 @@ namespace NtshEngn {
 		void setNetworking(Networking* networking);
 		void setSceneManager(SceneManager* sceneManager);
 
-		ScriptKeeper* getScriptKeeper();
-
 	public:
 		void onEntityComponentAdded(Entity entity, Component componentID);
 		void onEntityComponentRemoved(Entity entity, Component componentID);
