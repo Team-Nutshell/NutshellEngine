@@ -528,6 +528,14 @@ float NtshEngn::Script::getMonitorDisplayScaling() {
 	return windowModule->getMonitorDisplayScaling();
 }
 
+void NtshEngn::Script::setBackgroundColor(const Math::vec4& backgroundColor) {
+	if (!graphicsModule) {
+		return;
+	}
+
+	return graphicsModule->setBackgroundColor(backgroundColor);
+}
+
 NtshEngn::IntersectionInformation NtshEngn::Script::intersect(const ColliderShape* shape1, const ColliderShape* shape2) {
 	if (!physicsModule) {
 		return IntersectionInformation();
