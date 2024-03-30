@@ -130,6 +130,9 @@ namespace NtshEngn {
 		int getMonitorRefreshRate();
 		float getMonitorDisplayScaling();
 
+		// Graphics
+		void setBackgroundColor(const Math::vec4& backgroundColor);
+
 		// Physics
 		IntersectionInformation intersect(const ColliderShape* shape1, const ColliderShape* shape2);
 		
