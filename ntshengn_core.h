@@ -11,12 +11,14 @@
 #include "Common/asset_manager/ntshengn_asset_manager.h"
 #include "Common/job_system/ntshengn_job_system.h"
 #include "Common/profiler/ntshengn_profiler.h"
-#include "frame_limiter/ntshengn_frame_limiter.h"
-#include "scene_manager/ntshengn_scene_manager.h"
-#include "scripting/ntshengn_scripting.h"
-#include "networking/ntshengn_networking.h"
+#include "Common/frame_limiter/ntshengn_frame_limiter.h"
+#include "Common/scene_manager/ntshengn_scene_manager.h"
+#include "Common/script/ntshengn_script_manager_interface.h"
+#include "Common/networking/ntshengn_networking.h"
 #include "utils/ntshengn_core_defines.h"
 #include "module_loader/ntshengn_module_loader.h"
+#include "script_manager_loader/ntshengn_script_manager_loader.h"
+#include "scripting/ntshengn_scripting.h"
 #include <string>
 
 namespace NtshEngn {
@@ -52,8 +54,13 @@ namespace NtshEngn {
 		void loadModules();
 		void unloadModules();
 
+		void loadScripts();
+		void unloadScripts();
+
 		void passSystemModules();
 		void passAssetLoaderModule();
+
+		void passScriptManager();
 
 		void initializeECS();
 		void passECS();
@@ -80,11 +87,14 @@ namespace NtshEngn {
 		
 		AssetLoaderModuleInterface* m_assetLoaderModule = nullptr;
 
+		ScriptManagerInterface* m_scriptManager = nullptr;
 		Scripting m_scripting;
 
 		ECS m_ecs;
 
 		ModuleLoader m_moduleLoader;
+
+		ScriptManagerLoader m_scriptManagerLoader;
 
 		AssetManager m_assetManager;
 

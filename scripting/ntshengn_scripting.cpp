@@ -1,9 +1,5 @@
 #include "ntshengn_scripting.h"
 
-void NtshEngn::Scripting::init() {
-	m_sceneManager->setScriptKeeper(&m_scriptKeeper);
-}
-
 void NtshEngn::Scripting::update(double dt) {
 	for (auto& entityScript : m_entityScriptsJustInitialized) {
 		if (m_entityScriptsToDestroy.find(entityScript.first) == m_entityScriptsToDestroy.end()) {
@@ -29,6 +25,10 @@ void NtshEngn::Scripting::setSystemModules(GraphicsModuleInterface* graphicsModu
 	m_physicsModule = physicsModule;
 	m_windowModule = windowModule;
 	m_audioModule = audioModule;
+}
+
+void NtshEngn::Scripting::setScriptManager(ScriptManagerInterface* scriptManager) {
+	m_scriptManager = scriptManager;
 }
 
 void NtshEngn::Scripting::setECS(ECS* ecs) {
@@ -66,6 +66,7 @@ void NtshEngn::Scripting::onEntityComponentAdded(Entity entity, Component compon
 		Script* script = static_cast<Script*>(entityScriptable.script);
 		script->setEntityID(entity);
 		script->setSystemModules(m_graphicsModule, m_physicsModule, m_windowModule, m_audioModule);
+		script->setScriptManager(m_scriptManager);
 		script->setECS(m_ecs);
 		script->setAssetManager(m_assetManager);
 		script->setFrameLimiter(m_frameLimiter);
@@ -73,7 +74,6 @@ void NtshEngn::Scripting::onEntityComponentAdded(Entity entity, Component compon
 		script->setProfiler(m_profiler);
 		script->setNetworking(m_networking);
 		script->setSceneManager(m_sceneManager);
-		script->setScriptKeeper(&m_scriptKeeper);
 		// A new entity with a script with the same ID as an old entity with a script that has been destroyed this frame has been created
 		if (m_entityScriptsToDestroy.find(entity) != m_entityScriptsToDestroy.end()) {
 			m_entityScriptsToDestroy.erase(entity);
@@ -89,7 +89,7 @@ void NtshEngn::Scripting::onEntityComponentRemoved(Entity entity, Component comp
 		const Scriptable& scriptable = m_ecs->getComponent<Scriptable>(entity);
 		Script* script = static_cast<Script*>(scriptable.script);
 		script->destroy();
-		m_scriptKeeper.destroyScript(script);
+		m_scriptManager->destroyScript(script);
 
 		m_entityScriptsToDestroy.insert(entity);
 	}

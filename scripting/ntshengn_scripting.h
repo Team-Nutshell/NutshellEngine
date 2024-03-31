@@ -3,11 +3,11 @@
 #include "../Common/asset_manager/ntshengn_asset_manager.h"
 #include "../Common/job_system/ntshengn_job_system.h"
 #include "../Common/profiler/ntshengn_profiler.h"
-#include "../frame_limiter/ntshengn_frame_limiter.h"
-#include "../networking/ntshengn_networking.h"
-#include "../scene_manager/ntshengn_scene_manager.h"
-#include "ntshengn_script.h"
-#include "ntshengn_script_keeper.h"
+#include "../Common/frame_limiter/ntshengn_frame_limiter.h"
+#include "../Common/networking/ntshengn_networking.h"
+#include "../Common/scene_manager/ntshengn_scene_manager.h"
+#include "../Common/script/ntshengn_script.h"
+#include "../Common/script/ntshengn_script_manager_interface.h"
 #include <unordered_map>
 #include <set>
 
@@ -15,10 +15,10 @@ namespace NtshEngn {
 
 	class Scripting : public System {
 	public:
-		void init();
 		void update(double dt);
 
 		void setSystemModules(GraphicsModuleInterface* graphicsModule, PhysicsModuleInterface* physicsModule, WindowModuleInterface* windowModule, AudioModuleInterface* audioModule);
+		void setScriptManager(ScriptManagerInterface* scriptManager);
 		void setECS(ECS* ecs);
 		void setAssetManager(AssetManager* assetManager);
 		void setFrameLimiter(FrameLimiter* frameLimiter);
@@ -52,7 +52,7 @@ namespace NtshEngn {
 		SceneManager* m_sceneManager = nullptr;
 
 	private:
-		ScriptKeeper m_scriptKeeper;
+		ScriptManagerInterface* m_scriptManager;
 		std::unordered_map<Entity, bool> m_entityScriptsJustInitialized;
 		std::set<Entity> m_entityScriptsToDestroy;
 	};
