@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.14 FATAL_ERROR)
-set(NAME NutshellEngine-Core)
+set(NAME NutshellEngine)
 project(${NAME} VERSION 0.0.1 LANGUAGES C CXX)
 
 include(FetchContent)
@@ -47,41 +47,28 @@ elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
 		module_loader/ntshengn_module_loader_linux.h)
 endif()
 
-set(FRAME_LIMITER_SOURCES
-	frame_limiter/ntshengn_frame_limiter.cpp)
-set(FRAME_LIMITER_HEADERS
-	frame_limiter/ntshengn_frame_limiter.h)
-
-set(NETWORKING_SOURCES
-	networking/ntshengn_networking_server_socket.cpp
-	networking/ntshengn_networking_client_socket.cpp
-	networking/ntshengn_networking.cpp)
-set(NETWORKING_HEADERS
-	networking/ntshengn_networking_common.h
-	networking/ntshengn_networking_server_socket.h
-	networking/ntshengn_networking_client_socket.h
-	networking/ntshengn_networking.h)
-
-set(SCENE_MANAGER_SOURCES
-	scene_manager/ntshengn_scene_manager.cpp)
-set(SCENE_MANAGER_HEADERS
-	scene_manager/ntshengn_scene_manager.h)
+set(SCRIPT_MANAGER_LOADER_HEADERS
+	script_manager_loader/ntshengn_script_manager_loader.h)
+if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
+	list(APPEND SCRIPT_MANAGER_LOADER_HEADERS
+		script_manager_loader/ntshengn_script_manager_loader_windows.h)
+elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
+	list(APPEND SCRIPT_MANAGER_LOADER_HEADERS
+		script_manager_loader/ntshengn_script_manager_loader_linux.h)
+endif()
 
 set(SCRIPTING_SOURCES
-	scripting/ntshengn_scripting.cpp
-	scripting/ntshengn_script.cpp)
+	scripting/ntshengn_scripting.cpp)
 set(SCRIPTING_HEADERS
-	scripting/ntshengn_scripting.h
-	scripting/ntshengn_script.h
-	scripting/ntshengn_script_keeper.h)
+	scripting/ntshengn_scripting.h)
 
 set(UTILS_HEADERS
 	utils/ntshengn_core_defines.h)
 
-set(SOURCES ${CORE_SOURCES} ${FRAME_LIMITER_SOURCES} ${NETWORKING_SOURCES} ${SCENE_MANAGER_SOURCES} ${SCRIPTING_SOURCES})
-set(HEADERS ${CORE_HEADERS} ${MODULE_LOADER_HEADERS} ${FRAME_LIMITER_HEADERS} ${NETWORKING_HEADERS} ${SCENE_MANAGER_HEADERS} ${SCRIPTING_HEADERS} ${UTILS_HEADERS})
+set(SOURCES ${CORE_SOURCES} ${SCRIPTING_SOURCES})
+set(HEADERS ${CORE_HEADERS} ${MODULE_LOADER_HEADERS} ${SCRIPT_MANAGER_LOADER_HEADERS} ${SCRIPTING_HEADERS} ${UTILS_HEADERS})
 
-add_library(${PROJECT_NAME} ${SOURCES} ${HEADERS})
+add_executable(${PROJECT_NAME} main.cpp ${SOURCES} ${HEADERS})
 
 target_link_libraries(${PROJECT_NAME}
 	PUBLIC

@@ -117,11 +117,17 @@ void NtshEngn::Core::init() {
 	// Load modules
 	loadModules();
 
+	// Load scripts
+	loadScripts();
+
 	// Pass System Modules
 	passSystemModules();
 
 	// Pass Asset Loader Module
 	passAssetLoaderModule();
+
+	// Pass Script Manager
+	passScriptManager();
 
 	// Initialize ECS
 	initializeECS();
@@ -143,9 +149,6 @@ void NtshEngn::Core::init() {
 
 	// Pass Scene Manager
 	passSceneManager();
-
-	// Initialize Scripting
-	m_scripting.init();
 
 	// Initialize System Modules
 	NTSHENGN_POINTER_EXECUTE(m_windowModule, init());
@@ -190,6 +193,9 @@ void NtshEngn::Core::destroy() {
 	NTSHENGN_POINTER_EXECUTE(m_physicsModule, destroy());
 	NTSHENGN_POINTER_EXECUTE(m_windowModule, destroy());
 	NTSHENGN_POINTER_EXECUTE(m_audioModule, destroy());
+
+	// Unload scripts
+	unloadScripts();
 
 	// Unload modules
 	unloadModules();
@@ -245,6 +251,24 @@ void NtshEngn::Core::unloadModules() {
 	}
 }
 
+void NtshEngn::Core::loadScripts() {
+#if defined(NTSHENGN_OS_WINDOWS)
+	const std::string scriptsPath = "./NutshellEngine-Scripts.dll";
+#elif defined(NTSHENGN_OS_LINUX)
+	const std::string scriptsPath = "./libNutshellEngine-Scripts.so";
+#endif
+
+	if (std::filesystem::exists(std::filesystem::current_path().string() + "/" + scriptsPath)) {
+		m_scriptManager = m_scriptManagerLoader.loadScriptManager(scriptsPath);
+	}
+}
+
+void NtshEngn::Core::unloadScripts() {
+	if (m_scriptManager) {
+		m_scriptManagerLoader.unloadScriptManager(m_scriptManager);
+	}
+}
+
 void NtshEngn::Core::passSystemModules() {
 	NTSHENGN_POINTER_EXECUTE(m_graphicsModule, setSystemModules(m_graphicsModule, m_physicsModule, m_windowModule, m_audioModule));
 	NTSHENGN_POINTER_EXECUTE(m_physicsModule, setSystemModules(m_graphicsModule, m_physicsModule, m_windowModule, m_audioModule));
@@ -255,6 +279,12 @@ void NtshEngn::Core::passSystemModules() {
 
 void NtshEngn::Core::passAssetLoaderModule() {
 	m_assetManager.setAssetLoaderModule(m_assetLoaderModule);
+}
+
+void NtshEngn::Core::passScriptManager() {
+	m_scripting.setScriptManager(m_scriptManager);
+
+	m_sceneManager.setScriptManager(m_scriptManager);
 }
 
 void NtshEngn::Core::initializeECS() {
