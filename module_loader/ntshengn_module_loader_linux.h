@@ -16,7 +16,7 @@ namespace NtshEngn {
 		T* loadModule(const std::string& modulePath) {
 			NTSHENGN_CORE_INFO("Loading module from: \"" + modulePath + "\".");
 
-			void* m_moduleLibraries[typeid(T).name()] = dlopen(modulePath.c_str(), RTLD_LAZY);
+			m_moduleLibraries[typeid(T).name()] = dlopen(modulePath.c_str(), RTLD_LAZY);
 			if (!m_moduleLibraries[typeid(T).name()])
 			{
 				NTSHENGN_CORE_WARNING("Could not load the dynamic library.");
