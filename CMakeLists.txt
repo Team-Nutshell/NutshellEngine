@@ -87,3 +87,7 @@ target_compile_definitions(${PROJECT_NAME}
 		$<$<CONFIG:MinSizeRel>:NTSHENGN_RELEASE>
 		$<$<CONFIG:Release>:NTSHENGN_RELEASE>
 		$<$<CONFIG:RelWithDebInfo>:NTSHENGN_DEBUG>)
+
+set_target_properties(${PROJECT_NAME}
+	PROPERTIES
+	VS_DEBUGGER_WORKING_DIRECTORY "$(OutDir)")
