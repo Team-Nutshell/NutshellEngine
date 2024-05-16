@@ -65,7 +65,7 @@ void NtshEngn::Core::launch(const std::string& optionsFilePath) {
 	destroy();
 
 	if (m_profiler.isRunning()) {
-		NTSHENGN_CORE_INFO("Profiling session: \n" + Profiler::to_string(m_profiler.end()));
+		NTSHENGN_CORE_INFO("Profiling session: \n" + ProfilerResultNode::to_string(m_profiler.end()));
 	}
 }
 

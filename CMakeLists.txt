@@ -32,10 +32,30 @@ else()
 	FetchContent_MakeAvailable(Common)
 endif()
 
+set(ASSET_MANAGER_SOURCES
+	asset_manager/ntshengn_asset_manager.cpp)
+set(ASSET_MANAGER_HEADERS
+	asset_manager/ntshengn_asset_manager.h)
+
 set(CORE_SOURCES
 	ntshengn_core.cpp)
 set(CORE_HEADERS
 	ntshengn_core.h)
+
+set(ECS_SOURCES
+	ecs/ntshengn_ecs.cpp)
+set(ECS_HEADERS
+	ecs/ntshengn_ecs.h)
+
+set(FRAME_LIMITER_SOURCES
+	frame_limiter/ntshengn_frame_limiter.cpp)
+set(FRAME_LIMITER_HEADERS
+	frame_limiter/ntshengn_frame_limiter.h)
+
+set(JOB_SYSTEM_SOURCES
+	job_system/ntshengn_job_system.cpp)
+set(JOB_SYSTEM_HEADERS
+	job_system/ntshengn_job_system.h)
 
 set(MODULE_LOADER_HEADERS
 	module_loader/ntshengn_module_loader.h)
@@ -46,6 +66,25 @@ elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
 	list(APPEND MODULE_LOADER_HEADERS
 		module_loader/ntshengn_module_loader_linux.h)
 endif()
+
+set(NETWORKING_SOURCES
+	networking/ntshengn_networking.cpp
+	networking/ntshengn_networking_client_socket.cpp
+	networking/ntshengn_networking_server_socket.cpp)
+set(NETWORKING_HEADERS
+	networking/ntshengn_networking.h
+	networking/ntshengn_networking_client_socket.h
+	networking/ntshengn_networking_server_socket.h)
+
+set(PROFILER_SOURCES
+	profiler/ntshengn_profiler.cpp)
+set(PROFILER_HEADERS
+	profiler/ntshengn_profiler.h)
+
+set(SCENE_MANAGER_SOURCES
+	scene_manager/ntshengn_scene_manager.cpp)
+set(SCENE_MANAGER_HEADERS
+	scene_manager/ntshengn_scene_manager.h)
 
 set(SCRIPT_MANAGER_LOADER_HEADERS
 	script_manager_loader/ntshengn_script_manager_loader.h)
@@ -65,8 +104,8 @@ set(SCRIPTING_HEADERS
 set(UTILS_HEADERS
 	utils/ntshengn_core_defines.h)
 
-set(SOURCES ${CORE_SOURCES} ${SCRIPTING_SOURCES})
-set(HEADERS ${CORE_HEADERS} ${MODULE_LOADER_HEADERS} ${SCRIPT_MANAGER_LOADER_HEADERS} ${SCRIPTING_HEADERS} ${UTILS_HEADERS})
+set(SOURCES ${ASSET_MANAGER_SOURCES} ${CORE_SOURCES} ${ECS_SOURCES} ${FRAME_LIMITER_SOURCES} ${JOB_SYSTEM_SOURCES} ${NETWORKING_SOURCES} ${PROFILER_SOURCES} ${SCENE_MANAGER_SOURCES} ${SCRIPTING_SOURCES})
+set(HEADERS ${ASSET_MANAGER_HEADERS} ${CORE_HEADERS} ${ECS_HEADERS} ${FRAME_LIMITER_HEADERS} ${JOB_SYSTEM_HEADERS} ${MODULE_LOADER_HEADERS} ${NETWORKING_HEADERS} ${PROFILER_HEADERS} ${SCENE_MANAGER_HEADERS} ${SCRIPT_MANAGER_LOADER_HEADERS} ${SCRIPTING_HEADERS} ${UTILS_HEADERS})
 
 add_executable(${PROJECT_NAME} main.cpp ${SOURCES} ${HEADERS})
 
