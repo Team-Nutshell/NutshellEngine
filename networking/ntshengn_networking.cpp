@@ -7,6 +7,7 @@
 #elif defined(NTSHENGN_OS_LINUX)
 #include <netinet/in.h>
 #include <fcntl.h>
+#define SOCKET int
 #define INVALID_SOCKET -1
 #endif
 #include <unordered_map>
