@@ -289,7 +289,7 @@ void NtshEngn::SceneManager::goToScene(const std::string& filePath) {
 									for (const Math::vec3& position : uniquePositions) {
 										covarianceMatrix.x.x += (position.x - means.x) * (position.x - means.x);
 										covarianceMatrix.y.y += (position.y - means.y) * (position.y - means.y);
-										covarianceMatrix.z.z += (position.z - means.y) * (position.z - means.z);
+										covarianceMatrix.z.z += (position.z - means.z) * (position.z - means.z);
 										covarianceMatrix.x.y += (position.x - means.x) * (position.y - means.y);
 										covarianceMatrix.x.z += (position.x - means.x) * (position.z - means.z);
 										covarianceMatrix.y.z += (position.y - means.y) * (position.z - means.z);
@@ -414,7 +414,7 @@ void NtshEngn::SceneManager::goToScene(const std::string& filePath) {
 									for (const Math::vec3& position : uniquePositions) {
 										covarianceMatrix.x.x += (position.x - means.x) * (position.x - means.x);
 										covarianceMatrix.y.y += (position.y - means.y) * (position.y - means.y);
-										covarianceMatrix.z.z += (position.z - means.y) * (position.z - means.z);
+										covarianceMatrix.z.z += (position.z - means.z) * (position.z - means.z);
 										covarianceMatrix.x.y += (position.x - means.x) * (position.y - means.y);
 										covarianceMatrix.x.z += (position.x - means.x) * (position.z - means.z);
 										covarianceMatrix.y.z += (position.y - means.y) * (position.z - means.z);
