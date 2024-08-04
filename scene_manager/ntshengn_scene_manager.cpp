@@ -39,28 +39,65 @@ void NtshEngn::SceneManager::goToScene(const std::string& filePath) {
 
 					Model* model = m_assetManager->loadModel(modelPathNode.getString());
 
-					if (model) {
-						entities.resize(model->primitives.size());
-						for (size_t j = 0; j < model->primitives.size(); j++) {
+					if (renderableNode.contains("primitiveIndex")) {
+						const JSON::Node& primitiveIndexNode = renderableNode["primitiveIndex"];
+
+						uint32_t primitiveIndex = static_cast<uint32_t>(primitiveIndexNode.getNumber());
+						
+						if (model && (primitiveIndex < model->primitives.size())) {
+							Entity entity;
 							if (entityName != "") {
-								if (model->primitives.size() > 1) {
-									entities[j] = m_ecs->createEntity(entityName + "_" + std::to_string(j));
-								}
-								else {
-									entities[j] = m_ecs->createEntity(entityName);
-								}
+								entity = m_ecs->createEntity(entityName);
 							}
 							else {
-								entities[j] = m_ecs->createEntity();
+								entity = m_ecs->createEntity();
 							}
 
-							m_ecs->setEntityPersistence(entities[j], entityPersistent);
+							m_ecs->setEntityPersistence(entity, entityPersistent);
+
+							entities.push_back(entity);
 
 							Renderable renderable;
-							renderable.mesh = &model->primitives[j].mesh;
-							renderable.material = model->primitives[j].material;
-							m_ecs->addComponent(entities[j], renderable);
+							renderable.mesh = &model->primitives[primitiveIndex].mesh;
+							renderable.material = model->primitives[primitiveIndex].material;
+							m_ecs->addComponent(entity, renderable);
 						}
+						else {
+							Entity entity;
+							if (entityName != "") {
+								entity = m_ecs->createEntity(entityName);
+							}
+							else {
+								entity = m_ecs->createEntity();
+							}
+
+							m_ecs->setEntityPersistence(entity, entityPersistent);
+
+							entities.push_back(entity);
+
+							Renderable renderable;
+							renderable.mesh = nullptr;
+							renderable.material = Material();
+							m_ecs->addComponent(entity, renderable);
+						}
+					}
+					else {
+						Entity entity;
+						if (entityName != "") {
+							entity = m_ecs->createEntity(entityName);
+						}
+						else {
+							entity = m_ecs->createEntity();
+						}
+
+						m_ecs->setEntityPersistence(entity, entityPersistent);
+
+						entities.push_back(entity);
+
+						Renderable renderable;
+						renderable.mesh = nullptr;
+						renderable.material = Material();
+						m_ecs->addComponent(entity, renderable);
 					}
 				}
 			}
@@ -269,74 +306,10 @@ void NtshEngn::SceneManager::goToScene(const std::string& filePath) {
 							}
 
 							if (!collidableNode.contains("center") && !collidableNode.contains("halfExtent") && !collidableNode.contains("rotation")) {
-								if (m_ecs->hasComponent<Renderable>(entity)) {
-									// Calculate box from Renderable
-									const Renderable& renderable = m_ecs->getComponent<Renderable>(entity);
-
-									auto uniquePositionsCmp = [](const Math::vec3& a, const Math::vec3& b) {
-										return Math::to_string(a) < Math::to_string(b);
-										};
-									std::set<Math::vec3, decltype(uniquePositionsCmp)> uniquePositions(uniquePositionsCmp);
-									for (size_t j = 0; j < renderable.mesh->vertices.size(); j++) {
-										uniquePositions.insert(renderable.mesh->vertices[j].position);
-									}
-
-									float size = static_cast<float>(uniquePositions.size());
-
-									const Math::vec3 means = std::reduce(uniquePositions.begin(), uniquePositions.end(), Math::vec3(0.0f, 0.0f, 0.0f), [](Math::vec3 acc, const Math::vec3& val) { return acc + val; }) / size;
-
-									Math::mat3 covarianceMatrix;
-									for (const Math::vec3& position : uniquePositions) {
-										covarianceMatrix.x.x += (position.x - means.x) * (position.x - means.x);
-										covarianceMatrix.y.y += (position.y - means.y) * (position.y - means.y);
-										covarianceMatrix.z.z += (position.z - means.z) * (position.z - means.z);
-										covarianceMatrix.x.y += (position.x - means.x) * (position.y - means.y);
-										covarianceMatrix.x.z += (position.x - means.x) * (position.z - means.z);
-										covarianceMatrix.y.z += (position.y - means.y) * (position.z - means.z);
-									}
-									covarianceMatrix.x.x /= size;
-									covarianceMatrix.y.y /= size;
-									covarianceMatrix.z.z /= size;
-									covarianceMatrix.x.y /= size;
-									covarianceMatrix.x.z /= size;
-									covarianceMatrix.y.z /= size;
-
-									covarianceMatrix.y.x = covarianceMatrix.x.y;
-									covarianceMatrix.z.x = covarianceMatrix.x.z;
-									covarianceMatrix.z.y = covarianceMatrix.y.z;
-
-									std::array<std::pair<float, Math::vec3>, 3> eigen = covarianceMatrix.eigen();
-
-									colliderBox->center = means;
-
-									for (const Math::vec3& position : uniquePositions) {
-										const Math::vec3 positionMinusCenter = position - colliderBox->center;
-
-										const float extentX = std::abs(Math::dot(eigen[0].second, positionMinusCenter));
-										if (extentX > colliderBox->halfExtent.x) {
-											colliderBox->halfExtent.x = extentX;
-										}
-
-										const float extentY = std::abs(Math::dot(eigen[1].second, positionMinusCenter));
-										if (extentY > colliderBox->halfExtent.y) {
-											colliderBox->halfExtent.y = extentY;
-										}
-
-										const float extentZ = std::abs(Math::dot(eigen[2].second, positionMinusCenter));
-										if (extentZ > colliderBox->halfExtent.z) {
-											colliderBox->halfExtent.z = extentZ;
-										}
-									}
-
-									Math::mat4 rotationMatrix = Math::mat4(Math::vec4(eigen[0].second, 0.0f), Math::vec4(eigen[1].second, 0.0f), Math::vec4(eigen[2].second, 0.0f), Math::vec4(0.0f, 0.0f, 0.0f, 1.0f));
-									colliderBox->rotation = Math::rotationMatrixToEulerAngles(rotationMatrix);
-								}
-								else {
-									// Default box collider
-									colliderBox->center = Math::vec3(0.0f, 0.0f, 0.0f);
-									colliderBox->halfExtent = Math::vec3(0.5f, 0.5f, 0.5f);
-									colliderBox->rotation = Math::vec3(0.0f, 0.0f, 0.0f);
-								}
+								// Default box collider
+								colliderBox->center = Math::vec3(0.0f, 0.0f, 0.0f);
+								colliderBox->halfExtent = Math::vec3(0.5f, 0.5f, 0.5f);
+								colliderBox->rotation = Math::vec3(0.0f, 0.0f, 0.0f);
 							}
 						}
 						else if (typeNode.getString() == "Sphere") {
@@ -356,19 +329,9 @@ void NtshEngn::SceneManager::goToScene(const std::string& filePath) {
 							}
 
 							if (!collidableNode.contains("center") && !collidableNode.contains("radius")) {
-								if (m_ecs->hasComponent<Renderable>(entity)) {
-									// Calculate sphere from Renderable
-									const Renderable& renderable = m_ecs->getComponent<Renderable>(entity);
-									const std::array<Math::vec3, 2> aabb = m_assetManager->calculateAABB(*renderable.mesh);
-
-									colliderSphere->center = (aabb[0] + aabb[1]) / 2.0f;
-									colliderSphere->radius = (colliderSphere->center - aabb[0]).length();
-								}
-								else {
-									// Default sphere collider
-									colliderSphere->center = Math::vec3(0.0f, 0.0f, 0.0f);
-									colliderSphere->radius = 0.5f;
-								}
+								// Default sphere collider
+								colliderSphere->center = Math::vec3(0.0f, 0.0f, 0.0f);
+								colliderSphere->radius = 0.5f;
 							}
 						}
 						else if (typeNode.getString() == "Capsule") {
@@ -394,73 +357,10 @@ void NtshEngn::SceneManager::goToScene(const std::string& filePath) {
 							}
 
 							if (!collidableNode.contains("base") && !collidableNode.contains("tip") && !collidableNode.contains("radius")) {
-								if (m_ecs->hasComponent<Renderable>(entity)) {
-									// Calculate capsule from Renderable
-									const Renderable& renderable = m_ecs->getComponent<Renderable>(entity);
-
-									auto uniquePositionsCmp = [](const Math::vec3& a, const Math::vec3& b) {
-										return (a.x < b.x) && (a.y < b.y) && (a.z < b.z);
-										};
-									std::set<Math::vec3, decltype(uniquePositionsCmp)> uniquePositions(uniquePositionsCmp);
-									for (size_t j = 0; j < renderable.mesh->vertices.size(); j++) {
-										uniquePositions.insert(renderable.mesh->vertices[i].position);
-									}
-
-									float size = static_cast<float>(uniquePositions.size());
-
-									const Math::vec3 means = std::reduce(uniquePositions.begin(), uniquePositions.end(), Math::vec3(0.0f, 0.0f, 0.0f), [](Math::vec3 acc, const Math::vec3& val) { return acc + val; }) / size;
-
-									Math::mat3 covarianceMatrix;
-									for (const Math::vec3& position : uniquePositions) {
-										covarianceMatrix.x.x += (position.x - means.x) * (position.x - means.x);
-										covarianceMatrix.y.y += (position.y - means.y) * (position.y - means.y);
-										covarianceMatrix.z.z += (position.z - means.z) * (position.z - means.z);
-										covarianceMatrix.x.y += (position.x - means.x) * (position.y - means.y);
-										covarianceMatrix.x.z += (position.x - means.x) * (position.z - means.z);
-										covarianceMatrix.y.z += (position.y - means.y) * (position.z - means.z);
-									}
-									covarianceMatrix.x.x /= size;
-									covarianceMatrix.y.y /= size;
-									covarianceMatrix.z.z /= size;
-									covarianceMatrix.x.y /= size;
-									covarianceMatrix.x.z /= size;
-									covarianceMatrix.y.z /= size;
-
-									covarianceMatrix.y.x = covarianceMatrix.x.y;
-									covarianceMatrix.z.x = covarianceMatrix.x.z;
-									covarianceMatrix.z.y = covarianceMatrix.y.z;
-
-									std::array<std::pair<float, Math::vec3>, 3> eigen = covarianceMatrix.eigen();
-									std::sort(eigen.begin(), eigen.end(), [](const std::pair<float, Math::vec3>& a, const std::pair<float, Math::vec3>& b) {
-										return a.first > b.first;
-										});
-
-									Math::vec3 capsuleCenter = means;
-
-									float segmentLengthMax = 0.0f;
-									for (const Math::vec3& position : uniquePositions) {
-										const Math::vec3 positionMinusCenter = position - capsuleCenter;
-
-										const float segmentLength = std::abs(Math::dot(eigen[0].second, positionMinusCenter));
-										if (segmentLength > segmentLengthMax) {
-											segmentLengthMax = segmentLength;
-										}
-
-										const float radius = std::abs(Math::dot(eigen[1].second, positionMinusCenter));
-										if (radius > colliderCapsule->radius) {
-											colliderCapsule->radius = radius;
-										}
-									}
-
-									colliderCapsule->base = capsuleCenter - (eigen[0].second * (segmentLengthMax - colliderCapsule->radius));
-									colliderCapsule->tip = capsuleCenter + (eigen[0].second * (segmentLengthMax - colliderCapsule->radius));
-								}
-								else {
-									// Default capsule collider
-									colliderCapsule->base = Math::vec3(0.0f, 0.25f, 0.0f);
-									colliderCapsule->tip = Math::vec3(0.0f, 0.75f, 0.0f);
-									colliderCapsule->radius = 0.25f;
-								}
+								// Default capsule collider
+								colliderCapsule->base = Math::vec3(0.0f, 0.25f, 0.0f);
+								colliderCapsule->tip = Math::vec3(0.0f, 0.75f, 0.0f);
+								colliderCapsule->radius = 0.25f;
 							}
 						}
 					}
