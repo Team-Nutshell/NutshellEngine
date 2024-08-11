@@ -1,5 +1,12 @@
 #include "ntshengn_scene_manager.h"
+#if defined(NTSHENGN_OS_LINUX)
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wfree-nonheap-object"
+#endif
 #include "../utils/ntshengn_utils_json.h"
+#if defined(NTSHENGN_OS_LINUX)
+#pragma GCC diagnostic pop
+#endif
 #include "../utils/ntshengn_utils_math.h"
 #include <algorithm>
 #include <numeric>
