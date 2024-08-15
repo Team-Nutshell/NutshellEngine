@@ -203,6 +203,9 @@ void NtshEngn::SceneManager::goToScene(const std::string& filePath) {
 						else if (typeNode.getString() == "Spot") {
 							light.type = LightType::Spot;
 						}
+						else if (typeNode.getString() == "Ambient") {
+							light.type = LightType::Ambient;
+						}
 					}
 
 					if (lightNode.contains("color")) {
