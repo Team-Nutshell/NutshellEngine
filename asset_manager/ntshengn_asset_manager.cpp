@@ -98,6 +98,42 @@ NtshEngn::Model* NtshEngn::AssetManager::loadModel(const std::string& filePath) 
 	}
 }
 
+NtshEngn::Material* NtshEngn::AssetManager::createMaterial() {
+	Material newMaterial;
+
+	m_materialResources.push_front(newMaterial);
+
+	return &m_materialResources.front();
+}
+
+NtshEngn::Material* NtshEngn::AssetManager::loadMaterial(const std::string& filePath) {
+	if (!std::filesystem::exists(filePath)) {
+		NTSHENGN_ASSET_MANAGER_WARNING("Could not load material file \"" + filePath + "\" (file does not exist).");
+
+		return nullptr;
+	}
+
+	if (m_materialPaths.exist(filePath)) {
+		return m_materialPaths[filePath];
+	}
+
+	Material newMaterial;
+	if (File::extension(filePath) == "ntml") {
+		loadMaterialNtml(filePath, newMaterial);
+	}
+	else {
+		if (m_assetLoaderModule) {
+			newMaterial = m_assetLoaderModule->loadMaterial(filePath);
+		}
+	}
+
+	m_materialResources.push_front(newMaterial);
+
+	m_materialPaths.insert_or_assign(filePath, &m_materialResources.front());
+
+	return &m_materialResources.front();
+}
+
 NtshEngn::Image* NtshEngn::AssetManager::createImage() {
 	Image newImage;
 
