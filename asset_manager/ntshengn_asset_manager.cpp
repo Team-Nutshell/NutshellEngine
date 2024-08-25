@@ -257,6 +257,24 @@ void NtshEngn::AssetManager::destroyModel(Model* model) {
 	NTSHENGN_ASSET_MANAGER_ERROR("Could not destroy model resource.", Result::AssetManagerError);
 }
 
+void NtshEngn::AssetManager::destroyMaterial(Material* material) {
+	if (m_materialPaths.exist(material)) {
+		m_materialPaths.erase(material);
+	}
+
+	std::forward_list<Material>::iterator prev = m_materialResources.before_begin();
+	for (std::forward_list<Material>::iterator it = m_materialResources.begin(); it != m_materialResources.end(); it++) {
+		if (material == &(*it)) {
+			m_materialResources.erase_after(prev);
+			return;
+		}
+
+		prev = it;
+	}
+
+	NTSHENGN_ASSET_MANAGER_ERROR("Could not destroy material resource.", Result::AssetManagerError);
+}
+
 void NtshEngn::AssetManager::destroyImage(Image* image) {
 	if (m_imagePaths.exist(image)) {
 		m_imagePaths.erase(image);

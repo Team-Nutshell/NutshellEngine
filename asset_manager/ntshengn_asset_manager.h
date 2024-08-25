@@ -27,6 +27,7 @@ namespace NtshEngn {
 
 		void destroySound(Sound* sound);
 		void destroyModel(Model* model);
+		void destroyMaterial(Material* material);
 		void destroyImage(Image* image);
 		void destroyFont(Font* font);
 
