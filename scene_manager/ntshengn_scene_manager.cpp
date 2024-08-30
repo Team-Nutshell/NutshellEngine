@@ -160,6 +160,12 @@ void NtshEngn::SceneManager::goToScene(const std::string& filePath) {
 					light.color = { colorNode[0].getNumber(), colorNode[1].getNumber(), colorNode[2].getNumber() };
 				}
 
+				if (lightNode.contains("intensity")) {
+					const JSON::Node& intensityNode = lightNode["intensity"];
+
+					light.intensity = intensityNode.getNumber();
+				}
+
 				if (lightNode.contains("direction")) {
 					const JSON::Node& directionNode = lightNode["direction"];
 
