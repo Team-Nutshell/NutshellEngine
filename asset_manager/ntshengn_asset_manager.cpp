@@ -568,80 +568,167 @@ void NtshEngn::AssetManager::loadMaterialNtml(const std::string& filePath, Mater
 	JSON json;
 	const JSON::Node& materialRoot = json.read(filePath);
 
-	if (materialRoot.contains("diffuseTexture")) {
-		const JSON::Node& diffuseTextureNode = materialRoot["diffuseTexture"];
+	if (materialRoot.contains("diffuse")) {
+		const JSON::Node& diffuseNode = materialRoot["diffuse"];
 
-		if (diffuseTextureNode.contains("imagePath")) {
-			material.diffuseTexture.image = loadImage(diffuseTextureNode["imagePath"].getString());
+		if (diffuseNode.contains("texture")) {
+			const JSON::Node& diffuseTextureNode = diffuseNode["texture"];
+
+			if (diffuseTextureNode.contains("imagePath")) {
+				material.diffuseTexture.image = loadImage(diffuseTextureNode["imagePath"].getString());
+			}
+
+			if (diffuseTextureNode.contains("imageSamplerPath")) {
+				loadImageSamplerNtsp(diffuseTextureNode["imageSamplerPath"].getString(), material.diffuseTexture.imageSampler);
+			}
 		}
+		else if (diffuseNode.contains("color")) {
+			const JSON::Node& diffuseColorNode = diffuseNode["color"];
 
-		if (diffuseTextureNode.contains("imageSamplerPath")) {
-			loadImageSamplerNtsp(diffuseTextureNode["imageSamplerPath"].getString(), material.diffuseTexture.imageSampler);
-		}
-	}
+			Image* image = createImage();
+			image->width = 1;
+			image->height = 1;
+			image->format = ImageFormat::R8G8B8A8;
+			image->colorSpace = ImageColorSpace::SRGB;
+			image->data = { static_cast<uint8_t>(round(255.0f * diffuseColorNode[0].getNumber())), static_cast<uint8_t>(round(255.0f * diffuseColorNode[1].getNumber())), static_cast<uint8_t>(round(255.0f * diffuseColorNode[2].getNumber())), static_cast<uint8_t>(round(255.0f * diffuseColorNode[3].getNumber())) };
 
-	if (materialRoot.contains("normalTexture")) {
-		const JSON::Node& normalTextureNode = materialRoot["normalTexture"];
-
-		if (normalTextureNode.contains("imagePath")) {
-			material.normalTexture.image = loadImage(normalTextureNode["imagePath"].getString());
-		}
-
-		if (normalTextureNode.contains("imageSamplerPath")) {
-			loadImageSamplerNtsp(normalTextureNode["imageSamplerPath"].getString(), material.normalTexture.imageSampler);
-		}
-	}
-
-	if (materialRoot.contains("metalnessTexture")) {
-		const JSON::Node& metalnessTextureNode = materialRoot["metalnessTexture"];
-
-		if (metalnessTextureNode.contains("imagePath")) {
-			material.metalnessTexture.image = loadImage(metalnessTextureNode["imagePath"].getString());
-		}
-
-		if (metalnessTextureNode.contains("imageSamplerPath")) {
-			loadImageSamplerNtsp(metalnessTextureNode["imageSamplerPath"].getString(), material.metalnessTexture.imageSampler);
+			material.diffuseTexture.image = image;
 		}
 	}
 
-	if (materialRoot.contains("roughnessTexture")) {
-		const JSON::Node& roughnessTextureNode = materialRoot["roughnessTexture"];
+	if (materialRoot.contains("normal")) {
+		const JSON::Node& normalNode = materialRoot["normal"];
 
-		if (roughnessTextureNode.contains("imagePath")) {
-			material.roughnessTexture.image = loadImage(roughnessTextureNode["imagePath"].getString());
-		}
+		if (normalNode.contains("texture")) {
+			const JSON::Node& normalTextureNode = normalNode["texture"];
 
-		if (roughnessTextureNode.contains("imageSamplerPath")) {
-			loadImageSamplerNtsp(roughnessTextureNode["imageSamplerPath"].getString(), material.roughnessTexture.imageSampler);
-		}
-	}
+			if (normalTextureNode.contains("imagePath")) {
+				material.diffuseTexture.image = loadImage(normalTextureNode["imagePath"].getString());
+			}
 
-	if (materialRoot.contains("occlusionTexture")) {
-		const JSON::Node& occlusionTextureNode = materialRoot["occlusionTexture"];
-
-		if (occlusionTextureNode.contains("imagePath")) {
-			material.occlusionTexture.image = loadImage(occlusionTextureNode["imagePath"].getString());
-		}
-
-		if (occlusionTextureNode.contains("imageSamplerPath")) {
-			loadImageSamplerNtsp(occlusionTextureNode["imageSamplerPath"].getString(), material.occlusionTexture.imageSampler);
+			if (normalTextureNode.contains("imageSamplerPath")) {
+				loadImageSamplerNtsp(normalTextureNode["imageSamplerPath"].getString(), material.normalTexture.imageSampler);
+			}
 		}
 	}
 
-	if (materialRoot.contains("emissiveTexture")) {
-		const JSON::Node& emissiveTextureNode = materialRoot["emissiveTexture"];
+	if (materialRoot.contains("metalness")) {
+		const JSON::Node& metalnessNode = materialRoot["metalness"];
 
-		if (emissiveTextureNode.contains("imagePath")) {
-			material.emissiveTexture.image = loadImage(emissiveTextureNode["imagePath"].getString());
+		if (metalnessNode.contains("texture")) {
+			const JSON::Node& metalnessTextureNode = metalnessNode["texture"];
+
+			if (metalnessTextureNode.contains("imagePath")) {
+				material.metalnessTexture.image = loadImage(metalnessTextureNode["imagePath"].getString());
+			}
+
+			if (metalnessTextureNode.contains("imageSamplerPath")) {
+				loadImageSamplerNtsp(metalnessTextureNode["imageSamplerPath"].getString(), material.metalnessTexture.imageSampler);
+			}
 		}
+		else if (metalnessNode.contains("value")) {
+			const JSON::Node& metalnessValueNode = metalnessNode["value"];
+			uint8_t metalnessValue = static_cast<uint8_t>(round(255.0f * metalnessValueNode.getNumber()));
 
-		if (emissiveTextureNode.contains("imageSamplerPath")) {
-			loadImageSamplerNtsp(emissiveTextureNode["imageSamplerPath"].getString(), material.emissiveTexture.imageSampler);
+			Image* image = createImage();
+			image->width = 1;
+			image->height = 1;
+			image->format = ImageFormat::R8G8B8A8;
+			image->colorSpace = ImageColorSpace::Linear;
+			image->data = { metalnessValue, metalnessValue, metalnessValue, metalnessValue };
+
+			material.metalnessTexture.image = image;
 		}
 	}
 
-	if (materialRoot.contains("emissiveFactor")) {
-		material.emissiveFactor = materialRoot["emissiveFactor"].getNumber();
+	if (materialRoot.contains("roughness")) {
+		const JSON::Node& roughnessNode = materialRoot["roughness"];
+
+		if (roughnessNode.contains("texture")) {
+			const JSON::Node& roughnessTextureNode = roughnessNode["texture"];
+
+			if (roughnessTextureNode.contains("imagePath")) {
+				material.roughnessTexture.image = loadImage(roughnessTextureNode["imagePath"].getString());
+			}
+
+			if (roughnessTextureNode.contains("imageSamplerPath")) {
+				loadImageSamplerNtsp(roughnessTextureNode["imageSamplerPath"].getString(), material.roughnessTexture.imageSampler);
+			}
+		}
+		else if (roughnessNode.contains("value")) {
+			const JSON::Node& roughnessValueNode = roughnessNode["value"];
+			uint8_t roughnessValue = static_cast<uint8_t>(round(255.0f * roughnessValueNode.getNumber()));
+
+			Image* image = createImage();
+			image->width = 1;
+			image->height = 1;
+			image->format = ImageFormat::R8G8B8A8;
+			image->colorSpace = ImageColorSpace::Linear;
+			image->data = { roughnessValue, roughnessValue, roughnessValue, roughnessValue };
+
+			material.roughnessTexture.image = image;
+		}
+	}
+
+	if (materialRoot.contains("occlusion")) {
+		const JSON::Node& occlusionNode = materialRoot["occlusion"];
+
+		if (occlusionNode.contains("texture")) {
+			const JSON::Node& occlusionTextureNode = occlusionNode["texture"];
+
+			if (occlusionTextureNode.contains("imagePath")) {
+				material.occlusionTexture.image = loadImage(occlusionTextureNode["imagePath"].getString());
+			}
+
+			if (occlusionTextureNode.contains("imageSamplerPath")) {
+				loadImageSamplerNtsp(occlusionTextureNode["imageSamplerPath"].getString(), material.occlusionTexture.imageSampler);
+			}
+		}
+		else if (occlusionNode.contains("value")) {
+			const JSON::Node& occlusionValueNode = occlusionNode["value"];
+			uint8_t occlusionValue = static_cast<uint8_t>(round(255.0f * occlusionValueNode.getNumber()));
+
+			Image* image = createImage();
+			image->width = 1;
+			image->height = 1;
+			image->format = ImageFormat::R8G8B8A8;
+			image->colorSpace = ImageColorSpace::Linear;
+			image->data = { occlusionValue, occlusionValue, occlusionValue, occlusionValue };
+
+			material.occlusionTexture.image = image;
+		}
+	}
+
+	if (materialRoot.contains("emissive")) {
+		const JSON::Node& emissiveNode = materialRoot["emissive"];
+
+		if (emissiveNode.contains("texture")) {
+			const JSON::Node& emissiveTextureNode = emissiveNode["texture"];
+
+			if (emissiveTextureNode.contains("imagePath")) {
+				material.emissiveTexture.image = loadImage(emissiveTextureNode["imagePath"].getString());
+			}
+
+			if (emissiveTextureNode.contains("imageSamplerPath")) {
+				loadImageSamplerNtsp(emissiveTextureNode["imageSamplerPath"].getString(), material.emissiveTexture.imageSampler);
+			}
+		}
+		else if (emissiveNode.contains("color")) {
+			const JSON::Node& emissiveColorNode = emissiveNode["color"];
+
+			Image* image = createImage();
+			image->width = 1;
+			image->height = 1;
+			image->format = ImageFormat::R8G8B8A8;
+			image->colorSpace = ImageColorSpace::SRGB;
+			image->data = { static_cast<uint8_t>(round(255.0f * emissiveColorNode[0].getNumber())), static_cast<uint8_t>(round(255.0f * emissiveColorNode[1].getNumber())), static_cast<uint8_t>(round(255.0f * emissiveColorNode[2].getNumber())), 255 };
+
+			material.emissiveTexture.image = image;
+		}
+
+		if (emissiveNode.contains("factor")) {
+			material.emissiveFactor = emissiveNode["factor"].getNumber();
+		}
 	}
 
 	if (materialRoot.contains("alphaCutoff")) {
