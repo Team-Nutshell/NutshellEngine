@@ -341,67 +341,126 @@ void NtshEngn::SceneManager::goToScene(const std::string& filePath) {
 						Scriptable scriptable = m_scriptManager->createScriptable(scriptNameNode.getString());
 
 						if (scriptableNode.contains("editableVariables")) {
-							const JSON::Node& editableVariablesNode = scriptableNode["editableVariables"];
+							const JSON::Node& editableScriptVariablesNode = scriptableNode["editableVariables"];
 
 							auto& editableScriptVariables = scriptable.script->editableScriptVariables;
 							for (auto& editableScriptVariable : editableScriptVariables) {
-								if (editableVariablesNode.contains(editableScriptVariable.first)) {
+								if (editableScriptVariablesNode.contains(editableScriptVariable.first)) {
+									const JSON::Node& editableScriptVariableNode = editableScriptVariablesNode[editableScriptVariable.first];
 									if (editableScriptVariable.second.type == EditableScriptVariableType::Boolean) {
-										*static_cast<bool*>(editableScriptVariable.second.address) = editableVariablesNode[editableScriptVariable.first].getBoolean();
+										if (editableScriptVariableNode.getType() == JSON::Type::Boolean) {
+											*static_cast<bool*>(editableScriptVariable.second.address) = editableScriptVariableNode.getBoolean();
+										}
 									}
 									else if (editableScriptVariable.second.type == EditableScriptVariableType::Int8) {
-										*static_cast<int8_t*>(editableScriptVariable.second.address) = static_cast<int8_t>(editableVariablesNode[editableScriptVariable.first].getNumber());
+										if (editableScriptVariableNode.getType() == JSON::Type::Number) {
+											*static_cast<int8_t*>(editableScriptVariable.second.address) = static_cast<int8_t>(editableScriptVariableNode.getNumber());
+										}
 									}
 									else if (editableScriptVariable.second.type == EditableScriptVariableType::Int16) {
-										*static_cast<int16_t*>(editableScriptVariable.second.address) = static_cast<int16_t>(editableVariablesNode[editableScriptVariable.first].getNumber());
+										if (editableScriptVariableNode.getType() == JSON::Type::Number) {
+											*static_cast<int16_t*>(editableScriptVariable.second.address) = static_cast<int16_t>(editableScriptVariableNode.getNumber());
+										}
 									}
 									else if (editableScriptVariable.second.type == EditableScriptVariableType::Int32) {
-										*static_cast<int32_t*>(editableScriptVariable.second.address) = static_cast<int32_t>(editableVariablesNode[editableScriptVariable.first].getNumber());
+										if (editableScriptVariableNode.getType() == JSON::Type::Number) {
+											*static_cast<int32_t*>(editableScriptVariable.second.address) = static_cast<int32_t>(editableScriptVariableNode.getNumber());
+										}
 									}
 									else if (editableScriptVariable.second.type == EditableScriptVariableType::Int64) {
-										*static_cast<int64_t*>(editableScriptVariable.second.address) = static_cast<int64_t>(editableVariablesNode[editableScriptVariable.first].getNumber());
+										if (editableScriptVariableNode.getType() == JSON::Type::Number) {
+											*static_cast<int64_t*>(editableScriptVariable.second.address) = static_cast<int64_t>(editableScriptVariableNode.getNumber());
+										}
 									}
 									else if (editableScriptVariable.second.type == EditableScriptVariableType::Uint8) {
-										*static_cast<uint8_t*>(editableScriptVariable.second.address) = static_cast<uint8_t>(editableVariablesNode[editableScriptVariable.first].getNumber());
+										if (editableScriptVariableNode.getType() == JSON::Type::Number) {
+											*static_cast<uint8_t*>(editableScriptVariable.second.address) = static_cast<uint8_t>(editableScriptVariableNode.getNumber());
+										}
 									}
 									else if (editableScriptVariable.second.type == EditableScriptVariableType::Uint16) {
-										*static_cast<uint16_t*>(editableScriptVariable.second.address) = static_cast<uint16_t>(editableVariablesNode[editableScriptVariable.first].getNumber());
+										if (editableScriptVariableNode.getType() == JSON::Type::Number) {
+											*static_cast<uint16_t*>(editableScriptVariable.second.address) = static_cast<uint16_t>(editableScriptVariableNode.getNumber());
+										}
 									}
 									else if (editableScriptVariable.second.type == EditableScriptVariableType::Uint32) {
-										*static_cast<uint32_t*>(editableScriptVariable.second.address) = static_cast<uint32_t>(editableVariablesNode[editableScriptVariable.first].getNumber());
+										if (editableScriptVariableNode.getType() == JSON::Type::Number) {
+											*static_cast<uint32_t*>(editableScriptVariable.second.address) = static_cast<uint32_t>(editableScriptVariableNode.getNumber());
+										}
 									}
 									else if (editableScriptVariable.second.type == EditableScriptVariableType::Uint64) {
-										*static_cast<uint64_t*>(editableScriptVariable.second.address) = static_cast<uint64_t>(editableVariablesNode[editableScriptVariable.first].getNumber());
+										if (editableScriptVariableNode.getType() == JSON::Type::Number) {
+											*static_cast<uint64_t*>(editableScriptVariable.second.address) = static_cast<uint64_t>(editableScriptVariableNode.getNumber());
+										}
 									}
 									else if (editableScriptVariable.second.type == EditableScriptVariableType::Float32) {
-										*static_cast<float*>(editableScriptVariable.second.address) = static_cast<float>(editableVariablesNode[editableScriptVariable.first].getNumber());
+										if (editableScriptVariableNode.getType() == JSON::Type::Number) {
+											*static_cast<float*>(editableScriptVariable.second.address) = static_cast<float>(editableScriptVariableNode.getNumber());
+										}
 									}
 									else if (editableScriptVariable.second.type == EditableScriptVariableType::Float64) {
-										*static_cast<double*>(editableScriptVariable.second.address) = static_cast<double>(editableVariablesNode[editableScriptVariable.first].getNumber());
+										if (editableScriptVariableNode.getType() == JSON::Type::Number) {
+											*static_cast<double*>(editableScriptVariable.second.address) = static_cast<double>(editableScriptVariableNode.getNumber());
+										}
 									}
 									else if (editableScriptVariable.second.type == EditableScriptVariableType::String) {
-										*static_cast<std::string*>(editableScriptVariable.second.address) = editableVariablesNode[editableScriptVariable.first].getString();
+										if (editableScriptVariableNode.getType() == JSON::Type::String) {
+											*static_cast<std::string*>(editableScriptVariable.second.address) = editableScriptVariableNode.getString();
+										}
 									}
 									else if (editableScriptVariable.second.type == EditableScriptVariableType::Vector2) {
-										static_cast<Math::vec2*>(editableScriptVariable.second.address)->x = static_cast<float>(editableVariablesNode[editableScriptVariable.first][0].getNumber());
-										static_cast<Math::vec2*>(editableScriptVariable.second.address)->y = static_cast<float>(editableVariablesNode[editableScriptVariable.first][1].getNumber());
+										if ((editableScriptVariableNode.getType() == JSON::Type::Array) && (editableScriptVariableNode.size() == 2)) {
+											if (editableScriptVariableNode[0].getType() == JSON::Type::Number) {
+												static_cast<Math::vec2*>(editableScriptVariable.second.address)->x = static_cast<float>(editableScriptVariableNode[0].getNumber());
+											}
+											if (editableScriptVariableNode[1].getType() == JSON::Type::Number) {
+												static_cast<Math::vec2*>(editableScriptVariable.second.address)->y = static_cast<float>(editableScriptVariableNode[1].getNumber());
+											}
+										}
 									}
 									else if (editableScriptVariable.second.type == EditableScriptVariableType::Vector3) {
-										static_cast<Math::vec3*>(editableScriptVariable.second.address)->x = static_cast<float>(editableVariablesNode[editableScriptVariable.first][0].getNumber());
-										static_cast<Math::vec3*>(editableScriptVariable.second.address)->y = static_cast<float>(editableVariablesNode[editableScriptVariable.first][1].getNumber());
-										static_cast<Math::vec3*>(editableScriptVariable.second.address)->z = static_cast<float>(editableVariablesNode[editableScriptVariable.first][2].getNumber());
+										if ((editableScriptVariableNode.getType() == JSON::Type::Array) && (editableScriptVariableNode.size() == 3)) {
+											if (editableScriptVariableNode[0].getType() == JSON::Type::Number) {
+												static_cast<Math::vec3*>(editableScriptVariable.second.address)->x = static_cast<float>(editableScriptVariableNode[0].getNumber());
+											}
+											if (editableScriptVariableNode[1].getType() == JSON::Type::Number) {
+												static_cast<Math::vec3*>(editableScriptVariable.second.address)->y = static_cast<float>(editableScriptVariableNode[1].getNumber());
+											}
+											if (editableScriptVariableNode[2].getType() == JSON::Type::Number) {
+												static_cast<Math::vec3*>(editableScriptVariable.second.address)->z = static_cast<float>(editableScriptVariableNode[2].getNumber());
+											}
+										}
 									}
 									else if (editableScriptVariable.second.type == EditableScriptVariableType::Vector4) {
-										static_cast<Math::vec4*>(editableScriptVariable.second.address)->x = static_cast<float>(editableVariablesNode[editableScriptVariable.first][0].getNumber());
-										static_cast<Math::vec4*>(editableScriptVariable.second.address)->y = static_cast<float>(editableVariablesNode[editableScriptVariable.first][1].getNumber());
-										static_cast<Math::vec4*>(editableScriptVariable.second.address)->z = static_cast<float>(editableVariablesNode[editableScriptVariable.first][2].getNumber());
-										static_cast<Math::vec4*>(editableScriptVariable.second.address)->w = static_cast<float>(editableVariablesNode[editableScriptVariable.first][3].getNumber());
+										if ((editableScriptVariableNode.getType() == JSON::Type::Array) && (editableScriptVariableNode.size() == 4)) {
+											if (editableScriptVariableNode[0].getType() == JSON::Type::Number) {
+												static_cast<Math::vec4*>(editableScriptVariable.second.address)->x = static_cast<float>(editableScriptVariableNode[0].getNumber());
+											}
+											if (editableScriptVariableNode[1].getType() == JSON::Type::Number) {
+												static_cast<Math::vec4*>(editableScriptVariable.second.address)->y = static_cast<float>(editableScriptVariableNode[1].getNumber());
+											}
+											if (editableScriptVariableNode[2].getType() == JSON::Type::Number) {
+												static_cast<Math::vec4*>(editableScriptVariable.second.address)->z = static_cast<float>(editableScriptVariableNode[2].getNumber());
+											}
+											if (editableScriptVariableNode[3].getType() == JSON::Type::Number) {
+												static_cast<Math::vec4*>(editableScriptVariable.second.address)->w = static_cast<float>(editableScriptVariableNode[3].getNumber());
+											}
+										}
 									}
 									else if (editableScriptVariable.second.type == EditableScriptVariableType::Quaternion) {
-										static_cast<Math::quat*>(editableScriptVariable.second.address)->a = static_cast<float>(editableVariablesNode[editableScriptVariable.first][0].getNumber());
-										static_cast<Math::quat*>(editableScriptVariable.second.address)->b = static_cast<float>(editableVariablesNode[editableScriptVariable.first][1].getNumber());
-										static_cast<Math::quat*>(editableScriptVariable.second.address)->c = static_cast<float>(editableVariablesNode[editableScriptVariable.first][2].getNumber());
-										static_cast<Math::quat*>(editableScriptVariable.second.address)->d = static_cast<float>(editableVariablesNode[editableScriptVariable.first][3].getNumber());
+										if ((editableScriptVariableNode.getType() == JSON::Type::Array) && (editableScriptVariableNode.size() == 4)) {
+											if (editableScriptVariableNode[0].getType() == JSON::Type::Number) {
+												static_cast<Math::quat*>(editableScriptVariable.second.address)->a = static_cast<float>(editableScriptVariableNode[0].getNumber());
+											}
+											if (editableScriptVariableNode[1].getType() == JSON::Type::Number) {
+												static_cast<Math::quat*>(editableScriptVariable.second.address)->b = static_cast<float>(editableScriptVariableNode[1].getNumber());
+											}
+											if (editableScriptVariableNode[2].getType() == JSON::Type::Number) {
+												static_cast<Math::quat*>(editableScriptVariable.second.address)->c = static_cast<float>(editableScriptVariableNode[2].getNumber());
+											}
+											if (editableScriptVariableNode[3].getType() == JSON::Type::Number) {
+												static_cast<Math::quat*>(editableScriptVariable.second.address)->d = static_cast<float>(editableScriptVariableNode[3].getNumber());
+											}
+										}
 									}
 								}
 							}
