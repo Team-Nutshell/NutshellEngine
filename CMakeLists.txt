@@ -7,6 +7,7 @@ include(FetchContent)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+
 set(NTSHENGN_DEFINES "")
 set(NTSHENGN_LIBRARIES "")
 
@@ -65,6 +66,9 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
 elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
 	list(APPEND MODULE_LOADER_HEADERS
 		module_loader/ntshengn_module_loader_linux.h)
+elseif(CMAKE_SYSTEM_NAME STREQUAL "FreeBSD")
+        list(APPEND MODULE_LOADER_HEADERS
+                module_loader/ntshengn_module_loader_freebsd.h)
 endif()
 
 set(NETWORKING_SOURCES
@@ -117,7 +121,9 @@ target_link_libraries(${PROJECT_NAME}
 target_compile_options(${PROJECT_NAME}
 	PUBLIC
 		$<$<CXX_COMPILER_ID:MSVC>:/W4 /WX>
-		$<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wall -Werror>)
+		$<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wall>)
+
+target_link_options(${PROJECT_NAME} PUBLIC -pthread)
 
 target_compile_definitions(${PROJECT_NAME}
 	PUBLIC

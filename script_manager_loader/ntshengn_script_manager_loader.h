@@ -3,4 +3,6 @@
 #include "ntshengn_script_manager_loader_windows.h"
 #elif defined(NTSHENGN_OS_LINUX)
 #include "ntshengn_script_manager_loader_linux.h"
+#elif defined(NTSHENGN_OS_BSD)
+#include "ntshengn_script_manager_loader_freebsd.h"
 #endif

@@ -214,6 +214,12 @@ void NtshEngn::Core::loadModules() {
 	const std::string windowModulePath = "./modules/libNutshellEngine-WindowModule.so";
 	const std::string audioModulePath = "./modules/libNutshellEngine-AudioModule.so";
 	const std::string assetLoaderModulePath = "./modules/libNutshellEngine-AssetLoaderModule.so";
+#elif defined(NTSHENGN_OS_BSD)
+	const std::string graphicsModulePath = "./modules/libNutshellEngine-GraphicsModule.so";
+        const std::string physicsModulePath = "./modules/libNutshellEngine-PhysicsModule.so";
+        const std::string windowModulePath = "./modules/libNutshellEngine-WindowModule.so";
+        const std::string audioModulePath = "./modules/libNutshellEngine-AudioModule.so";
+        const std::string assetLoaderModulePath = "./modules/libNutshellEngine-AssetLoaderModule.so";
 #endif
 
 	if (std::filesystem::exists(std::filesystem::current_path().string() + "/" + graphicsModulePath)) {
@@ -255,6 +261,8 @@ void NtshEngn::Core::loadScripts() {
 #if defined(NTSHENGN_OS_WINDOWS)
 	const std::string scriptsPath = "./NutshellEngine-Scripts.dll";
 #elif defined(NTSHENGN_OS_LINUX)
+	const std::string scriptsPath = "./libNutshellEngine-Scripts.so";
+#elif defined(NTSHENGN_OS_BSD)
 	const std::string scriptsPath = "./libNutshellEngine-Scripts.so";
 #endif
 
