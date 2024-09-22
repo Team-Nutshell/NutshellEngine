@@ -66,6 +66,10 @@ void NtshEngn::ServerSocket::setDataReceivedCallback(std::function<void(Connecte
 	m_dataReceivedCallback = callback;
 }
 
+uint16_t NtshEngn::ServerSocket::getPort() {
+	return m_port;
+}
+
 const std::unordered_map<NtshEngn::ConnectedClientID, NtshEngn::ConnectedClient>& NtshEngn::ServerSocket::getConnectedClients() {
 	return m_connectedClients;
 }

@@ -20,6 +20,7 @@ namespace NtshEngn {
 		void setClientDisconnectCallback(std::function<void(ConnectedClientID)> callback);
 		void setDataReceivedCallback(std::function<void(ConnectedClientID, void*, size_t)> callback);
 
+		uint16_t getPort();
 		const std::unordered_map<ConnectedClientID, ConnectedClient>& getConnectedClients();
 
 	private:
