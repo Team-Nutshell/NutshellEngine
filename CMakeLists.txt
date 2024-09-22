@@ -114,6 +114,14 @@ target_link_libraries(${PROJECT_NAME}
 		NutshellEngine::Common
 		${NTSHENGN_LIBRARIES})
 
+if(CMAKE_SYSTEM_NAME STREQUAL "Linux" OR CMAKE_SYSTEM_NAME STREQUAL "FreeBSD")
+	set(THREADS_PREFER_PTHREAD_FLAG TRUE)
+	find_package(Threads REQUIRED)
+	target_link_libraries(${PROJECT_NAME}
+		PRIVATE
+			Threads::Threads)
+endif()
+
 target_compile_options(${PROJECT_NAME}
 	PUBLIC
 		$<$<CXX_COMPILER_ID:MSVC>:/W4 /WX>
