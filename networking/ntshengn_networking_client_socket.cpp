@@ -3,7 +3,7 @@
 #include <winsock2.h>
 #include <ws2tcpip.h>
 #pragma comment(lib, "ws2_32.lib")
-#elif defined(NTSHENGN_OS_LINUX)
+#elif defined(NTSHENGN_OS_LINUX) || defined(NTSHENGN_OS_FREEBSD)
 #include <sys/socket.h>
 #include <arpa/inet.h>
 #include <netinet/in.h>

@@ -4,7 +4,7 @@
 #if defined(NTSHENGN_OS_WINDOWS)
 #include <ws2tcpip.h>
 #pragma comment(lib, "ws2_32.lib")
-#elif defined(NTSHENGN_OS_LINUX)
+#elif defined(NTSHENGN_OS_LINUX) || defined(NTSHENGN_OS_FREEBSD)
 #include <netinet/in.h>
 #include <fcntl.h>
 #define SOCKET int
@@ -121,7 +121,7 @@ NtshEngn::ServerSocketInterface* NtshEngn::Networking::createServerSocketUDP(uin
 #if defined(NTSHENGN_OS_WINDOWS)
 	unsigned long nonBlockingSocket = 1;
 	int nonBlocking = ioctlsocket(sock, FIONBIO, &nonBlockingSocket);
-#elif defined(NTSHENGN_OS_LINUX)
+#elif defined(NTSHENGN_OS_LINUX) || defined(NTSHENGN_OS_FREEBSD)
 	int nonBlocking = fcntl(sock, F_SETFL, fcntl(sock, F_GETFL, 0) | O_NONBLOCK);
 #endif
 	if (nonBlocking != 0) {
@@ -153,7 +153,7 @@ NtshEngn::ServerSocketInterface* NtshEngn::Networking::createServerSocketTCP(uin
 #if defined(NTSHENGN_OS_WINDOWS)
 	unsigned long nonBlockingSocket = 1;
 	int nonBlocking = ioctlsocket(sock, FIONBIO, &nonBlockingSocket);
-#elif defined(NTSHENGN_OS_LINUX)
+#elif defined(NTSHENGN_OS_LINUX) || defined(NTSHENGN_OS_FREEBSD)
 	int nonBlocking = fcntl(sock, F_SETFL, fcntl(sock, F_GETFL, 0) | O_NONBLOCK);
 #endif
 	if (nonBlocking != 0) {
@@ -184,7 +184,7 @@ NtshEngn::ClientSocketInterface* NtshEngn::Networking::createClientSocketUDP() {
 #if defined(NTSHENGN_OS_WINDOWS)
 	unsigned long nonBlockingSocket = 1;
 	int nonBlocking = ioctlsocket(sock, FIONBIO, &nonBlockingSocket);
-#elif defined(NTSHENGN_OS_LINUX)
+#elif defined(NTSHENGN_OS_LINUX) || defined(NTSHENGN_OS_FREEBSD)
 	int nonBlocking = fcntl(sock, F_SETFL, fcntl(sock, F_GETFL, 0) | O_NONBLOCK);
 #endif
 	if (nonBlocking != 0) {
@@ -206,7 +206,7 @@ NtshEngn::ClientSocketInterface* NtshEngn::Networking::createClientSocketTCP() {
 #if defined(NTSHENGN_OS_WINDOWS)
 	unsigned long nonBlockingSocket = 1;
 	int nonBlocking = ioctlsocket(sock, FIONBIO, &nonBlockingSocket);
-#elif defined(NTSHENGN_OS_LINUX)
+#elif defined(NTSHENGN_OS_LINUX) || defined(NTSHENGN_OS_FREEBSD)
 	int nonBlocking = fcntl(sock, F_SETFL, fcntl(sock, F_GETFL, 0) | O_NONBLOCK);
 #endif
 	if (nonBlocking != 0) {

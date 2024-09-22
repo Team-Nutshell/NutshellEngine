@@ -62,9 +62,9 @@ set(MODULE_LOADER_HEADERS
 if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
 	list(APPEND MODULE_LOADER_HEADERS
 		module_loader/ntshengn_module_loader_windows.h)
-elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
+elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux" OR CMAKE_SYSTEM_NAME STREQUAL "FreeBSD")
 	list(APPEND MODULE_LOADER_HEADERS
-		module_loader/ntshengn_module_loader_linux.h)
+		module_loader/ntshengn_module_loader_linux_freebsd.h)
 endif()
 
 set(NETWORKING_SOURCES
@@ -91,9 +91,9 @@ set(SCRIPT_MANAGER_LOADER_HEADERS
 if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
 	list(APPEND SCRIPT_MANAGER_LOADER_HEADERS
 		script_manager_loader/ntshengn_script_manager_loader_windows.h)
-elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
+elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux" OR CMAKE_SYSTEM_NAME STREQUAL "FreeBSD")
 	list(APPEND SCRIPT_MANAGER_LOADER_HEADERS
-		script_manager_loader/ntshengn_script_manager_loader_linux.h)
+		script_manager_loader/ntshengn_script_manager_loader_linux_freebsd.h)
 endif()
 
 set(SCRIPTING_SOURCES
