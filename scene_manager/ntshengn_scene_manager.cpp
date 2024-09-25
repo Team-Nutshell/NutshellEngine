@@ -330,6 +330,26 @@ void NtshEngn::SceneManager::goToScene(const std::string& filePath) {
 				m_ecs->addComponent(entity, collidable);
 			}
 
+			// SoundListener
+			if (entityNode.contains("soundListener")) {
+				const JSON::Node& soundListenerNode = entityNode["soundListener"];
+
+				SoundListener soundListener;
+				if (soundListenerNode.contains("forward")) {
+					const JSON::Node& forwardNode = soundListenerNode["forward"];
+
+					soundListener.forward = { forwardNode[0].getNumber(), forwardNode[1].getNumber(), forwardNode[2].getNumber() };
+				}
+
+				if (soundListenerNode.contains("up")) {
+					const JSON::Node& upNode = soundListenerNode["up"];
+
+					soundListener.up = { upNode[0].getNumber(), upNode[1].getNumber(), upNode[2].getNumber() };
+				}
+
+				m_ecs->addComponent(entity, soundListener);
+			}
+
 			// Scriptable
 			if (entityNode.contains("scriptable")) {
 				const JSON::Node& scriptableNode = entityNode["scriptable"];
