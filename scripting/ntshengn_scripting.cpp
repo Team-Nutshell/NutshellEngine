@@ -1,6 +1,6 @@
 #include "ntshengn_scripting.h"
 
-void NtshEngn::Scripting::update(double dt) {
+void NtshEngn::Scripting::update(float dt) {
 	for (auto& entityScript : m_entityScriptsJustInitialized) {
 		if (m_entityScriptsToDestroy.find(entityScript.first) == m_entityScriptsToDestroy.end()) {
 			if (!entityScript.second) {
