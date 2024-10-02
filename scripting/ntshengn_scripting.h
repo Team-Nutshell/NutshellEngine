@@ -15,7 +15,7 @@ namespace NtshEngn {
 
 	class Scripting : public System {
 	public:
-		void update(double dt);
+		void update(float dt);
 
 		void setSystemModules(GraphicsModuleInterface* graphicsModule, PhysicsModuleInterface* physicsModule, WindowModuleInterface* windowModule, AudioModuleInterface* audioModule);
 		void setScriptManager(ScriptManagerInterface* scriptManager);

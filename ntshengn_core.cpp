@@ -163,7 +163,7 @@ void NtshEngn::Core::update() {
 	bool applicationClose = false;
 	while (!applicationClose) {
 		double currentFrame = std::chrono::duration<double, std::milli>(std::chrono::steady_clock::now().time_since_epoch()).count();
-		double dt = currentFrame - lastFrame;
+		float dt = static_cast<float>((currentFrame - lastFrame) / 1000.0);
 
 		// Update
 		m_networking.update();
