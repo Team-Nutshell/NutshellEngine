@@ -38,7 +38,9 @@ void NtshEngn::Core::run(const std::string& optionsFilePath) {
 	}
 
 	// Initialize
+	m_profiler.startBlock("Init");
 	init();
+	m_profiler.endBlock();
 
 	Image* iconImage = nullptr;
 	if (windowIconImagePath != "") {
@@ -59,10 +61,14 @@ void NtshEngn::Core::run(const std::string& optionsFilePath) {
 	}
 
 	// Loop
+	m_profiler.startBlock("Update");
 	update();
+	m_profiler.endBlock();
 
 	// Destroy
+	m_profiler.startBlock("Destroy");
 	destroy();
+	m_profiler.endBlock();
 
 	if (m_profiler.isRunning()) {
 		NTSHENGN_CORE_INFO("Profiling session: \n" + ProfilerResultNode::to_string(m_profiler.end()));
@@ -115,10 +121,14 @@ NtshEngn::SceneManager* NtshEngn::Core::getSceneManager() {
 
 void NtshEngn::Core::init() {
 	// Load modules
+	m_profiler.startBlock("Load modules");
 	loadModules();
+	m_profiler.endBlock();
 
 	// Load scripts
+	m_profiler.startBlock("Load scripts");
 	loadScripts();
+	m_profiler.endBlock();
 
 	// Pass System Modules
 	passSystemModules();
@@ -151,11 +161,19 @@ void NtshEngn::Core::init() {
 	passSceneManager();
 
 	// Initialize System Modules
+	m_profiler.startBlock("Init Window Module");
 	NTSHENGN_POINTER_EXECUTE(m_windowModule, init());
+	m_profiler.endBlock();
 	NTSHENGN_POINTER_EXECUTE(m_windowModule, openWindow(1280, 720, ""));
+	m_profiler.startBlock("Init Graphics Module");
 	NTSHENGN_POINTER_EXECUTE(m_graphicsModule, init());
+	m_profiler.endBlock();
+	m_profiler.startBlock("Init Physics Module");
 	NTSHENGN_POINTER_EXECUTE(m_physicsModule, init());
+	m_profiler.endBlock();
+	m_profiler.startBlock("Init Audio Module");
 	NTSHENGN_POINTER_EXECUTE(m_audioModule, init());
+	m_profiler.endBlock();
 }
 
 void NtshEngn::Core::update() {
@@ -166,12 +184,28 @@ void NtshEngn::Core::update() {
 		float dt = static_cast<float>((currentFrame - lastFrame) / 1000.0);
 
 		// Update
+		m_profiler.startBlock("Frame");
+
+		m_profiler.startBlock("Update Networking");
 		m_networking.update();
+		m_profiler.endBlock();
+		m_profiler.startBlock("Update Window Module");
 		NTSHENGN_POINTER_EXECUTE(m_windowModule, update(dt));
+		m_profiler.endBlock();
+		m_profiler.startBlock("Update Scripting");
 		m_scripting.update(dt);
+		m_profiler.endBlock();
+		m_profiler.startBlock("Update Physics Module");
 		NTSHENGN_POINTER_EXECUTE(m_physicsModule, update(dt));
+		m_profiler.endBlock();
+		m_profiler.startBlock("Update Audio Module");
 		NTSHENGN_POINTER_EXECUTE(m_audioModule, update(dt));
+		m_profiler.endBlock();
+		m_profiler.startBlock("Update Graphics Module");
 		NTSHENGN_POINTER_EXECUTE(m_graphicsModule, update(dt));
+		m_profiler.endBlock();
+
+		m_profiler.endBlock();
 
 		applicationClose = m_windowModule ? !m_windowModule->isWindowOpen(m_windowModule->getMainWindowID()) : true;
 
@@ -189,16 +223,28 @@ void NtshEngn::Core::destroy() {
 	m_jobSystem.destroy();
 
 	// Destroy System Modules
+	m_profiler.startBlock("Destroy Graphics Module");
 	NTSHENGN_POINTER_EXECUTE(m_graphicsModule, destroy());
+	m_profiler.endBlock();
+	m_profiler.startBlock("Destroy Physics Module");
 	NTSHENGN_POINTER_EXECUTE(m_physicsModule, destroy());
+	m_profiler.endBlock();
+	m_profiler.startBlock("Destroy Window Module");
 	NTSHENGN_POINTER_EXECUTE(m_windowModule, destroy());
+	m_profiler.endBlock();
+	m_profiler.startBlock("Destroy Audio Module");
 	NTSHENGN_POINTER_EXECUTE(m_audioModule, destroy());
+	m_profiler.endBlock();
 
 	// Unload scripts
+	m_profiler.startBlock("Unload scripts");
 	unloadScripts();
+	m_profiler.endBlock();
 
 	// Unload modules
+	m_profiler.startBlock("Unload modules");
 	unloadModules();
+	m_profiler.endBlock();
 }
 
 void NtshEngn::Core::loadModules() {
