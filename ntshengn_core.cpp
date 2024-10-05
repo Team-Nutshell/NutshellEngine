@@ -2,7 +2,7 @@
 #include <filesystem>
 #include <chrono>
 
-void NtshEngn::Core::launch(const std::string& optionsFilePath) {
+void NtshEngn::Core::run(const std::string& optionsFilePath) {
 	std::string windowTitle = "NutshellEngine";
 	std::string windowIconImagePath = "";
 	std::string firstScenePath = "";

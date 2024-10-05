@@ -25,7 +25,7 @@ namespace NtshEngn {
 
 	class Core {
 	public:
-		void launch(const std::string& optionsFilePath);
+		void run(const std::string& optionsFilePath);
 
 		GraphicsModuleInterface* getGraphicsModule();
 		PhysicsModuleInterface* getPhysicsModule();
