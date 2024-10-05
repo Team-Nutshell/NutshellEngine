@@ -6,7 +6,7 @@
 
 int main() {
 	NtshEngn::Core core;
-	core.launch("assets/options/options.ntop");
+	core.run("assets/options/options.ntop");
 
 	return 0;
 }
