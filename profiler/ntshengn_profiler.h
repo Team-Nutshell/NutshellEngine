@@ -31,7 +31,7 @@ namespace NtshEngn {
 				resultNode.totalTime = totalTime;
 				resultNode.meanTime = meanTime;
 				resultNode.minTimeIndex = minTimeIndex;
-				resultNode.minTime = times[resultNode.minTimeIndex];
+				resultNode.minTime = minTime;
 				resultNode.maxTimeIndex = maxTimeIndex;
 				resultNode.maxTime = maxTime;
 
