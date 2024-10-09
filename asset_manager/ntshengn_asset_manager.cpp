@@ -603,7 +603,7 @@ void NtshEngn::AssetManager::loadMaterialNtml(const std::string& filePath, Mater
 			const JSON::Node& normalTextureNode = normalNode["texture"];
 
 			if (normalTextureNode.contains("imagePath")) {
-				material.diffuseTexture.image = loadImage(normalTextureNode["imagePath"].getString());
+				material.normalTexture.image = loadImage(normalTextureNode["imagePath"].getString());
 			}
 
 			if (normalTextureNode.contains("imageSamplerPath")) {
