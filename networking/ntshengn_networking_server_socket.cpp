@@ -44,7 +44,7 @@ void NtshEngn::ServerSocket::destroy() {
 }
 
 void NtshEngn::ServerSocket::sendDataToClient(ConnectedClientID clientID, const void* data, size_t dataSize) {
-	NTSHENGN_ASSERT(m_connectedClients.find(clientID) != m_connectedClients.end());
+	NTSHENGN_ASSERT(m_connectedClients.find(clientID) != m_connectedClients.end(), "No client with ID " + std::to_string(clientID) + " is connected to the server.");
 
 	if (m_networkType == NetworkType::UDP) {
 		sendDataToClientUDP(clientID, data, dataSize);
