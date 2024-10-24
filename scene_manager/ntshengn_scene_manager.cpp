@@ -15,6 +15,8 @@
 #include <vector>
 
 void NtshEngn::SceneManager::goToScene(const std::string& filePath) {
+	m_currentScenePath = filePath;
+
 	JSON json;
 	const JSON::Node& sceneRoot = json.read(filePath);
 
@@ -492,8 +494,6 @@ void NtshEngn::SceneManager::goToScene(const std::string& filePath) {
 			}
 		}
 	}
-
-	m_currentScenePath = filePath;
 }
 
 std::string NtshEngn::SceneManager::getCurrentScenePath() {
