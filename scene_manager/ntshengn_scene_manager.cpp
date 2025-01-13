@@ -113,10 +113,45 @@ void NtshEngn::SceneManager::goToScene(const std::string& filePath) {
 					camera.up = { upNode[0].getNumber(), upNode[1].getNumber(), upNode[2].getNumber() };
 				}
 
+				if (cameraNode.contains("projectionType")) {
+					const JSON::Node& projectionTypeNode = cameraNode["projectionType"];
+
+					if (projectionTypeNode.getString() == "Perspective") {
+						camera.projectionType = CameraProjectionType::Perspective;
+					}
+					else if (projectionTypeNode.getString() == "Orthographic") {
+						camera.projectionType = CameraProjectionType::Orthographic;
+					}
+				}
+
 				if (cameraNode.contains("fov")) {
 					const JSON::Node& fovNode = cameraNode["fov"];
 
 					camera.fov = Math::toRad(fovNode.getNumber());
+				}
+
+				if (cameraNode.contains("left")) {
+					const JSON::Node& leftNode = cameraNode["left"];
+
+					camera.left = leftNode.getNumber();
+				}
+
+				if (cameraNode.contains("right")) {
+					const JSON::Node& rightNode = cameraNode["right"];
+
+					camera.right = rightNode.getNumber();
+				}
+
+				if (cameraNode.contains("bottom")) {
+					const JSON::Node& bottomNode = cameraNode["bottom"];
+
+					camera.bottom = bottomNode.getNumber();
+				}
+
+				if (cameraNode.contains("top")) {
+					const JSON::Node& topNode = cameraNode["top"];
+
+					camera.top = topNode.getNumber();
 				}
 
 				if (cameraNode.contains("nearPlane")) {
