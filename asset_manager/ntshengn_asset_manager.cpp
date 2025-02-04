@@ -393,7 +393,7 @@ std::array<NtshEngn::Math::vec3, 2> NtshEngn::AssetManager::calculateAABB(const 
 		max.z += epsilon;
 	}
 
-	return { Math::vec3(min.x, min.y, min.z), Math::vec3(max.x, max.y, max.z) };
+	return { min, max };
 }
 
 void NtshEngn::AssetManager::setAssetLoaderModule(AssetLoaderModuleInterface* assetLoaderModule) {
