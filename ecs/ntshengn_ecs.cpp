@@ -6,7 +6,6 @@ void NtshEngn::ECS::init() {
 	m_systemManager = std::make_unique<SystemManager>();
 }
 
-// Entity
 NtshEngn::Entity NtshEngn::ECS::createEntity() {
 	Entity newEntity = m_entityManager->createEntity();
 	addComponent(newEntity, Transform{});
