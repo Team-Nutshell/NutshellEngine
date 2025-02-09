@@ -52,7 +52,7 @@ void NtshEngn::Core::run(const std::string& optionsFilePath) {
 
 		if (iconImage) {
 			m_windowModule->setWindowIcon(m_windowModule->getMainWindowID(), *iconImage);
-			m_assetManager.destroyImage(iconImage);
+			m_assetManager.destroyImage(m_assetManager.getImageName(iconImage));
 		}
 	}
 
