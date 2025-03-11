@@ -72,3 +72,27 @@ void NtshEngn::ECS::setEntityPersistence(Entity entity, bool persistent) {
 bool NtshEngn::ECS::isEntityPersistent(Entity entity) {
 	return m_entityManager->isEntityPersistent(entity);
 }
+
+void NtshEngn::ECS::addEntityToEntityGroup(Entity entity, const std::string& entityGroupName) {
+	m_entityManager->addEntityToEntityGroup(entity, entityGroupName);
+}
+
+void NtshEngn::ECS::removeEntityFromEntityGroup(Entity entity, const std::string& entityGroupName) {
+	m_entityManager->removeEntityFromEntityGroup(entity, entityGroupName);
+}
+
+bool NtshEngn::ECS::entityGroupExists(const std::string& entityGroupName) {
+	return m_entityManager->entityGroupExists(entityGroupName);
+}
+
+bool NtshEngn::ECS::isEntityInEntityGroup(Entity entity, const std::string& entityGroupName) {
+	return m_entityManager->isEntityInEntityGroup(entity, entityGroupName);
+}
+
+std::set<NtshEngn::Entity> NtshEngn::ECS::getEntitiesInEntityGroup(const std::string& entityGroupName) {
+	return m_entityManager->getEntitiesInEntityGroup(entityGroupName);
+}
+
+std::set<std::string> NtshEngn::ECS::getEntityGroupsOfEntity(Entity entity) {
+	return m_entityManager->getEntityGroupsOfEntity(entity);
+}

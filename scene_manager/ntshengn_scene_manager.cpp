@@ -39,6 +39,13 @@ void NtshEngn::SceneManager::goToScene(const std::string& filePath) {
 				m_ecs->setEntityPersistence(entity, entityPersistent);
 			}
 
+			if (entityNode.contains("entityGroups")) {
+				const JSON::Node& entityGroupsNode = entityNode["entityGroups"];
+				for (size_t j = 0; j < entityGroupsNode.size(); j++) {
+					m_ecs->addEntityToEntityGroup(entity, entityGroupsNode[j].getString());
+				}
+			}
+
 			// Renderable
 			if (entityNode.contains("renderable")) {
 				const JSON::Node& renderableNode = entityNode["renderable"];
