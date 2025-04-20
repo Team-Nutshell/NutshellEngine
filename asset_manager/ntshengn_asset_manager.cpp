@@ -886,6 +886,20 @@ void NtshEngn::AssetManager::loadMaterialNtml(const std::string& filePath, Mater
 	if (materialRoot.contains("indexOfRefraction")) {
 		material.indexOfRefraction = materialRoot["indexOfRefraction"].getNumber();
 	}
+
+	if (materialRoot.contains("useTriplanarMapping")) {
+		material.useTriplanarMapping = materialRoot["useTriplanarMapping"].getBoolean();
+	}
+
+	if (materialRoot.contains("scaleUV")) {
+		material.scaleUV.x = materialRoot["scaleUV"][0].getNumber();
+		material.scaleUV.y = materialRoot["scaleUV"][1].getNumber();
+	}
+
+	if (materialRoot.contains("offsetUV")) {
+		material.offsetUV.x = materialRoot["offsetUV"][0].getNumber();
+		material.offsetUV.y = materialRoot["offsetUV"][1].getNumber();
+	}
 }
 
 void NtshEngn::AssetManager::loadModelNtmd(const std::string& filePath, Model& model) {
