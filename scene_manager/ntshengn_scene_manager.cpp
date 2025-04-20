@@ -222,6 +222,12 @@ void NtshEngn::SceneManager::goToScene(const std::string& filePath) {
 					light.cutoff = { Math::toRad(cutoffNode[0].getNumber()), Math::toRad(cutoffNode[1].getNumber()) };
 				}
 
+				if (lightNode.contains("distance")) {
+					const JSON::Node& distanceNode = lightNode["distance"];
+
+					light.distance = distanceNode.getNumber();
+				}
+
 				m_ecs->addComponent(entity, light);
 			}
 
