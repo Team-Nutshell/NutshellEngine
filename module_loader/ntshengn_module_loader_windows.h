@@ -26,7 +26,7 @@ namespace NtshEngn {
 
 			createModule_t createModule = (createModule_t)GetProcAddress(m_moduleLibraries[typeid(T).name()], "createModule");
 			if (!createModule) {
-				NTSHENGN_CORE_ERROR("Could not load symbol \"createModule\" from dynamic library. Error code: " + std::to_string(GetLastError()), NtshEngn::Result::SymbolLoadError);
+				NTSHENGN_CORE_ERROR("Could not load symbol \"createModule\" from dynamic library. Error code: " + std::to_string(GetLastError()));
 			}
 
 			T* module = static_cast<T*>(createModule());
@@ -42,13 +42,13 @@ namespace NtshEngn {
 
 			destroyModule_t destroyModule = (destroyModule_t)GetProcAddress(m_moduleLibraries[typeid(T).name()], "destroyModule");
 			if (!destroyModule) {
-				NTSHENGN_CORE_ERROR("Could not load symbol \"destroyModule\".", NtshEngn::Result::SymbolLoadError);
+				NTSHENGN_CORE_ERROR("Could not load symbol \"destroyModule\".");
 			}
 
 			destroyModule(module);
 
 			if (!FreeLibrary(m_moduleLibraries[typeid(T).name()])) {
-				NTSHENGN_CORE_ERROR("Could not unload the dynamic library.", NtshEngn::Result::LibraryLoadError);
+				NTSHENGN_CORE_ERROR("Could not unload the dynamic library.");
 			}
 		}
 

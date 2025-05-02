@@ -24,13 +24,13 @@
 #endif
 
 #if defined(NTSHENGN_DEBUG)
-#define NTSHENGN_CORE_ERROR(message, code) \
+#define NTSHENGN_CORE_ERROR(message) \
 	do { \
-		std::cerr << "\33[1m\33[39mCORE \33[31mERROR\33[39m\33[0m: " + std::string(message) + " (" + std::string(#code) + ")" << std::endl; \
+		std::cerr << "\33[1m\33[39mCORE \33[31mERROR\33[39m\33[0m: " + std::string(message) << std::endl; \
 		exit(1); \
 	} while(0)
 #else
-#define NTSHENGN_CORE_ERROR(message, code) \
+#define NTSHENGN_CORE_ERROR(message) \
 	do { \
 		exit(1); \
 	} while(0)

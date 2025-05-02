@@ -27,7 +27,7 @@ namespace NtshEngn {
 
 			createScriptManager_t createScriptManager = (createScriptManager_t)GetProcAddress(m_scriptManagerLibrary, "createScriptManager");
 			if (!createScriptManager) {
-				NTSHENGN_CORE_ERROR("Could not load symbol \"createScriptManager\" from dynamic library. Error code: " + std::to_string(GetLastError()), NtshEngn::Result::SymbolLoadError);
+				NTSHENGN_CORE_ERROR("Could not load symbol \"createScriptManager\" from dynamic library. Error code: " + std::to_string(GetLastError()));
 			}
 
 			ScriptManagerInterface* scriptManager = static_cast<ScriptManagerInterface*>(createScriptManager());
@@ -42,13 +42,13 @@ namespace NtshEngn {
 
 			destroyScriptManager_t destroyScriptManager = (destroyScriptManager_t)GetProcAddress(m_scriptManagerLibrary, "destroyScriptManager");
 			if (!destroyScriptManager) {
-				NTSHENGN_CORE_ERROR("Could not load symbol destroyScriptManager.", NtshEngn::Result::SymbolLoadError);
+				NTSHENGN_CORE_ERROR("Could not load symbol destroyScriptManager.");
 			}
 
 			destroyScriptManager(scriptManager);
 
 			if (!FreeLibrary(m_scriptManagerLibrary)) {
-				NTSHENGN_CORE_ERROR("Could not unload the dynamic library.", NtshEngn::Result::LibraryLoadError);
+				NTSHENGN_CORE_ERROR("Could not unload the dynamic library.");
 			}
 		}
 
