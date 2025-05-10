@@ -3,6 +3,8 @@
 #include <vector>
 #include <unordered_map>
 #include <string>
+#include <algorithm>
+#include <numeric>
 
 namespace NtshEngn {
 
@@ -12,12 +14,6 @@ namespace NtshEngn {
 			std::string name = "";
 
 			std::vector<double> times;
-			double totalTime = 0.0;
-			double meanTime = 0.0;
-			uint32_t minTimeIndex = 0;
-			double minTime = 0.0;
-			uint32_t maxTimeIndex = 0;
-			double maxTime = 0.0;
 
 			double start;
 
@@ -27,13 +23,17 @@ namespace NtshEngn {
 			ProfilerResultNode getResults() const {
 				ProfilerResultNode resultNode;
 				resultNode.name = name;
-				resultNode.times = times;
-				resultNode.totalTime = totalTime;
-				resultNode.meanTime = meanTime;
-				resultNode.minTimeIndex = minTimeIndex;
-				resultNode.minTime = minTime;
-				resultNode.maxTimeIndex = maxTimeIndex;
-				resultNode.maxTime = maxTime;
+				resultNode.count = static_cast<uint32_t>(times.size());
+				resultNode.totalTime = std::accumulate(times.begin(), times.end(), 0.0);
+				resultNode.meanTime = resultNode.totalTime / static_cast<double>(resultNode.count);
+				resultNode.minTimeIndex = static_cast<uint32_t>(std::distance(times.begin(), std::min_element(times.begin(), times.end())));
+				resultNode.minTime = times[resultNode.minTimeIndex];
+				resultNode.maxTimeIndex = static_cast<uint32_t>(std::distance(times.begin(), std::max_element(times.begin(), times.end())));
+				resultNode.maxTime = times[resultNode.maxTimeIndex];
+
+				std::vector<double> sortedTimes = times;
+				std::sort(sortedTimes.begin(), sortedTimes.end());
+				resultNode.medianTime = sortedTimes[resultNode.count / 2];
 
 				for (const Node* child : children) {
 					resultNode.children.push_back(child->getResults());

@@ -20,8 +20,8 @@ NtshEngn::ProfilerResultNode NtshEngn::Profiler::getResults() {
 
 	if (m_isRunning) {
 		resultNode.name = m_rootNode.name;
+		resultNode.count = 1;
 		resultNode.totalTime = std::chrono::duration<double, std::milli>(std::chrono::high_resolution_clock::now().time_since_epoch()).count() - m_rootNode.start;
-		resultNode.times = { resultNode.totalTime };
 
 		for (const Node* child : m_rootNode.children) {
 			resultNode.children.push_back(child->getResults());
@@ -67,21 +67,6 @@ void NtshEngn::Profiler::endBlock() {
 			const double blockTime = std::chrono::duration<double, std::milli>(std::chrono::high_resolution_clock::now().time_since_epoch()).count() - m_currentNode->start;
 
 			m_currentNode->times.push_back(blockTime);
-			m_currentNode->totalTime += blockTime;
-			if (m_currentNode->times.size() > 1) {
-				m_currentNode->meanTime = m_currentNode->totalTime / static_cast<double>(m_currentNode->times.size());
-				m_currentNode->minTimeIndex = (blockTime < m_currentNode->minTime) ? static_cast<uint32_t>(m_currentNode->times.size() - 1) : m_currentNode->minTimeIndex;
-				m_currentNode->minTime = (blockTime < m_currentNode->minTime) ? blockTime : m_currentNode->minTime;
-				m_currentNode->maxTimeIndex = (blockTime > m_currentNode->maxTime) ? static_cast<uint32_t>(m_currentNode->times.size() - 1) : m_currentNode->maxTimeIndex;
-				m_currentNode->maxTime = (blockTime > m_currentNode->maxTime) ? blockTime : m_currentNode->maxTime;
-			}
-			else {
-				m_currentNode->meanTime = m_currentNode->totalTime;
-				m_currentNode->minTimeIndex = 0;
-				m_currentNode->minTime = blockTime;
-				m_currentNode->maxTimeIndex = 0;
-				m_currentNode->maxTime = blockTime;
-			}
 
 			m_currentNode = m_currentNode->parent;
 		}
