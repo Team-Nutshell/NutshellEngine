@@ -205,11 +205,13 @@ void NtshEngn::Core::update() {
 		NTSHENGN_POINTER_EXECUTE(m_graphicsModule, update(dt));
 		m_profiler.endBlock();
 
-		m_profiler.endBlock();
-
 		applicationClose = m_windowModule ? !m_windowModule->isWindowOpen(m_windowModule->getMainWindowID()) : true;
 
+		m_profiler.startBlock("Wait Frame Limiter");
 		m_frameLimiter.wait(currentFrame);
+		m_profiler.endBlock();
+
+		m_profiler.endBlock();
 
 		lastFrame = currentFrame;
 	}
