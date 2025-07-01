@@ -1,5 +1,5 @@
 #pragma once
-#include "../../Common/networking/ntshengn_networking_interface.h"
+#include "../Common/networking/ntshengn_networking_interface.h"
 #include <forward_list>
 #include <memory>
 

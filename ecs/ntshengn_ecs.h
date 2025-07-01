@@ -1,5 +1,5 @@
 #pragma once
-#include "../../Common/ecs/ntshengn_ecs_interface.h"
+#include "../Common/ecs/ntshengn_ecs_interface.h"
 
 namespace NtshEngn {
 

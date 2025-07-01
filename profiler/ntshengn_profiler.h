@@ -1,5 +1,5 @@
 #pragma once
-#include "../../Common/profiler/ntshengn_profiler_interface.h"
+#include "../Common/profiler/ntshengn_profiler_interface.h"
 #include <vector>
 #include <unordered_map>
 #include <string>

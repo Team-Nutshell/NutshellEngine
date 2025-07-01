@@ -1,5 +1,5 @@
 #pragma once
-#include "../../Common/frame_limiter/ntshengn_frame_limiter_interface.h"
+#include "../Common/frame_limiter/ntshengn_frame_limiter_interface.h"
 
 namespace NtshEngn {
 

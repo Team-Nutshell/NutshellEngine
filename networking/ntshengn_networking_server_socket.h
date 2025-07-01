@@ -1,6 +1,6 @@
 #pragma once
-#include "../../Common/networking/ntshengn_networking_server_socket_interface.h"
-#include "ntshengn_networking_common.h"
+#include "../Common/networking/ntshengn_networking_server_socket_interface.h"
+#include "../Common/networking/ntshengn_networking_common.h"
 #include <string>
 #include <unordered_map>
 #include <functional>

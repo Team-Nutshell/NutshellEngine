@@ -1,5 +1,5 @@
 #pragma once
-#include "../../Common/job_system/ntshengn_job_system_interface.h"
+#include "../Common/job_system/ntshengn_job_system_interface.h"
 #include "../utils/ntshengn_utils_thread_safe_queue.h"
 #include <thread>
 #include <mutex>

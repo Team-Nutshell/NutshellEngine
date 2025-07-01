@@ -1,5 +1,5 @@
 #include "ntshengn_networking_server_socket.h"
-#include "../../Common/utils/ntshengn_defines.h"
+#include "../Common/utils/ntshengn_defines.h"
 #if defined(NTSHENGN_OS_WINDOWS)
 #include <winsock2.h>
 #include <ws2tcpip.h>

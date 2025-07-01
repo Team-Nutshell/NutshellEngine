@@ -1,6 +1,6 @@
 #pragma once
-#include "../../Common/asset_manager/ntshengn_asset_manager_interface.h"
-#include "../../Common/modules/ntshengn_asset_loader_module_interface.h"
+#include "../Common/asset_manager/ntshengn_asset_manager_interface.h"
+#include "../Common/modules/ntshengn_asset_loader_module_interface.h"
 #include "../resources/ntshengn_resources_audio.h"
 #include "../resources/ntshengn_resources_graphics.h"
 #include <filesystem>

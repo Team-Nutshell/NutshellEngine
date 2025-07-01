@@ -1,5 +1,5 @@
 #pragma once
-#include "../../Common/scene_manager/ntshengn_scene_manager_interface.h"
+#include "../Common/scene_manager/ntshengn_scene_manager_interface.h"
 #include "../asset_manager/ntshengn_asset_manager.h"
 #include "../ecs/ntshengn_ecs.h"
 #include "../script/ntshengn_script_manager_interface.h"
