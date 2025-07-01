@@ -49,6 +49,10 @@ bool NtshEngn::ECS::entityExists(Entity entity) {
 	return m_entityManager->entityExists(entity);
 }
 
+const std::set<NtshEngn::Entity>& NtshEngn::ECS::getEntities() {
+	return m_entityManager->getExistingEntities();
+}
+
 void NtshEngn::ECS::setEntityName(Entity entity, const std::string& name) {
 	m_entityManager->setEntityName(entity, name);
 }

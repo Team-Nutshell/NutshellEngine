@@ -17,6 +17,8 @@ namespace NtshEngn {
 
 		bool entityExists(Entity entity);
 
+		const std::set<Entity>& getEntities();
+
 		void setEntityName(Entity entity, const std::string& name);
 		bool entityHasName(Entity entity);
 		std::string getEntityName(Entity entity);
