@@ -15,10 +15,18 @@
 #include <vector>
 
 void NtshEngn::SceneManager::goToScene(const std::string& filePath) {
+	std::string previousScenePath = m_currentScenePath;
 	m_currentScenePath = filePath;
 
 	JSON json;
 	const JSON::Node& sceneRoot = json.read(filePath);
+
+	const std::set<Entity>& entities = m_ecs->getEntities();
+	for (Entity entity : entities) {
+		if (m_ecs->hasComponent<Scriptable>(entity)) {
+			m_ecs->getComponent<Scriptable>(entity).script->onSceneExit(previousScenePath);
+		}
+	}
 
 	m_ecs->destroyNonPersistentEntities();
 
@@ -540,6 +548,12 @@ void NtshEngn::SceneManager::goToScene(const std::string& filePath) {
 					}
 				}
 			}
+		}
+	}
+
+	for (Entity entity : entities) {
+		if (m_ecs->hasComponent<Scriptable>(entity)) {
+			m_ecs->getComponent<Scriptable>(entity).script->onSceneEnter(m_currentScenePath);
 		}
 	}
 }
