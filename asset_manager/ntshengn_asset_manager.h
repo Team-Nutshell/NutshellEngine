@@ -20,7 +20,8 @@ namespace NtshEngn {
 		Image* loadImage(const std::string& filePath);
 
 		Font* createFont(const std::string& fontName);
-		Font* loadFont(const std::string& filePath, float fontHeight);
+		Font* loadFontBitmap(const std::string& filePath, float fontHeight);
+		Font* loadFontSDF(const std::string& filePath);
 
 		Sound* createSound(const std::string& soundName);
 		Sound* loadSound(const std::string& filePath);

@@ -202,7 +202,7 @@ NtshEngn::Font* NtshEngn::AssetManager::createFont(const std::string& fontName) 
 	}
 }
 
-NtshEngn::Font* NtshEngn::AssetManager::loadFont(const std::string& filePath, float fontHeight) {
+NtshEngn::Font* NtshEngn::AssetManager::loadFontBitmap(const std::string& filePath, float fontHeight) {
 	if (!std::filesystem::exists(filePath)) {
 		NTSHENGN_ASSET_MANAGER_WARNING("Could not load font file \"" + filePath + "\" (file does not exist).");
 
@@ -215,7 +215,7 @@ NtshEngn::Font* NtshEngn::AssetManager::loadFont(const std::string& filePath, fl
 		return nullptr;
 	}
 
-	std::string normalizedPath = getNormalizedPath(filePath);
+	std::string normalizedPath = getNormalizedPath(filePath) + ":Bitmap:" + std::to_string(fontHeight);
 
 	if (m_fonts.find(normalizedPath) != m_fonts.end()) {
 		if (m_fontLastModified.find(normalizedPath) != m_fontLastModified.end()) {
@@ -227,10 +227,52 @@ NtshEngn::Font* NtshEngn::AssetManager::loadFont(const std::string& filePath, fl
 
 	Font newFont;
 	if (m_assetLoaderModule) {
-		newFont = m_assetLoaderModule->loadFont(filePath, fontHeight);
+		newFont = m_assetLoaderModule->loadFontBitmap(filePath, fontHeight);
 	}
 
 	if (newFont.image) {
+		newFont.type = FontType::Bitmap;
+
+		m_fonts[normalizedPath] = newFont;
+		Font* font = &m_fonts[normalizedPath];
+
+		m_fontNames[font] = normalizedPath;
+		m_fontLastModified[normalizedPath] = std::filesystem::last_write_time(filePath);
+
+		return font;
+	}
+	else {
+		NTSHENGN_ASSET_MANAGER_WARNING("Could not load font file \"" + filePath + "\".");
+
+		return nullptr;
+	}
+}
+
+NtshEngn::Font* NtshEngn::AssetManager::loadFontSDF(const std::string& filePath) {
+	if (!std::filesystem::exists(filePath)) {
+		NTSHENGN_ASSET_MANAGER_WARNING("Could not load font file \"" + filePath + "\" (file does not exist).");
+
+		return nullptr;
+	}
+
+	std::string normalizedPath = getNormalizedPath(filePath) + ":SDF";
+
+	if (m_fonts.find(normalizedPath) != m_fonts.end()) {
+		if (m_fontLastModified.find(normalizedPath) != m_fontLastModified.end()) {
+			if (m_fontLastModified[normalizedPath] == std::filesystem::last_write_time(filePath)) {
+				return &m_fonts[normalizedPath];
+			}
+		}
+	}
+
+	Font newFont;
+	if (m_assetLoaderModule) {
+		newFont = m_assetLoaderModule->loadFontSDF(filePath);
+	}
+
+	if (newFont.image) {
+		newFont.type = FontType::SDF;
+
 		m_fonts[normalizedPath] = newFont;
 		Font* font = &m_fonts[normalizedPath];
 
