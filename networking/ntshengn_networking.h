@@ -26,7 +26,7 @@ namespace NtshEngn {
 
 	private:
 		std::forward_list<std::unique_ptr<ServerSocketInterface>> m_servers;
-		std::forward_list< std::unique_ptr<ClientSocketInterface>> m_clients;
+		std::forward_list<std::unique_ptr<ClientSocketInterface>> m_clients;
 	};
 
 }
