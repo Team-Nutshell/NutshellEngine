@@ -269,33 +269,39 @@ void NtshEngn::Core::loadModules() {
 
 	if (std::filesystem::exists("modules")) {
 		const std::filesystem::path modulesDirectory{ "modules" };
+		std::vector<std::string> sortedModulePaths;
 		for (const std::filesystem::directory_entry moduleEntry : std::filesystem::directory_iterator(modulesDirectory)) {
-			std::string modulePath = moduleEntry.path().string();
 			if (!moduleEntry.is_directory() && (File::extension(moduleEntry.path().string()) == dynamicLibraryExtension)) {
-				ModuleInterface* module = m_moduleLoader.loadModule(modulePath);
-				if ((module->getType() == ModuleType::Graphics) && !m_graphicsModule) {
-					m_graphicsModule = static_cast<GraphicsModuleInterface*>(module);
-					m_graphicsModulePath = modulePath;
-				}
-				else if ((module->getType() == ModuleType::Physics) && !m_physicsModule) {
-					m_physicsModule = static_cast<PhysicsModuleInterface*>(module);
-					m_physicsModulePath = modulePath;
-				}
-				else if ((module->getType() == ModuleType::Window) && !m_windowModule) {
-					m_windowModule = static_cast<WindowModuleInterface*>(module);
-					m_windowModulePath = modulePath;
-				}
-				else if ((module->getType() == ModuleType::Audio) && !m_audioModule) {
-					m_audioModule = static_cast<AudioModuleInterface*>(module);
-					m_audioModulePath = modulePath;
-				}
-				else if ((module->getType() == ModuleType::AssetLoader) && !m_assetLoaderModule) {
-					m_assetLoaderModule = static_cast<AssetLoaderModuleInterface*>(module);
-					m_assetLoaderModulePath = modulePath;
-				}
-				else {
-					m_moduleLoader.unloadModule(module, modulePath);
-				}
+				std::string modulePath = moduleEntry.path().string();
+				sortedModulePaths.push_back(modulePath);
+			}
+		}
+
+		std::sort(sortedModulePaths.begin(), sortedModulePaths.end());
+		for (const std::string& modulePath : sortedModulePaths) {
+			ModuleInterface* module = m_moduleLoader.loadModule(modulePath);
+			if ((module->getType() == ModuleType::Graphics) && !m_graphicsModule) {
+				m_graphicsModule = static_cast<GraphicsModuleInterface*>(module);
+				m_graphicsModulePath = modulePath;
+			}
+			else if ((module->getType() == ModuleType::Physics) && !m_physicsModule) {
+				m_physicsModule = static_cast<PhysicsModuleInterface*>(module);
+				m_physicsModulePath = modulePath;
+			}
+			else if ((module->getType() == ModuleType::Window) && !m_windowModule) {
+				m_windowModule = static_cast<WindowModuleInterface*>(module);
+				m_windowModulePath = modulePath;
+			}
+			else if ((module->getType() == ModuleType::Audio) && !m_audioModule) {
+				m_audioModule = static_cast<AudioModuleInterface*>(module);
+				m_audioModulePath = modulePath;
+			}
+			else if ((module->getType() == ModuleType::AssetLoader) && !m_assetLoaderModule) {
+				m_assetLoaderModule = static_cast<AssetLoaderModuleInterface*>(module);
+				m_assetLoaderModulePath = modulePath;
+			}
+			else {
+				m_moduleLoader.unloadModule(module, modulePath);
 			}
 		}
 	}
