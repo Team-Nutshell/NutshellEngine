@@ -174,6 +174,9 @@ void NtshEngn::Core::init() {
 	m_profiler.startBlock("Init Audio Module");
 	NTSHENGN_POINTER_EXECUTE(m_audioModule, init());
 	m_profiler.endBlock();
+	m_profiler.startBlock("Init Asset Loader Module");
+	NTSHENGN_POINTER_EXECUTE(m_assetLoaderModule, init());
+	m_profiler.endBlock();
 }
 
 void NtshEngn::Core::update() {
@@ -188,6 +191,9 @@ void NtshEngn::Core::update() {
 
 		m_profiler.startBlock("Update Networking");
 		m_networking.update();
+		m_profiler.endBlock();
+		m_profiler.startBlock("Update Asset Loader Module");
+		NTSHENGN_POINTER_EXECUTE(m_assetLoaderModule, update(dt));
 		m_profiler.endBlock();
 		m_profiler.startBlock("Update Window Module");
 		NTSHENGN_POINTER_EXECUTE(m_windowModule, update(dt));
@@ -236,6 +242,9 @@ void NtshEngn::Core::destroy() {
 	m_profiler.endBlock();
 	m_profiler.startBlock("Destroy Audio Module");
 	NTSHENGN_POINTER_EXECUTE(m_audioModule, destroy());
+	m_profiler.endBlock();
+	m_profiler.startBlock("Destroy Asset Loader Module");
+	NTSHENGN_POINTER_EXECUTE(m_assetLoaderModule, destroy());
 	m_profiler.endBlock();
 
 	// Unload scripts
