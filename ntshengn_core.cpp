@@ -1,4 +1,6 @@
 #include "ntshengn_core.h"
+#include "Common/utils/ntshengn_utils_file.h"
+#include "Common/utils/ntshengn_utils_json.h"
 #include <filesystem>
 #include <chrono>
 
@@ -260,51 +262,60 @@ void NtshEngn::Core::destroy() {
 
 void NtshEngn::Core::loadModules() {
 #if defined(NTSHENGN_OS_WINDOWS)
-	const std::string graphicsModulePath = "./modules/NutshellEngine-GraphicsModule.dll";
-	const std::string physicsModulePath = "./modules/NutshellEngine-PhysicsModule.dll";
-	const std::string windowModulePath = "./modules/NutshellEngine-WindowModule.dll";
-	const std::string audioModulePath = "./modules/NutshellEngine-AudioModule.dll";
-	const std::string assetLoaderModulePath = "./modules/NutshellEngine-AssetLoaderModule.dll";
+	const std::string dynamicLibraryExtension = "dll";
 #elif defined(NTSHENGN_OS_LINUX) || defined(NTSHENGN_OS_FREEBSD)
-	const std::string graphicsModulePath = "./modules/libNutshellEngine-GraphicsModule.so";
-	const std::string physicsModulePath = "./modules/libNutshellEngine-PhysicsModule.so";
-	const std::string windowModulePath = "./modules/libNutshellEngine-WindowModule.so";
-	const std::string audioModulePath = "./modules/libNutshellEngine-AudioModule.so";
-	const std::string assetLoaderModulePath = "./modules/libNutshellEngine-AssetLoaderModule.so";
+	const std::string dynamicLibraryExtension = "so";
 #endif
 
-	if (std::filesystem::exists(std::filesystem::current_path().string() + "/" + graphicsModulePath)) {
-		m_graphicsModule = m_moduleLoader.loadModule<GraphicsModuleInterface>(graphicsModulePath);
-	}
-	if (std::filesystem::exists(std::filesystem::current_path().string() + "/" + physicsModulePath)) {
-		m_physicsModule = m_moduleLoader.loadModule<PhysicsModuleInterface>(physicsModulePath);
-	}
-	if (std::filesystem::exists(std::filesystem::current_path().string() + "/" + windowModulePath)) {
-		m_windowModule = m_moduleLoader.loadModule<WindowModuleInterface>(windowModulePath);
-	}
-	if (std::filesystem::exists(std::filesystem::current_path().string() + "/" + audioModulePath)) {
-		m_audioModule = m_moduleLoader.loadModule<AudioModuleInterface>(audioModulePath);
-	}
-	if (std::filesystem::exists(std::filesystem::current_path().string() + "/" + assetLoaderModulePath)) {
-		m_assetLoaderModule = m_moduleLoader.loadModule<AssetLoaderModuleInterface>(assetLoaderModulePath);
+	if (std::filesystem::exists("modules")) {
+		const std::filesystem::path modulesDirectory{ "modules" };
+		for (const std::filesystem::directory_entry moduleEntry : std::filesystem::directory_iterator(modulesDirectory)) {
+			std::string modulePath = moduleEntry.path().string();
+			if (!moduleEntry.is_directory() && (File::extension(moduleEntry.path().string()) == dynamicLibraryExtension)) {
+				ModuleInterface* module = m_moduleLoader.loadModule(modulePath);
+				if ((module->getType() == ModuleType::Graphics) && !m_graphicsModule) {
+					m_graphicsModule = static_cast<GraphicsModuleInterface*>(module);
+					m_graphicsModulePath = modulePath;
+				}
+				else if ((module->getType() == ModuleType::Physics) && !m_physicsModule) {
+					m_physicsModule = static_cast<PhysicsModuleInterface*>(module);
+					m_physicsModulePath = modulePath;
+				}
+				else if ((module->getType() == ModuleType::Window) && !m_windowModule) {
+					m_windowModule = static_cast<WindowModuleInterface*>(module);
+					m_windowModulePath = modulePath;
+				}
+				else if ((module->getType() == ModuleType::Audio) && !m_audioModule) {
+					m_audioModule = static_cast<AudioModuleInterface*>(module);
+					m_audioModulePath = modulePath;
+				}
+				else if ((module->getType() == ModuleType::AssetLoader) && !m_assetLoaderModule) {
+					m_assetLoaderModule = static_cast<AssetLoaderModuleInterface*>(module);
+					m_assetLoaderModulePath = modulePath;
+				}
+				else {
+					m_moduleLoader.unloadModule(module, modulePath);
+				}
+			}
+		}
 	}
 }
 
 void NtshEngn::Core::unloadModules() {
 	if (m_graphicsModule) {
-		m_moduleLoader.unloadModule(m_graphicsModule);
+		m_moduleLoader.unloadModule(m_graphicsModule, m_graphicsModulePath);
 	}
 	if (m_physicsModule) {
-		m_moduleLoader.unloadModule(m_physicsModule);
+		m_moduleLoader.unloadModule(m_physicsModule, m_physicsModulePath);
 	}
 	if (m_windowModule) {
-		m_moduleLoader.unloadModule(m_windowModule);
+		m_moduleLoader.unloadModule(m_windowModule, m_windowModulePath);
 	}
 	if (m_audioModule) {
-		m_moduleLoader.unloadModule(m_audioModule);
+		m_moduleLoader.unloadModule(m_audioModule, m_audioModulePath);
 	}
 	if (m_assetLoaderModule) {
-		m_moduleLoader.unloadModule(m_assetLoaderModule);
+		m_moduleLoader.unloadModule(m_assetLoaderModule, m_assetLoaderModulePath);
 	}
 }
 

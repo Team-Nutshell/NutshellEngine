@@ -1,7 +1,6 @@
 #pragma once
 #include "Common/utils/ntshengn_defines.h"
 #include "Common/utils/ntshengn_enums.h"
-#include "Common/utils/ntshengn_utils_json.h"
 #include "Common/modules/ntshengn_graphics_module_interface.h"
 #include "Common/modules/ntshengn_physics_module_interface.h"
 #include "Common/modules/ntshengn_window_module_interface.h"
@@ -86,6 +85,12 @@ namespace NtshEngn {
 		AudioModuleInterface* m_audioModule = nullptr;
 		
 		AssetLoaderModuleInterface* m_assetLoaderModule = nullptr;
+
+		std::string m_graphicsModulePath;
+		std::string m_physicsModulePath;
+		std::string m_windowModulePath;
+		std::string m_audioModulePath;
+		std::string m_assetLoaderModulePath;
 
 		ScriptManagerInterface* m_scriptManager = nullptr;
 		Scripting m_scripting;
