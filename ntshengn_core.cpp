@@ -270,7 +270,7 @@ void NtshEngn::Core::loadModules() {
 	if (std::filesystem::exists("modules")) {
 		const std::filesystem::path modulesDirectory{ "modules" };
 		std::vector<std::string> sortedModulePaths;
-		for (const std::filesystem::directory_entry moduleEntry : std::filesystem::directory_iterator(modulesDirectory)) {
+		for (const std::filesystem::directory_entry& moduleEntry : std::filesystem::directory_iterator(modulesDirectory)) {
 			if (!moduleEntry.is_directory() && (File::extension(moduleEntry.path().string()) == dynamicLibraryExtension)) {
 				std::string modulePath = moduleEntry.path().string();
 				sortedModulePaths.push_back(modulePath);
