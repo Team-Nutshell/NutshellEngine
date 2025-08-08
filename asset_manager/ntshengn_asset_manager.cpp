@@ -332,7 +332,7 @@ NtshEngn::Sound* NtshEngn::AssetManager::loadSound(const std::string& filePath) 
 		}
 	}
 
-	if (newSound.size != 0) {
+	if (newSound.data.size() != 0) {
 		m_sounds[normalizedPath] = newSound;
 		Sound* sound = &m_sounds[normalizedPath];
 
@@ -1024,10 +1024,6 @@ void NtshEngn::AssetManager::loadSoundNtsd(const std::string& filePath, Sound& s
 
 	if (soundRoot.contains("bitsPerSample")) {
 		sound.bitsPerSample = static_cast<uint8_t>(soundRoot["bitsPerSample"].getNumber());
-	}
-
-	if (soundRoot.contains("size")) {
-		sound.size = static_cast<size_t>(soundRoot["size"].getNumber());
 	}
 
 	if (soundRoot.contains("data")) {
