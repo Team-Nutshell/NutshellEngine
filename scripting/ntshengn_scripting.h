@@ -17,7 +17,7 @@ namespace NtshEngn {
 	public:
 		void update(float dt);
 
-		void setSystemModules(GraphicsModuleInterface* graphicsModule, PhysicsModuleInterface* physicsModule, WindowModuleInterface* windowModule, AudioModuleInterface* audioModule);
+		void setModules(GraphicsModuleInterface* graphicsModule, PhysicsModuleInterface* physicsModule, WindowModuleInterface* windowModule, AudioModuleInterface* audioModule, PlatformModuleInterface* platformModule);
 		void setScriptManager(ScriptManagerInterface* scriptManager);
 		void setECS(ECS* ecs);
 		void setAssetManager(AssetManager* assetManager);
@@ -36,6 +36,7 @@ namespace NtshEngn {
 		PhysicsModuleInterface* m_physicsModule = nullptr;
 		WindowModuleInterface* m_windowModule = nullptr;
 		AudioModuleInterface* m_audioModule = nullptr;
+		PlatformModuleInterface* m_platformModule = nullptr;
 
 		ECS* m_ecs = nullptr;
 

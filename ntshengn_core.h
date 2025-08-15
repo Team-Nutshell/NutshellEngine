@@ -6,6 +6,7 @@
 #include "Common/modules/ntshengn_window_module_interface.h"
 #include "Common/modules/ntshengn_audio_module_interface.h"
 #include "Common/modules/ntshengn_asset_loader_module_interface.h"
+#include "Common/modules/ntshengn_platform_module_interface.h"
 #include "ecs/ntshengn_ecs.h"
 #include "asset_manager/ntshengn_asset_manager.h"
 #include "job_system/ntshengn_job_system.h"
@@ -30,6 +31,8 @@ namespace NtshEngn {
 		PhysicsModuleInterface* getPhysicsModule();
 		WindowModuleInterface* getWindowModule();
 		AudioModuleInterface* getAudioModule();
+
+		PlatformModuleInterface* getPlatformModule();
 
 		ECS* getECS();
 
@@ -86,11 +89,14 @@ namespace NtshEngn {
 		
 		AssetLoaderModuleInterface* m_assetLoaderModule = nullptr;
 
+		PlatformModuleInterface* m_platformModule = nullptr;
+
 		std::string m_graphicsModulePath;
 		std::string m_physicsModulePath;
 		std::string m_windowModulePath;
 		std::string m_audioModulePath;
 		std::string m_assetLoaderModulePath;
+		std::string m_platformModulePath;
 
 		ScriptManagerInterface* m_scriptManager = nullptr;
 		Scripting m_scripting;

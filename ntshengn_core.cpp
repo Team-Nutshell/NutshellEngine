@@ -93,6 +93,10 @@ NtshEngn::AudioModuleInterface* NtshEngn::Core::getAudioModule() {
 	return m_audioModule;
 }
 
+NtshEngn::PlatformModuleInterface* NtshEngn::Core::getPlatformModule() {
+	return m_platformModule;
+}
+
 NtshEngn::ECS* NtshEngn::Core::getECS() {
 	return &m_ecs;
 }
@@ -163,6 +167,9 @@ void NtshEngn::Core::init() {
 	passSceneManager();
 
 	// Initialize System Modules
+	m_profiler.startBlock("Init Platform Module");
+	NTSHENGN_POINTER_EXECUTE(m_platformModule, init());
+	m_profiler.endBlock();
 	m_profiler.startBlock("Init Window Module");
 	NTSHENGN_POINTER_EXECUTE(m_windowModule, init());
 	m_profiler.endBlock();
@@ -199,6 +206,9 @@ void NtshEngn::Core::update() {
 		m_profiler.endBlock();
 		m_profiler.startBlock("Update Window Module");
 		NTSHENGN_POINTER_EXECUTE(m_windowModule, update(dt));
+		m_profiler.endBlock();
+		m_profiler.startBlock("Update Platform Module");
+		NTSHENGN_POINTER_EXECUTE(m_platformModule, update(dt));
 		m_profiler.endBlock();
 		m_profiler.startBlock("Update Scripting");
 		m_scripting.update(dt);
@@ -247,6 +257,9 @@ void NtshEngn::Core::destroy() {
 	m_profiler.endBlock();
 	m_profiler.startBlock("Destroy Asset Loader Module");
 	NTSHENGN_POINTER_EXECUTE(m_assetLoaderModule, destroy());
+	m_profiler.endBlock();
+	m_profiler.startBlock("Destroy Platform Module");
+	NTSHENGN_POINTER_EXECUTE(m_platformModule, destroy());
 	m_profiler.endBlock();
 
 	// Unload scripts
@@ -300,6 +313,10 @@ void NtshEngn::Core::loadModules() {
 				m_assetLoaderModule = static_cast<AssetLoaderModuleInterface*>(module);
 				m_assetLoaderModulePath = modulePath;
 			}
+			else if ((module->getType() == ModuleType::Platform) && !m_platformModule) {
+				m_platformModule = static_cast<PlatformModuleInterface*>(module);
+				m_platformModulePath = modulePath;
+			}
 			else {
 				m_moduleLoader.unloadModule(module, modulePath);
 			}
@@ -323,6 +340,9 @@ void NtshEngn::Core::unloadModules() {
 	if (m_assetLoaderModule) {
 		m_moduleLoader.unloadModule(m_assetLoaderModule, m_assetLoaderModulePath);
 	}
+	if (m_platformModule) {
+		m_moduleLoader.unloadModule(m_platformModule, m_platformModulePath);
+	}
 }
 
 void NtshEngn::Core::loadScripts() {
@@ -344,11 +364,11 @@ void NtshEngn::Core::unloadScripts() {
 }
 
 void NtshEngn::Core::passSystemModules() {
-	NTSHENGN_POINTER_EXECUTE(m_graphicsModule, setSystemModules(m_graphicsModule, m_physicsModule, m_windowModule, m_audioModule));
-	NTSHENGN_POINTER_EXECUTE(m_physicsModule, setSystemModules(m_graphicsModule, m_physicsModule, m_windowModule, m_audioModule));
-	m_scripting.setSystemModules(m_graphicsModule, m_physicsModule, m_windowModule, m_audioModule);
-	NTSHENGN_POINTER_EXECUTE(m_windowModule, setSystemModules(m_graphicsModule, m_physicsModule, m_windowModule, m_audioModule));
-	NTSHENGN_POINTER_EXECUTE(m_audioModule, setSystemModules(m_graphicsModule, m_physicsModule, m_windowModule, m_audioModule));
+	NTSHENGN_POINTER_EXECUTE(m_graphicsModule, setModules(m_graphicsModule, m_physicsModule, m_windowModule, m_audioModule, m_platformModule));
+	NTSHENGN_POINTER_EXECUTE(m_physicsModule, setModules(m_graphicsModule, m_physicsModule, m_windowModule, m_audioModule, m_platformModule));
+	m_scripting.setModules(m_graphicsModule, m_physicsModule, m_windowModule, m_audioModule, m_platformModule);
+	NTSHENGN_POINTER_EXECUTE(m_windowModule, setModules(m_graphicsModule, m_physicsModule, m_windowModule, m_audioModule, m_platformModule));
+	NTSHENGN_POINTER_EXECUTE(m_audioModule, setModules(m_graphicsModule, m_physicsModule, m_windowModule, m_audioModule, m_platformModule));
 }
 
 void NtshEngn::Core::passAssetLoaderModule() {
@@ -447,6 +467,7 @@ void NtshEngn::Core::passProfiler() {
 	NTSHENGN_POINTER_EXECUTE(m_windowModule, setProfiler(&m_profiler));
 	NTSHENGN_POINTER_EXECUTE(m_audioModule, setProfiler(&m_profiler));
 	NTSHENGN_POINTER_EXECUTE(m_assetLoaderModule, setProfiler(&m_profiler));
+	NTSHENGN_POINTER_EXECUTE(m_platformModule, setProfiler(&m_profiler));
 }
 
 void NtshEngn::Core::initializeNetworking() {

@@ -20,11 +20,12 @@ void NtshEngn::Scripting::update(float dt) {
 	m_entityScriptsToDestroy.clear();
 }
 
-void NtshEngn::Scripting::setSystemModules(GraphicsModuleInterface* graphicsModule, PhysicsModuleInterface* physicsModule, WindowModuleInterface* windowModule, AudioModuleInterface* audioModule) {
+void NtshEngn::Scripting::setModules(GraphicsModuleInterface* graphicsModule, PhysicsModuleInterface* physicsModule, WindowModuleInterface* windowModule, AudioModuleInterface* audioModule, PlatformModuleInterface* platformModule) {
 	m_graphicsModule = graphicsModule;
 	m_physicsModule = physicsModule;
 	m_windowModule = windowModule;
 	m_audioModule = audioModule;
+	m_platformModule = platformModule;
 }
 
 void NtshEngn::Scripting::setScriptManager(ScriptManagerInterface* scriptManager) {
@@ -65,7 +66,7 @@ void NtshEngn::Scripting::onEntityComponentAdded(Entity entity, Component compon
 
 		Script* script = static_cast<Script*>(entityScriptable.script);
 		script->setEntityID(entity);
-		script->setSystemModules(m_graphicsModule, m_physicsModule, m_windowModule, m_audioModule);
+		script->setModules(m_graphicsModule, m_physicsModule, m_windowModule, m_audioModule, m_platformModule);
 		script->setScriptManager(m_scriptManager);
 		script->setECS(m_ecs);
 		script->setAssetManager(m_assetManager);
