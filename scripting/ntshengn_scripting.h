@@ -1,4 +1,5 @@
 #pragma once
+#include "../command_line/ntshengn_command_line.h"
 #include "../ecs/ntshengn_ecs.h"
 #include "../asset_manager/ntshengn_asset_manager.h"
 #include "../job_system/ntshengn_job_system.h"
@@ -19,6 +20,7 @@ namespace NtshEngn {
 
 		void setModules(GraphicsModuleInterface* graphicsModule, PhysicsModuleInterface* physicsModule, WindowModuleInterface* windowModule, AudioModuleInterface* audioModule, PlatformModuleInterface* platformModule);
 		void setScriptManager(ScriptManagerInterface* scriptManager);
+		void setCommandLine(CommandLine* commandLine);
 		void setECS(ECS* ecs);
 		void setAssetManager(AssetManager* assetManager);
 		void setFrameLimiter(FrameLimiter* frameLimiter);
@@ -37,6 +39,8 @@ namespace NtshEngn {
 		WindowModuleInterface* m_windowModule = nullptr;
 		AudioModuleInterface* m_audioModule = nullptr;
 		PlatformModuleInterface* m_platformModule = nullptr;
+
+		CommandLine* m_commandLine = nullptr;
 
 		ECS* m_ecs = nullptr;
 

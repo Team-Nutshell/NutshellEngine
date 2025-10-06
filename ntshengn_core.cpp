@@ -4,7 +4,9 @@
 #include <filesystem>
 #include <chrono>
 
-void NtshEngn::Core::run(const std::string& optionsFilePath) {
+void NtshEngn::Core::run(const std::string& optionsFilePath, const CommandLine& commandLine) {
+	m_commandLine = commandLine;
+
 	std::string windowTitle = "NutshellEngine";
 	std::string windowIconImagePath = "";
 	std::string firstScenePath = "";
@@ -97,6 +99,10 @@ NtshEngn::PlatformModuleInterface* NtshEngn::Core::getPlatformModule() {
 	return m_platformModule;
 }
 
+NtshEngn::CommandLine* NtshEngn::Core::getCommandLine() {
+	return &m_commandLine;
+}
+
 NtshEngn::ECS* NtshEngn::Core::getECS() {
 	return &m_ecs;
 }
@@ -144,6 +150,9 @@ void NtshEngn::Core::init() {
 
 	// Pass Script Manager
 	passScriptManager();
+
+	// Pass Command Line
+	passCommandLine();
 
 	// Initialize ECS
 	initializeECS();
@@ -379,6 +388,14 @@ void NtshEngn::Core::passScriptManager() {
 	m_scripting.setScriptManager(m_scriptManager);
 
 	m_sceneManager.setScriptManager(m_scriptManager);
+}
+
+void NtshEngn::Core::passCommandLine() {
+	NTSHENGN_POINTER_EXECUTE(m_graphicsModule, setCommandLine(&m_commandLine));
+	NTSHENGN_POINTER_EXECUTE(m_physicsModule, setCommandLine(&m_commandLine));
+	m_scripting.setCommandLine(&m_commandLine);
+	NTSHENGN_POINTER_EXECUTE(m_windowModule, setCommandLine(&m_commandLine));
+	NTSHENGN_POINTER_EXECUTE(m_audioModule, setCommandLine(&m_commandLine));
 }
 
 void NtshEngn::Core::initializeECS() {

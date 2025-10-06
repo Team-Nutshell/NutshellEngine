@@ -7,14 +7,17 @@
 #include "exception_handler/ntshengn_exception_handler.h"
 #endif
 
-int main() {
+int main(int argc, char** argv) {
 #if defined(NTSHENGN_DEBUG)
 	NtshEngn::ExceptionHandler exceptionHandler;
 	exceptionHandler.setExceptionHandler();
 #endif
 
+	NtshEngn::CommandLine commandLine;
+	commandLine.set(argc, argv);
+
 	NtshEngn::Core core;
-	core.run("assets/options/options.ntop");
+	core.run("assets/options/options.ntop", commandLine);
 
 #if defined(NTSHENGN_DEBUG)
 	exceptionHandler.unsetExceptionHandler();

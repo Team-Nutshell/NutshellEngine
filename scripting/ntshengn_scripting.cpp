@@ -32,6 +32,10 @@ void NtshEngn::Scripting::setScriptManager(ScriptManagerInterface* scriptManager
 	m_scriptManager = scriptManager;
 }
 
+void NtshEngn::Scripting::setCommandLine(CommandLine* commandLine) {
+	m_commandLine = commandLine;
+}
+
 void NtshEngn::Scripting::setECS(ECS* ecs) {
 	m_ecs = ecs;
 }
@@ -68,6 +72,7 @@ void NtshEngn::Scripting::onEntityComponentAdded(Entity entity, Component compon
 		script->setEntityID(entity);
 		script->setModules(m_graphicsModule, m_physicsModule, m_windowModule, m_audioModule, m_platformModule);
 		script->setScriptManager(m_scriptManager);
+		script->setCommandLine(m_commandLine);
 		script->setECS(m_ecs);
 		script->setAssetManager(m_assetManager);
 		script->setFrameLimiter(m_frameLimiter);

@@ -7,6 +7,7 @@
 #include "Common/modules/ntshengn_audio_module_interface.h"
 #include "Common/modules/ntshengn_asset_loader_module_interface.h"
 #include "Common/modules/ntshengn_platform_module_interface.h"
+#include "command_line/ntshengn_command_line.h"
 #include "ecs/ntshengn_ecs.h"
 #include "asset_manager/ntshengn_asset_manager.h"
 #include "job_system/ntshengn_job_system.h"
@@ -25,7 +26,7 @@ namespace NtshEngn {
 
 	class Core {
 	public:
-		void run(const std::string& optionsFilePath);
+		void run(const std::string& optionsFilePath, const CommandLine& commandLine);
 
 		GraphicsModuleInterface* getGraphicsModule();
 		PhysicsModuleInterface* getPhysicsModule();
@@ -33,6 +34,8 @@ namespace NtshEngn {
 		AudioModuleInterface* getAudioModule();
 
 		PlatformModuleInterface* getPlatformModule();
+
+		CommandLine* getCommandLine();
 
 		ECS* getECS();
 
@@ -63,6 +66,8 @@ namespace NtshEngn {
 		void passAssetLoaderModule();
 
 		void passScriptManager();
+
+		void passCommandLine();
 
 		void initializeECS();
 		void passECS();
@@ -100,6 +105,8 @@ namespace NtshEngn {
 
 		ScriptManagerInterface* m_scriptManager = nullptr;
 		Scripting m_scripting;
+
+		CommandLine m_commandLine;
 
 		ECS m_ecs;
 
