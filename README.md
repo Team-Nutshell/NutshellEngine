@@ -17,3 +17,4 @@ This repository contains **NutshellEngine's core**.
 - [**Window Module**](https://github.com/Team-Nutshell/NutshellEngine-WindowModule): Module managing NutshellEngine's windows and inputs.
 - [**Audio Module**](https://github.com/Team-Nutshell/NutshellEngine-AudioModule): Module managing NutshellEngine's audio system.
 - [**Asset Loader Module**](https://github.com/Team-Nutshell/NutshellEngine-AssetLoaderModule): Module loading assets used by NutshellEngine's applications and modules.
+- [**Platform Module**](https://github.com/Team-Nutshell/NutshellEngine-Platform): Module linking NutshellEngine to distribution platforms.
