@@ -1031,6 +1031,8 @@ void NtshEngn::AssetManager::loadSoundNtsd(const std::string& filePath, Sound& s
 			sound.data.push_back(static_cast<uint8_t>(soundRoot["data"][i].getNumber()));
 		}
 	}
+
+	sound.length = static_cast<float>(sound.data.size()) / static_cast<float>(sound.sampleRate * sound.channels * (sound.bitsPerSample / 8));
 }
 
 std::string NtshEngn::AssetManager::getNormalizedPath(const std::string& filePath) {
