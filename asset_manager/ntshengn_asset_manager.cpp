@@ -741,6 +741,9 @@ void NtshEngn::AssetManager::loadMaterialNtml(const std::string& filePath, Mater
 
 			if (diffuseTextureNode.contains("imagePath")) {
 				material.diffuseTexture.image = loadImage(diffuseTextureNode["imagePath"].getString());
+				if (material.diffuseTexture.image) {
+					material.diffuseTexture.image->colorSpace = ImageColorSpace::SRGB;
+				}
 			}
 
 			if (diffuseTextureNode.contains("imageSamplerPath")) {
@@ -774,6 +777,9 @@ void NtshEngn::AssetManager::loadMaterialNtml(const std::string& filePath, Mater
 
 			if (normalTextureNode.contains("imagePath")) {
 				material.normalTexture.image = loadImage(normalTextureNode["imagePath"].getString());
+				if (material.normalTexture.image) {
+					material.normalTexture.image->colorSpace = ImageColorSpace::Linear;
+				}
 			}
 
 			if (normalTextureNode.contains("imageSamplerPath")) {
@@ -790,6 +796,9 @@ void NtshEngn::AssetManager::loadMaterialNtml(const std::string& filePath, Mater
 
 			if (metalnessTextureNode.contains("imagePath")) {
 				material.metalnessTexture.image = loadImage(metalnessTextureNode["imagePath"].getString());
+				if (material.metalnessTexture.image) {
+					material.metalnessTexture.image->colorSpace = ImageColorSpace::Linear;
+				}
 			}
 
 			if (metalnessTextureNode.contains("imageSamplerPath")) {
@@ -824,6 +833,9 @@ void NtshEngn::AssetManager::loadMaterialNtml(const std::string& filePath, Mater
 
 			if (roughnessTextureNode.contains("imagePath")) {
 				material.roughnessTexture.image = loadImage(roughnessTextureNode["imagePath"].getString());
+				if (material.roughnessTexture.image) {
+					material.roughnessTexture.image->colorSpace = ImageColorSpace::Linear;
+				}
 			}
 
 			if (roughnessTextureNode.contains("imageSamplerPath")) {
@@ -858,6 +870,9 @@ void NtshEngn::AssetManager::loadMaterialNtml(const std::string& filePath, Mater
 
 			if (occlusionTextureNode.contains("imagePath")) {
 				material.occlusionTexture.image = loadImage(occlusionTextureNode["imagePath"].getString());
+				if (material.occlusionTexture.image) {
+					material.occlusionTexture.image->colorSpace = ImageColorSpace::Linear;
+				}
 			}
 
 			if (occlusionTextureNode.contains("imageSamplerPath")) {
@@ -892,6 +907,9 @@ void NtshEngn::AssetManager::loadMaterialNtml(const std::string& filePath, Mater
 
 			if (emissiveTextureNode.contains("imagePath")) {
 				material.emissiveTexture.image = loadImage(emissiveTextureNode["imagePath"].getString());
+				if (material.emissiveTexture.image) {
+					material.emissiveTexture.image->colorSpace = ImageColorSpace::SRGB;
+				}
 			}
 
 			if (emissiveTextureNode.contains("imageSamplerPath")) {
