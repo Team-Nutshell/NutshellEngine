@@ -47,16 +47,17 @@ NtshEngn::Model* NtshEngn::AssetManager::loadModel(const std::string& filePath) 
 	}
 
 	Model newModel;
+	bool loaded = false;
 	if (File::extension(filePath) == "ntmd") {
-		loadModelNtmd(filePath, newModel);
+		loaded = loadModelNtmd(filePath, newModel);
 	}
 	else {
 		if (m_assetLoaderModule) {
-			newModel = m_assetLoaderModule->loadModel(filePath);
+			loaded = m_assetLoaderModule->loadModel(filePath, newModel);
 		}
 	}
 
-	if (newModel.primitives.size() != 0) {
+	if (loaded) {
 		m_models[normalizedPath] = newModel;
 		Model* model = &m_models[normalizedPath];
 
@@ -107,22 +108,30 @@ NtshEngn::Material* NtshEngn::AssetManager::loadMaterial(const std::string& file
 	}
 
 	Material newMaterial;
+	bool loaded = false;
 	if (File::extension(filePath) == "ntml") {
-		loadMaterialNtml(filePath, newMaterial);
+		loaded = loadMaterialNtml(filePath, newMaterial);
 	}
 	else {
 		if (m_assetLoaderModule) {
-			newMaterial = m_assetLoaderModule->loadMaterial(filePath);
+			loaded = m_assetLoaderModule->loadMaterial(filePath, newMaterial);
 		}
 	}
 
-	m_materials[normalizedPath] = newMaterial;
-	Material* material = &m_materials[normalizedPath];
+	if (loaded) {
+		m_materials[normalizedPath] = newMaterial;
+		Material* material = &m_materials[normalizedPath];
 
-	m_materialNames[material] = normalizedPath;
-	m_materialLastModified[normalizedPath] = std::filesystem::last_write_time(filePath);
+		m_materialNames[material] = normalizedPath;
+		m_materialLastModified[normalizedPath] = std::filesystem::last_write_time(filePath);
 
-	return material;
+		return material;
+	}
+	else {
+		NTSHENGN_ASSET_MANAGER_WARNING("Could not load material file \"" + filePath + "\".");
+
+		return nullptr;
+	}
 }
 
 NtshEngn::Image* NtshEngn::AssetManager::createImage(const std::string& imageName) {
@@ -160,16 +169,17 @@ NtshEngn::Image* NtshEngn::AssetManager::loadImage(const std::string& filePath) 
 	}
 
 	Image newImage;
+	bool loaded = false;
 	if (File::extension(filePath) == "ntim") {
-		loadImageNtim(filePath, newImage);
+		loaded = loadImageNtim(filePath, newImage);
 	}
 	else {
 		if (m_assetLoaderModule) {
-			newImage = m_assetLoaderModule->loadImage(filePath);
+			loaded = m_assetLoaderModule->loadImage(filePath, newImage);
 		}
 	}
 
-	if (newImage.width != 0) {
+	if (loaded) {
 		m_images[normalizedPath] = newImage;
 		Image* image = &m_images[normalizedPath];
 
@@ -226,11 +236,12 @@ NtshEngn::Font* NtshEngn::AssetManager::loadFontBitmap(const std::string& filePa
 	}
 
 	Font newFont;
+	bool loaded = false;
 	if (m_assetLoaderModule) {
-		newFont = m_assetLoaderModule->loadFontBitmap(filePath, fontHeight);
+		loaded = m_assetLoaderModule->loadFontBitmap(filePath, fontHeight, newFont);
 	}
 
-	if (newFont.image) {
+	if (loaded) {
 		newFont.type = FontType::Bitmap;
 
 		m_fonts[normalizedPath] = newFont;
@@ -266,11 +277,12 @@ NtshEngn::Font* NtshEngn::AssetManager::loadFontSDF(const std::string& filePath)
 	}
 
 	Font newFont;
+	bool loaded = false;
 	if (m_assetLoaderModule) {
-		newFont = m_assetLoaderModule->loadFontSDF(filePath);
+		loaded = m_assetLoaderModule->loadFontSDF(filePath, newFont);
 	}
 
-	if (newFont.image) {
+	if (loaded) {
 		newFont.type = FontType::SDF;
 
 		m_fonts[normalizedPath] = newFont;
@@ -323,16 +335,17 @@ NtshEngn::Sound* NtshEngn::AssetManager::loadSound(const std::string& filePath) 
 	}
 
 	Sound newSound;
+	bool loaded = false;
 	if (File::extension(filePath) == "ntsd") {
-		loadSoundNtsd(filePath, newSound);
+		loaded = loadSoundNtsd(filePath, newSound);
 	}
 	else {
 		if (m_assetLoaderModule) {
-			newSound = m_assetLoaderModule->loadSound(filePath);
+			loaded = m_assetLoaderModule->loadSound(filePath, newSound);
 		}
 	}
 
-	if (newSound.data.size() != 0) {
+	if (loaded) {
 		m_sounds[normalizedPath] = newSound;
 		Sound* sound = &m_sounds[normalizedPath];
 
@@ -592,7 +605,7 @@ void NtshEngn::AssetManager::setAssetLoaderModule(AssetLoaderModuleInterface* as
 	m_assetLoaderModule = assetLoaderModule;
 }
 
-void NtshEngn::AssetManager::loadMeshNtmh(const std::string& filePath, Mesh& mesh) {
+bool NtshEngn::AssetManager::loadMeshNtmh(const std::string& filePath, Mesh& mesh) {
 	const std::unordered_map<std::string, MeshTopology> stringToMeshTopology {
 		{ "TriangleList", MeshTopology::TriangleList },
 		{ "TriangleStrip", MeshTopology::TriangleStrip },
@@ -668,9 +681,11 @@ void NtshEngn::AssetManager::loadMeshNtmh(const std::string& filePath, Mesh& mes
 	if (meshRoot.contains("topology")) {
 		mesh.topology = stringToMeshTopology.at(meshRoot["topology"].getString());
 	}
+
+	return true;
 }
 
-void NtshEngn::AssetManager::loadImageSamplerNtsp(const std::string& filePath, ImageSampler& imageSampler) {
+bool NtshEngn::AssetManager::loadImageSamplerNtsp(const std::string& filePath, ImageSampler& imageSampler) {
 	const std::unordered_map<std::string, ImageSamplerFilter> stringToImageSamplerFilter{
 		{ "Linear", ImageSamplerFilter::Linear },
 		{ "Nearest", ImageSamplerFilter::Nearest },
@@ -727,9 +742,11 @@ void NtshEngn::AssetManager::loadImageSamplerNtsp(const std::string& filePath, I
 	if (imageSamplerRoot.contains("anisotropyLevel")) {
 		imageSampler.anisotropyLevel = imageSamplerRoot["anisotropyLevel"].getNumber();
 	}
+
+	return true;
 }
 
-void NtshEngn::AssetManager::loadMaterialNtml(const std::string& filePath, Material& material) {
+bool NtshEngn::AssetManager::loadMaterialNtml(const std::string& filePath, Material& material) {
 	JSON json;
 	const JSON::Node& materialRoot = json.read(filePath);
 
@@ -960,9 +977,11 @@ void NtshEngn::AssetManager::loadMaterialNtml(const std::string& filePath, Mater
 		material.offsetUV.x = materialRoot["offsetUV"][0].getNumber();
 		material.offsetUV.y = materialRoot["offsetUV"][1].getNumber();
 	}
+
+	return true;
 }
 
-void NtshEngn::AssetManager::loadModelNtmd(const std::string& filePath, Model& model) {
+bool NtshEngn::AssetManager::loadModelNtmd(const std::string& filePath, Model& model) {
 	JSON json;
 	const JSON::Node& modelRoot = json.read(filePath);
 
@@ -982,9 +1001,11 @@ void NtshEngn::AssetManager::loadModelNtmd(const std::string& filePath, Model& m
 			model.primitives.push_back(primitive);
 		}
 	}
+
+	return true;
 }
 
-void NtshEngn::AssetManager::loadImageNtim(const std::string& filePath, Image& image) {
+bool NtshEngn::AssetManager::loadImageNtim(const std::string& filePath, Image& image) {
 	const std::unordered_map<std::string, ImageFormat> stringToImageFormat{
 		{ "R8", ImageFormat::R8 },
 		{ "R8G8", ImageFormat::R8G8 },
@@ -1026,9 +1047,11 @@ void NtshEngn::AssetManager::loadImageNtim(const std::string& filePath, Image& i
 			image.data.push_back(static_cast<uint8_t>(imageRoot["data"][i].getNumber()));
 		}
 	}
+
+	return true;
 }
 
-void NtshEngn::AssetManager::loadSoundNtsd(const std::string& filePath, Sound& sound) {
+bool NtshEngn::AssetManager::loadSoundNtsd(const std::string& filePath, Sound& sound) {
 	JSON json;
 	const JSON::Node& soundRoot = json.read(filePath);
 
@@ -1051,6 +1074,8 @@ void NtshEngn::AssetManager::loadSoundNtsd(const std::string& filePath, Sound& s
 	}
 
 	sound.length = static_cast<float>(sound.data.size()) / static_cast<float>(sound.sampleRate * sound.channels * (sound.bitsPerSample / 8));
+
+	return true;
 }
 
 std::string NtshEngn::AssetManager::getNormalizedPath(const std::string& filePath) {

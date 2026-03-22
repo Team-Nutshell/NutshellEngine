@@ -54,17 +54,17 @@ namespace NtshEngn {
 		void setAssetLoaderModule(AssetLoaderModuleInterface* assetLoaderModule);
 
 	private:
-		void loadMeshNtmh(const std::string& filePath, Mesh& mesh);
+		bool loadMeshNtmh(const std::string& filePath, Mesh& mesh);
 
-		void loadImageSamplerNtsp(const std::string& filePath, ImageSampler& imageSampler);
+		bool loadImageSamplerNtsp(const std::string& filePath, ImageSampler& imageSampler);
 
-		void loadMaterialNtml(const std::string& filePath, Material& material);
+		bool loadMaterialNtml(const std::string& filePath, Material& material);
 
-		void loadModelNtmd(const std::string& filePath, Model& model);
+		bool loadModelNtmd(const std::string& filePath, Model& model);
 
-		void loadImageNtim(const std::string& filePath, Image& image);
+		bool loadImageNtim(const std::string& filePath, Image& image);
 
-		void loadSoundNtsd(const std::string& filePath, Sound& sound);
+		bool loadSoundNtsd(const std::string& filePath, Sound& sound);
 
 		std::string getNormalizedPath(const std::string& filePath);
 
