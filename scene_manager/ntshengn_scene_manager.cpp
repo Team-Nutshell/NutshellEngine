@@ -7,6 +7,7 @@
 #if defined(NTSHENGN_OS_LINUX) || defined(NTSHENGN_OS_FREEBSD)
 #pragma GCC diagnostic pop
 #endif
+#include "../utils/ntshengn_utils_file.h"
 #include "../utils/ntshengn_utils_math.h"
 #include <algorithm>
 #include <numeric>
@@ -82,6 +83,12 @@ void NtshEngn::SceneManager::goToScene(const std::string& filePath) {
 					Material* material = m_assetManager->loadMaterial(materialPathNode.getString());
 
 					renderable.material = *material;
+				}
+
+				if (renderableNode.contains("fragmentShaderPath")) {
+					const JSON::Node& fragmentShaderPathNode = renderableNode["fragmentShaderPath"];
+
+					renderable.fragmentShader = File::readAscii(fragmentShaderPathNode.getString());
 				}
 
 				m_ecs->addComponent(entity, renderable);
