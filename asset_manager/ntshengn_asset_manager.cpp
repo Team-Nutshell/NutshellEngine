@@ -642,7 +642,7 @@ bool NtshEngn::AssetManager::loadMeshNtmh(const std::string& filePath, Mesh& mes
 			}
 
 			if (vertexNode.contains("color")) {
-				vertex.color = { vertexNode["color"][0].getNumber(), vertexNode["color"][1].getNumber(), vertexNode["color"][2].getNumber() };
+				vertex.color = { vertexNode["color"][0].getNumber(), vertexNode["color"][1].getNumber(), vertexNode["color"][2].getNumber(), vertexNode["color"][3].getNumber() };
 			}
 
 			if (vertexNode.contains("tangent")) {
