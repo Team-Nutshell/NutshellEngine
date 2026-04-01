@@ -91,6 +91,18 @@ void NtshEngn::SceneManager::goToScene(const std::string& filePath) {
 					renderable.fragmentShader = File::readAscii(fragmentShaderPathNode.getString());
 				}
 
+				if (renderableNode.contains("isVisible")) {
+					const JSON::Node& isVisibleNode = renderableNode["isVisible"];
+
+					renderable.isVisible = isVisibleNode.getBoolean();
+				}
+
+				if (renderableNode.contains("castsShadows")) {
+					const JSON::Node& castsShadowsNode = renderableNode["castsShadows"];
+
+					renderable.castsShadows = castsShadowsNode.getBoolean();
+				}
+
 				m_ecs->addComponent(entity, renderable);
 			}
 
