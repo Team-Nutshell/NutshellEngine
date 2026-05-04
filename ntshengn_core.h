@@ -52,7 +52,7 @@ namespace NtshEngn {
 		SceneManager* getSceneManager();
 
 	private:
-		void init();
+		void init(int windowWidth, int windowHeight, const std::string& windowTitle);
 		void update();
 		void destroy();
 

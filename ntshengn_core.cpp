@@ -9,6 +9,8 @@ void NtshEngn::Core::run(const std::string& optionsFilePath, const CommandLine& 
 
 	std::string windowTitle = "NutshellEngine";
 	std::string windowIconImagePath = "";
+	int windowWidth = 1280;
+	int windowHeight = 720;
 	std::string firstScenePath = "";
 
 	if (std::filesystem::exists(optionsFilePath)) {
@@ -21,6 +23,11 @@ void NtshEngn::Core::run(const std::string& optionsFilePath, const CommandLine& 
 
 		if (optionsRoot.contains("windowIconImagePath")) {
 			windowIconImagePath = optionsRoot["windowIconImagePath"].getString();
+		}
+
+		if (optionsRoot.contains("windowSize")) {
+			windowWidth = static_cast<int>(optionsRoot["windowSize"][0].getNumber());
+			windowHeight = static_cast<int>(optionsRoot["windowSize"][1].getNumber());
 		}
 
 		if (optionsRoot.contains("maxFPS")) {
@@ -43,7 +50,7 @@ void NtshEngn::Core::run(const std::string& optionsFilePath, const CommandLine& 
 
 	// Initialize
 	m_profiler.startBlock("Init");
-	init();
+	init(windowWidth, windowHeight, windowTitle);
 	m_profiler.endBlock();
 
 	Image* iconImage = nullptr;
@@ -52,8 +59,6 @@ void NtshEngn::Core::run(const std::string& optionsFilePath, const CommandLine& 
 	}
 
 	if (m_windowModule && m_windowModule->isWindowOpen(m_windowModule->getMainWindowID())) {
-		m_windowModule->setWindowTitle(m_windowModule->getMainWindowID(), windowTitle);
-
 		if (iconImage) {
 			m_windowModule->setWindowIcon(m_windowModule->getMainWindowID(), *iconImage);
 			m_assetManager.destroyImage(m_assetManager.getImageName(iconImage));
@@ -131,7 +136,7 @@ NtshEngn::SceneManager* NtshEngn::Core::getSceneManager() {
 	return &m_sceneManager;
 }
 
-void NtshEngn::Core::init() {
+void NtshEngn::Core::init(int windowWidth, int windowHeight, const std::string& windowTitle) {
 	// Load modules
 	m_profiler.startBlock("Load modules");
 	loadModules();
@@ -182,7 +187,7 @@ void NtshEngn::Core::init() {
 	m_profiler.startBlock("Init Window Module");
 	NTSHENGN_POINTER_EXECUTE(m_windowModule, init());
 	m_profiler.endBlock();
-	NTSHENGN_POINTER_EXECUTE(m_windowModule, openWindow(1280, 720, ""));
+	NTSHENGN_POINTER_EXECUTE(m_windowModule, openWindow(windowWidth, windowHeight, windowTitle));
 	m_profiler.startBlock("Init Graphics Module");
 	NTSHENGN_POINTER_EXECUTE(m_graphicsModule, init());
 	m_profiler.endBlock();
