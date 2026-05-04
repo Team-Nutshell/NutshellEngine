@@ -25,9 +25,12 @@ void NtshEngn::Core::run(const std::string& optionsFilePath, const CommandLine& 
 			windowIconImagePath = optionsRoot["windowIconImagePath"].getString();
 		}
 
-		if (optionsRoot.contains("windowSize")) {
-			windowWidth = static_cast<int>(optionsRoot["windowSize"][0].getNumber());
-			windowHeight = static_cast<int>(optionsRoot["windowSize"][1].getNumber());
+		if (optionsRoot.contains("windowWidth")) {
+			windowWidth = static_cast<int>(optionsRoot["windowWidth"].getNumber());
+		}
+
+		if (optionsRoot.contains("windowHeight")) {
+			windowHeight = static_cast<int>(optionsRoot["windowHeight"].getNumber());
 		}
 
 		if (optionsRoot.contains("maxFPS")) {
