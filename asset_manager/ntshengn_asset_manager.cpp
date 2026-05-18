@@ -605,6 +605,10 @@ void NtshEngn::AssetManager::setAssetLoaderModule(AssetLoaderModuleInterface* as
 	m_assetLoaderModule = assetLoaderModule;
 }
 
+void NtshEngn::AssetManager::setGraphicsModule(GraphicsModuleInterface* graphicsModule) {
+	m_graphicsModule = graphicsModule;
+}
+
 bool NtshEngn::AssetManager::loadMeshNtmh(const std::string& filePath, Mesh& mesh) {
 	const std::unordered_map<std::string, MeshTopology> stringToMeshTopology {
 		{ "TriangleList", MeshTopology::TriangleList },
@@ -757,9 +761,13 @@ bool NtshEngn::AssetManager::loadMaterialNtml(const std::string& filePath, Mater
 			const JSON::Node& diffuseTextureNode = diffuseNode["texture"];
 
 			if (diffuseTextureNode.contains("imagePath")) {
-				material.diffuseTexture.image = loadImage(diffuseTextureNode["imagePath"].getString());
-				if (material.diffuseTexture.image) {
-					material.diffuseTexture.image->colorSpace = ImageColorSpace::SRGB;
+				Image* image = loadImage(diffuseTextureNode["imagePath"].getString());
+				if (image) {
+					image->colorSpace = ImageColorSpace::SRGB;
+
+					if (m_graphicsModule) {
+						material.diffuseTexture.image = m_graphicsModule->load(*image);
+					}
 				}
 			}
 
@@ -782,7 +790,9 @@ bool NtshEngn::AssetManager::loadMaterialNtml(const std::string& filePath, Mater
 				image->data = { static_cast<uint8_t>(round(255.0f * diffuseColorNode[0].getNumber())), static_cast<uint8_t>(round(255.0f * diffuseColorNode[1].getNumber())), static_cast<uint8_t>(round(255.0f * diffuseColorNode[2].getNumber())), static_cast<uint8_t>(round(255.0f * diffuseColorNode[3].getNumber())) };
 			}
 
-			material.diffuseTexture.image = image;
+			if (m_graphicsModule) {
+				material.diffuseTexture.image = m_graphicsModule->load(*image);
+			}
 		}
 	}
 
@@ -793,9 +803,13 @@ bool NtshEngn::AssetManager::loadMaterialNtml(const std::string& filePath, Mater
 			const JSON::Node& normalTextureNode = normalNode["texture"];
 
 			if (normalTextureNode.contains("imagePath")) {
-				material.normalTexture.image = loadImage(normalTextureNode["imagePath"].getString());
+				Image* image = loadImage(normalTextureNode["imagePath"].getString());
 				if (material.normalTexture.image) {
-					material.normalTexture.image->colorSpace = ImageColorSpace::Linear;
+					image->colorSpace = ImageColorSpace::Linear;
+
+					if (m_graphicsModule) {
+						material.normalTexture.image = m_graphicsModule->load(*image);
+					}
 				}
 			}
 
@@ -812,9 +826,13 @@ bool NtshEngn::AssetManager::loadMaterialNtml(const std::string& filePath, Mater
 			const JSON::Node& metalnessTextureNode = metalnessNode["texture"];
 
 			if (metalnessTextureNode.contains("imagePath")) {
-				material.metalnessTexture.image = loadImage(metalnessTextureNode["imagePath"].getString());
+				Image* image = loadImage(metalnessTextureNode["imagePath"].getString());
 				if (material.metalnessTexture.image) {
-					material.metalnessTexture.image->colorSpace = ImageColorSpace::Linear;
+					image->colorSpace = ImageColorSpace::Linear;
+
+					if (m_graphicsModule) {
+						material.metalnessTexture.image = m_graphicsModule->load(*image);
+					}
 				}
 			}
 
@@ -838,7 +856,9 @@ bool NtshEngn::AssetManager::loadMaterialNtml(const std::string& filePath, Mater
 				image->data = { metalnessValue, metalnessValue, metalnessValue, metalnessValue };
 			}
 
-			material.metalnessTexture.image = image;
+			if (m_graphicsModule) {
+				material.metalnessTexture.image = m_graphicsModule->load(*image);
+			}
 		}
 	}
 
@@ -849,9 +869,13 @@ bool NtshEngn::AssetManager::loadMaterialNtml(const std::string& filePath, Mater
 			const JSON::Node& roughnessTextureNode = roughnessNode["texture"];
 
 			if (roughnessTextureNode.contains("imagePath")) {
-				material.roughnessTexture.image = loadImage(roughnessTextureNode["imagePath"].getString());
+				Image* image = loadImage(roughnessTextureNode["imagePath"].getString());
 				if (material.roughnessTexture.image) {
-					material.roughnessTexture.image->colorSpace = ImageColorSpace::Linear;
+					image->colorSpace = ImageColorSpace::Linear;
+
+					if (m_graphicsModule) {
+						material.roughnessTexture.image = m_graphicsModule->load(*image);
+					}
 				}
 			}
 
@@ -875,7 +899,9 @@ bool NtshEngn::AssetManager::loadMaterialNtml(const std::string& filePath, Mater
 				image->data = { roughnessValue, roughnessValue, roughnessValue, roughnessValue };
 			}
 
-			material.roughnessTexture.image = image;
+			if (m_graphicsModule) {
+				material.roughnessTexture.image = m_graphicsModule->load(*image);
+			}
 		}
 	}
 
@@ -886,9 +912,13 @@ bool NtshEngn::AssetManager::loadMaterialNtml(const std::string& filePath, Mater
 			const JSON::Node& occlusionTextureNode = occlusionNode["texture"];
 
 			if (occlusionTextureNode.contains("imagePath")) {
-				material.occlusionTexture.image = loadImage(occlusionTextureNode["imagePath"].getString());
+				Image* image = loadImage(occlusionTextureNode["imagePath"].getString());
 				if (material.occlusionTexture.image) {
-					material.occlusionTexture.image->colorSpace = ImageColorSpace::Linear;
+					image->colorSpace = ImageColorSpace::Linear;
+
+					if (m_graphicsModule) {
+						material.occlusionTexture.image = m_graphicsModule->load(*image);
+					}
 				}
 			}
 
@@ -912,7 +942,9 @@ bool NtshEngn::AssetManager::loadMaterialNtml(const std::string& filePath, Mater
 				image->data = { occlusionValue, occlusionValue, occlusionValue, occlusionValue };
 			}
 
-			material.occlusionTexture.image = image;
+			if (m_graphicsModule) {
+				material.occlusionTexture.image = m_graphicsModule->load(*image);
+			}
 		}
 	}
 
@@ -923,9 +955,13 @@ bool NtshEngn::AssetManager::loadMaterialNtml(const std::string& filePath, Mater
 			const JSON::Node& emissiveTextureNode = emissiveNode["texture"];
 
 			if (emissiveTextureNode.contains("imagePath")) {
-				material.emissiveTexture.image = loadImage(emissiveTextureNode["imagePath"].getString());
+				Image* image = loadImage(emissiveTextureNode["imagePath"].getString());
 				if (material.emissiveTexture.image) {
-					material.emissiveTexture.image->colorSpace = ImageColorSpace::SRGB;
+					image->colorSpace = ImageColorSpace::SRGB;
+
+					if (m_graphicsModule) {
+						material.emissiveTexture.image = m_graphicsModule->load(*image);
+					}
 				}
 			}
 
@@ -948,7 +984,9 @@ bool NtshEngn::AssetManager::loadMaterialNtml(const std::string& filePath, Mater
 				image->data = { static_cast<uint8_t>(round(255.0f * emissiveColorNode[0].getNumber())), static_cast<uint8_t>(round(255.0f * emissiveColorNode[1].getNumber())), static_cast<uint8_t>(round(255.0f * emissiveColorNode[2].getNumber())), 255 };
 			}
 
-			material.emissiveTexture.image = image;
+			if (m_graphicsModule) {
+				material.emissiveTexture.image = m_graphicsModule->load(*image);
+			}
 		}
 
 		if (emissiveNode.contains("factor")) {

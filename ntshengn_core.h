@@ -62,7 +62,8 @@ namespace NtshEngn {
 		void loadScripts();
 		void unloadScripts();
 
-		void passSystemModules();
+		void passModules();
+		void passGraphicsModule();
 		void passAssetLoaderModule();
 
 		void passScriptManager();

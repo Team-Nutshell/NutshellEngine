@@ -150,8 +150,11 @@ void NtshEngn::Core::init(int windowWidth, int windowHeight, const std::string& 
 	loadScripts();
 	m_profiler.endBlock();
 
-	// Pass System Modules
-	passSystemModules();
+	// Pass Modules
+	passModules();
+
+	// Pass Graphics Module
+	passGraphicsModule();
 
 	// Pass Asset Loader Module
 	passAssetLoaderModule();
@@ -380,12 +383,18 @@ void NtshEngn::Core::unloadScripts() {
 	}
 }
 
-void NtshEngn::Core::passSystemModules() {
+void NtshEngn::Core::passModules() {
 	NTSHENGN_POINTER_EXECUTE(m_graphicsModule, setModules(m_graphicsModule, m_physicsModule, m_windowModule, m_audioModule, m_platformModule));
 	NTSHENGN_POINTER_EXECUTE(m_physicsModule, setModules(m_graphicsModule, m_physicsModule, m_windowModule, m_audioModule, m_platformModule));
 	m_scripting.setModules(m_graphicsModule, m_physicsModule, m_windowModule, m_audioModule, m_platformModule);
 	NTSHENGN_POINTER_EXECUTE(m_windowModule, setModules(m_graphicsModule, m_physicsModule, m_windowModule, m_audioModule, m_platformModule));
 	NTSHENGN_POINTER_EXECUTE(m_audioModule, setModules(m_graphicsModule, m_physicsModule, m_windowModule, m_audioModule, m_platformModule));
+	NTSHENGN_POINTER_EXECUTE(m_assetLoaderModule, setModules(m_graphicsModule, m_physicsModule, m_windowModule, m_audioModule, m_platformModule));
+	NTSHENGN_POINTER_EXECUTE(m_platformModule, setModules(m_graphicsModule, m_physicsModule, m_windowModule, m_audioModule, m_platformModule));
+}
+
+void NtshEngn::Core::passGraphicsModule() {
+	m_assetManager.setGraphicsModule(m_graphicsModule);
 }
 
 void NtshEngn::Core::passAssetLoaderModule() {
@@ -404,6 +413,8 @@ void NtshEngn::Core::passCommandLine() {
 	m_scripting.setCommandLine(&m_commandLine);
 	NTSHENGN_POINTER_EXECUTE(m_windowModule, setCommandLine(&m_commandLine));
 	NTSHENGN_POINTER_EXECUTE(m_audioModule, setCommandLine(&m_commandLine));
+	NTSHENGN_POINTER_EXECUTE(m_assetLoaderModule, setCommandLine(&m_commandLine));
+	NTSHENGN_POINTER_EXECUTE(m_platformModule, setCommandLine(&m_commandLine));
 }
 
 void NtshEngn::Core::initializeECS() {
@@ -463,6 +474,7 @@ void NtshEngn::Core::passAssetManager() {
 	NTSHENGN_POINTER_EXECUTE(m_windowModule, setAssetManager(&m_assetManager));
 	NTSHENGN_POINTER_EXECUTE(m_audioModule, setAssetManager(&m_assetManager));
 	NTSHENGN_POINTER_EXECUTE(m_assetLoaderModule, setAssetManager(&m_assetManager));
+	NTSHENGN_POINTER_EXECUTE(m_platformModule, setAssetManager(&m_assetManager));
 
 	m_sceneManager.setAssetManager(&m_assetManager);
 }
@@ -483,6 +495,8 @@ void NtshEngn::Core::passJobSystem() {
 	m_scripting.setJobSystem(&m_jobSystem);
 	NTSHENGN_POINTER_EXECUTE(m_windowModule, setJobSystem(&m_jobSystem));
 	NTSHENGN_POINTER_EXECUTE(m_audioModule, setJobSystem(&m_jobSystem));
+	NTSHENGN_POINTER_EXECUTE(m_assetLoaderModule, setJobSystem(&m_jobSystem));
+	NTSHENGN_POINTER_EXECUTE(m_platformModule, setJobSystem(&m_jobSystem));
 }
 
 void NtshEngn::Core::passProfiler() {

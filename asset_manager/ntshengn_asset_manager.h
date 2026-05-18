@@ -1,6 +1,7 @@
 #pragma once
 #include "../Common/asset_manager/ntshengn_asset_manager_interface.h"
 #include "../Common/modules/ntshengn_asset_loader_module_interface.h"
+#include "../Common/modules/ntshengn_graphics_module_interface.h"
 #include "../resources/ntshengn_resources_audio.h"
 #include "../resources/ntshengn_resources_graphics.h"
 #include <filesystem>
@@ -52,6 +53,7 @@ namespace NtshEngn {
 
 	public:
 		void setAssetLoaderModule(AssetLoaderModuleInterface* assetLoaderModule);
+		void setGraphicsModule(GraphicsModuleInterface* graphicsModule);
 
 	private:
 		bool loadMeshNtmh(const std::string& filePath, Mesh& mesh);
@@ -69,7 +71,8 @@ namespace NtshEngn {
 		std::string getNormalizedPath(const std::string& filePath);
 
 	private:
-		AssetLoaderModuleInterface* m_assetLoaderModule;
+		AssetLoaderModuleInterface* m_assetLoaderModule = nullptr;
+		GraphicsModuleInterface* m_graphicsModule = nullptr;
 
 		std::unordered_map<std::string, Model> m_models;
 		std::unordered_map<std::string, Material> m_materials;
