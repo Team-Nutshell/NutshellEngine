@@ -743,8 +743,16 @@ bool NtshEngn::AssetManager::loadImageSamplerNtsp(const std::string& filePath, I
 		imageSampler.borderColor = stringToImageSamplerBorderColor.at(imageSamplerRoot["borderColor"].getString());
 	}
 
-	if (imageSamplerRoot.contains("anisotropyLevel")) {
-		imageSampler.anisotropyLevel = imageSamplerRoot["anisotropyLevel"].getNumber();
+	if (imageSamplerRoot.contains("minLod")) {
+		imageSampler.minLod = imageSamplerRoot["minLod"].getNumber();
+	}
+
+	if (imageSamplerRoot.contains("maxLod")) {
+		imageSampler.maxLod = imageSamplerRoot["maxLod"].getNumber();
+	}
+
+	if (imageSamplerRoot.contains("maxAnisotropy")) {
+		imageSampler.maxAnisotropy = imageSamplerRoot["maxAnisotropy"].getNumber();
 	}
 
 	return true;
