@@ -27,26 +27,38 @@ namespace NtshEngn {
 		Sound* createSound(const std::string& soundName);
 		Sound* loadSound(const std::string& filePath);
 
+		Animation* createAnimation(const std::string& animationsName);
+
 		void destroyModel(const std::string& modelName);
 		void destroyMaterial(const std::string& materialName);
 		void destroyImage(const std::string& imageName);
 		void destroyFont(const std::string& fontName);
 		void destroySound(const std::string& soundName);
+		void destroyAnimation(const std::string& animationName);
 
 		Model* findModelByName(const std::string& modelName);
 		std::string getModelName(const Model* model);
+		std::vector<std::string> getModelNames();
 
 		Material* findMaterialByName(const std::string& materialName);
 		std::string getMaterialName(const Material* material);
+		std::vector<std::string> getMaterialNames();
 
 		Image* findImageByName(const std::string& imageName);
 		std::string getImageName(const Image* image);
+		std::vector<std::string> getImageNames();
 
 		Font* findFontByName(const std::string& fontName);
 		std::string getFontName(const Font* font);
+		std::vector<std::string> getFontNames();
 
 		Sound* findSoundByName(const std::string& soundName);
 		std::string getSoundName(const Sound* sound);
+		std::vector<std::string> getSoundNames();
+
+		Animation* findAnimationByName(const std::string& animationName);
+		std::string getAnimationName(const Animation* animation);
+		std::vector<std::string> getAnimationNames();
 
 		void calculateTangents(Mesh& mesh);
 		std::array<Math::vec3, 2> calculateAABB(const Mesh& mesh);
@@ -68,8 +80,6 @@ namespace NtshEngn {
 
 		bool loadSoundNtsd(const std::string& filePath, Sound& sound);
 
-		std::string getNormalizedPath(const std::string& filePath);
-
 	private:
 		AssetLoaderModuleInterface* m_assetLoaderModule = nullptr;
 		GraphicsModuleInterface* m_graphicsModule = nullptr;
@@ -79,12 +89,14 @@ namespace NtshEngn {
 		std::unordered_map<std::string, Image> m_images;
 		std::unordered_map<std::string, Font> m_fonts;
 		std::unordered_map<std::string, Sound> m_sounds;
+		std::unordered_map<std::string, Animation> m_animations;
 
 		std::unordered_map<Model*, std::string> m_modelNames;
 		std::unordered_map<Material*, std::string> m_materialNames;
 		std::unordered_map<Image*, std::string> m_imageNames;
 		std::unordered_map<Font*, std::string> m_fontNames;
 		std::unordered_map<Sound*, std::string> m_soundNames;
+		std::unordered_map<Animation*, std::string> m_animationNames;
 
 		std::unordered_map<std::string, std::filesystem::file_time_type> m_modelLastModified;
 		std::unordered_map<std::string, std::filesystem::file_time_type> m_materialLastModified;

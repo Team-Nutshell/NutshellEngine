@@ -14,8 +14,7 @@
 
 NtshEngn::Model* NtshEngn::AssetManager::createModel(const std::string& modelName) {
 	if (m_models.find(modelName) == m_models.end()) {
-		Model newModel;
-		m_models[modelName] = newModel;
+		m_models[modelName] = Model();
 		Model* model = &m_models[modelName];
 
 		m_modelNames[model] = modelName;
@@ -36,7 +35,7 @@ NtshEngn::Model* NtshEngn::AssetManager::loadModel(const std::string& filePath) 
 		return nullptr;
 	}
 
-	std::string normalizedPath = getNormalizedPath(filePath);
+	std::string normalizedPath = File::normalize(filePath);
 
 	if (m_models.find(normalizedPath) != m_models.end()) {
 		if (m_modelLastModified.find(normalizedPath) != m_modelLastModified.end()) {
@@ -61,6 +60,10 @@ NtshEngn::Model* NtshEngn::AssetManager::loadModel(const std::string& filePath) 
 		m_models[normalizedPath] = newModel;
 		Model* model = &m_models[normalizedPath];
 
+		for (ModelPrimitive& primitive : model->primitives) {
+			primitive.mesh.model = model;
+		}
+
 		m_modelNames[model] = normalizedPath;
 		m_modelLastModified[normalizedPath] = std::filesystem::last_write_time(filePath);
 
@@ -75,8 +78,7 @@ NtshEngn::Model* NtshEngn::AssetManager::loadModel(const std::string& filePath) 
 
 NtshEngn::Material* NtshEngn::AssetManager::createMaterial(const std::string& materialName) {
 	if (m_materials.find(materialName) == m_materials.end()) {
-		Material newMaterial;
-		m_materials[materialName] = newMaterial;
+		m_materials[materialName] = Material();
 		Material* material = &m_materials[materialName];
 
 		m_materialNames[material] = materialName;
@@ -97,7 +99,7 @@ NtshEngn::Material* NtshEngn::AssetManager::loadMaterial(const std::string& file
 		return nullptr;
 	}
 
-	std::string normalizedPath = getNormalizedPath(filePath);
+	std::string normalizedPath = File::normalize(filePath);
 
 	if (m_materials.find(normalizedPath) != m_materials.end()) {
 		if (m_materialLastModified.find(normalizedPath) != m_materialLastModified.end()) {
@@ -136,8 +138,7 @@ NtshEngn::Material* NtshEngn::AssetManager::loadMaterial(const std::string& file
 
 NtshEngn::Image* NtshEngn::AssetManager::createImage(const std::string& imageName) {
 	if (m_images.find(imageName) == m_images.end()) {
-		Image newImage;
-		m_images[imageName] = newImage;
+		m_images[imageName] = Image();
 		Image* image = &m_images[imageName];
 
 		m_imageNames[image] = imageName;
@@ -158,7 +159,7 @@ NtshEngn::Image* NtshEngn::AssetManager::loadImage(const std::string& filePath) 
 		return nullptr;
 	}
 
-	std::string normalizedPath = getNormalizedPath(filePath);
+	std::string normalizedPath = File::normalize(filePath);
 
 	if (m_images.find(normalizedPath) != m_images.end()) {
 		if (m_imageLastModified.find(normalizedPath) != m_imageLastModified.end()) {
@@ -197,8 +198,7 @@ NtshEngn::Image* NtshEngn::AssetManager::loadImage(const std::string& filePath) 
 
 NtshEngn::Font* NtshEngn::AssetManager::createFont(const std::string& fontName) {
 	if (m_fonts.find(fontName) == m_fonts.end()) {
-		Font newFont;
-		m_fonts[fontName] = newFont;
+		m_fonts[fontName] = Font();
 		Font* font = &m_fonts[fontName];
 
 		m_fontNames[font] = fontName;
@@ -225,7 +225,7 @@ NtshEngn::Font* NtshEngn::AssetManager::loadFontBitmap(const std::string& filePa
 		return nullptr;
 	}
 
-	std::string normalizedPath = getNormalizedPath(filePath) + ":Bitmap:" + std::to_string(fontHeight);
+	std::string normalizedPath = File::normalize(filePath) + ":Bitmap:" + std::to_string(fontHeight);
 
 	if (m_fonts.find(normalizedPath) != m_fonts.end()) {
 		if (m_fontLastModified.find(normalizedPath) != m_fontLastModified.end()) {
@@ -266,7 +266,7 @@ NtshEngn::Font* NtshEngn::AssetManager::loadFontSDF(const std::string& filePath)
 		return nullptr;
 	}
 
-	std::string normalizedPath = getNormalizedPath(filePath) + ":SDF";
+	std::string normalizedPath = File::normalize(filePath) + ":SDF";
 
 	if (m_fonts.find(normalizedPath) != m_fonts.end()) {
 		if (m_fontLastModified.find(normalizedPath) != m_fontLastModified.end()) {
@@ -302,8 +302,7 @@ NtshEngn::Font* NtshEngn::AssetManager::loadFontSDF(const std::string& filePath)
 
 NtshEngn::Sound* NtshEngn::AssetManager::createSound(const std::string& soundName) {
 	if (m_sounds.find(soundName) == m_sounds.end()) {
-		Sound newSound;
-		m_sounds[soundName] = newSound;
+		m_sounds[soundName] = Sound();
 		Sound* sound = &m_sounds[soundName];
 
 		m_soundNames[sound] = soundName;
@@ -324,7 +323,7 @@ NtshEngn::Sound* NtshEngn::AssetManager::loadSound(const std::string& filePath) 
 		return nullptr;
 	}
 
-	std::string normalizedPath = getNormalizedPath(filePath);
+	std::string normalizedPath = File::normalize(filePath);
 
 	if (m_sounds.find(normalizedPath) != m_sounds.end()) {
 		if (m_soundLastModified.find(normalizedPath) != m_soundLastModified.end()) {
@@ -356,6 +355,22 @@ NtshEngn::Sound* NtshEngn::AssetManager::loadSound(const std::string& filePath) 
 	}
 	else {
 		NTSHENGN_ASSET_MANAGER_WARNING("Could not load sound file \"" + filePath + "\".");
+
+		return nullptr;
+	}
+}
+
+NtshEngn::Animation* NtshEngn::AssetManager::createAnimation(const std::string& animationName) {
+	if (m_animations.find(animationName) == m_animations.end()) {
+		m_animations[animationName] = Animation();
+		Animation* animation = &m_animations[animationName];
+
+		m_animationNames[animation] = animationName;
+
+		return animation;
+	}
+	else {
+		NTSHENGN_ASSET_MANAGER_WARNING("Animation name \"" + animationName + "\" already exists.");
 
 		return nullptr;
 	}
@@ -426,94 +441,170 @@ void NtshEngn::AssetManager::destroySound(const std::string& soundName) {
 	}
 }
 
+void NtshEngn::AssetManager::destroyAnimation(const std::string& animationName) {
+	if (m_animations.find(animationName) != m_animations.end()) {
+		m_animationNames.erase(&m_animations[animationName]);
+		m_animations.erase(animationName);
+	}
+	else {
+		NTSHENGN_ASSET_MANAGER_WARNING("Could not destroy animation named \"" + animationName + "\" (name not found).");
+	}
+}
+
 NtshEngn::Model* NtshEngn::AssetManager::findModelByName(const std::string& modelName) {
 	if (m_models.find(modelName) != m_models.end()) {
 		return &m_models[modelName];
 	}
-	else {
-		return nullptr;
-	}
+
+	return nullptr;
 }
 
 std::string NtshEngn::AssetManager::getModelName(const Model* model) {
 	if (m_modelNames.find(const_cast<Model*>(model)) != m_modelNames.end()) {
 		return m_modelNames[const_cast<Model*>(model)];
 	}
-	else {
-		return "";
+
+	return "";
+}
+
+std::vector<std::string> NtshEngn::AssetManager::getModelNames() {
+	std::vector<std::string> modelNames;
+	modelNames.reserve(m_modelNames.size());
+	for (const auto& modelName : m_modelNames) {
+		modelNames.push_back(modelName.second);
 	}
+
+	return modelNames;
 }
 
 NtshEngn::Material* NtshEngn::AssetManager::findMaterialByName(const std::string& materialName) {
 	if (m_materials.find(materialName) != m_materials.end()) {
 		return &m_materials[materialName];
 	}
-	else {
-		return nullptr;
-	}
+
+	return nullptr;
 }
 
 std::string NtshEngn::AssetManager::getMaterialName(const Material* material) {
 	if (m_materialNames.find(const_cast<Material*>(material)) != m_materialNames.end()) {
 		return m_materialNames[const_cast<Material*>(material)];
 	}
-	else {
-		return "";
+
+	return "";
+}
+
+std::vector<std::string> NtshEngn::AssetManager::getMaterialNames() {
+	std::vector<std::string> materialNames;
+	materialNames.reserve(m_materialNames.size());
+	for (const auto& materialName : m_materialNames) {
+		materialNames.push_back(materialName.second);
 	}
+
+	return materialNames;
 }
 
 NtshEngn::Image* NtshEngn::AssetManager::findImageByName(const std::string& imageName) {
 	if (m_images.find(imageName) != m_images.end()) {
 		return &m_images[imageName];
 	}
-	else {
-		return nullptr;
-	}
+
+	return nullptr;
 }
 
 std::string NtshEngn::AssetManager::getImageName(const Image* image) {
 	if (m_imageNames.find(const_cast<Image*>(image)) != m_imageNames.end()) {
 		return m_imageNames[const_cast<Image*>(image)];
 	}
-	else {
-		return "";
+
+	return "";
+}
+
+std::vector<std::string> NtshEngn::AssetManager::getImageNames() {
+	std::vector<std::string> imageNames;
+	imageNames.reserve(m_imageNames.size());
+	for (const auto& imageName : m_imageNames) {
+		imageNames.push_back(imageName.second);
 	}
+
+	return imageNames;
 }
 
 NtshEngn::Font* NtshEngn::AssetManager::findFontByName(const std::string& fontName) {
 	if (m_fonts.find(fontName) != m_fonts.end()) {
 		return &m_fonts[fontName];
 	}
-	else {
-		return nullptr;
-	}
+
+	return nullptr;
 }
 
 std::string NtshEngn::AssetManager::getFontName(const Font* font) {
 	if (m_fontNames.find(const_cast<Font*>(font)) != m_fontNames.end()) {
 		return m_fontNames[const_cast<Font*>(font)];
 	}
-	else {
-		return "";
+
+	return "";
+}
+
+std::vector<std::string> NtshEngn::AssetManager::getFontNames() {
+	std::vector<std::string> fontNames;
+	fontNames.reserve(m_fontNames.size());
+	for (const auto& fontName : m_fontNames) {
+		fontNames.push_back(fontName.second);
 	}
+
+	return fontNames;
 }
 
 NtshEngn::Sound* NtshEngn::AssetManager::findSoundByName(const std::string& soundName) {
 	if (m_sounds.find(soundName) != m_sounds.end()) {
 		return &m_sounds[soundName];
 	}
-	else {
-		return nullptr;
-	}
+
+	return nullptr;
 }
 
 std::string NtshEngn::AssetManager::getSoundName(const Sound* sound) {
 	if (m_soundNames.find(const_cast<Sound*>(sound)) != m_soundNames.end()) {
 		return m_soundNames[const_cast<Sound*>(sound)];
 	}
-	else {
-		return "";
+
+	return "";
+}
+
+std::vector<std::string> NtshEngn::AssetManager::getSoundNames() {
+	std::vector<std::string> soundNames;
+	soundNames.reserve(m_soundNames.size());
+	for (const auto& soundName : m_soundNames) {
+		soundNames.push_back(soundName.second);
 	}
+
+	return soundNames;
+}
+
+NtshEngn::Animation* NtshEngn::AssetManager::findAnimationByName(const std::string& animationName) {
+	if (m_animations.find(animationName) != m_animations.end()) {
+		return &m_animations[animationName];
+	}
+
+	return nullptr;
+}
+
+std::string NtshEngn::AssetManager::getAnimationName(const Animation* animation) {
+	if (m_animationNames.find(const_cast<Animation*>(animation)) != m_animationNames.end()) {
+		return m_animationNames[const_cast<Animation*>(animation)];
+	}
+
+	return "";
+}
+
+std::vector<std::string> NtshEngn::AssetManager::getAnimationNames() {
+	std::vector<std::string> animationNames;
+	animationNames.reserve(m_animationNames.size());
+	for (const auto& animationName : m_animationNames) {
+		animationNames.push_back(animationName.second);
+	}
+
+	return animationNames;
 }
 
 void NtshEngn::AssetManager::calculateTangents(Mesh& mesh) {
@@ -1122,20 +1213,4 @@ bool NtshEngn::AssetManager::loadSoundNtsd(const std::string& filePath, Sound& s
 	sound.length = static_cast<float>(sound.data.size()) / static_cast<float>(sound.sampleRate * sound.channels * (sound.bitsPerSample / 8));
 
 	return true;
-}
-
-std::string NtshEngn::AssetManager::getNormalizedPath(const std::string& filePath) {
-	if (filePath.empty()) {
-		return "";
-	}
-
-	std::string normalizedPath = std::filesystem::canonical(filePath).string();
-	std::replace(normalizedPath.begin(), normalizedPath.end(), '\\', '/');
-	std::string currentPath = std::filesystem::current_path().string();
-	std::replace(currentPath.begin(), currentPath.end(), '\\', '/');
-	if (normalizedPath.substr(0, currentPath.size()) == currentPath) {
-		normalizedPath = normalizedPath.substr(currentPath.size() + 1);
-	}
-
-	return normalizedPath;
 }
