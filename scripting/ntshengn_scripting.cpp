@@ -92,10 +92,11 @@ void NtshEngn::Scripting::onEntityComponentAdded(Entity entity, Component compon
 
 void NtshEngn::Scripting::onEntityComponentRemoved(Entity entity, Component componentID) {
 	if (componentID == m_ecs->getComponentID<Scriptable>()) {
-		const Scriptable& scriptable = m_ecs->getComponent<Scriptable>(entity);
+		Scriptable& scriptable = m_ecs->getComponent<Scriptable>(entity);
 		Script* script = static_cast<Script*>(scriptable.script);
 		script->destroy();
 		m_scriptManager->destroyScript(script);
+		scriptable.script = nullptr;
 
 		m_entityScriptsToDestroy.insert(entity);
 	}

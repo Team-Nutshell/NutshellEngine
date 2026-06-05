@@ -69,7 +69,7 @@ void NtshEngn::SceneManager::goToScene(const std::string& filePath) {
 						const JSON::Node& primitiveIndexNode = renderableNode["primitiveIndex"];
 
 						uint32_t primitiveIndex = static_cast<uint32_t>(primitiveIndexNode.getNumber());
-						
+
 						if (model && (primitiveIndex < model->primitives.size())) {
 							renderable.mesh = &model->primitives[primitiveIndex].mesh;
 							renderable.material = model->primitives[primitiveIndex].material;
