@@ -323,83 +323,83 @@ void NtshEngn::SceneManager::goToScene(const std::string& filePath) {
 					const JSON::Node& typeNode = collidableNode["type"];
 
 					if (typeNode.getString() == "Box") {
-						collidable.collider = std::make_unique<ColliderBox>();
-						ColliderBox* colliderBox = static_cast<ColliderBox*>(collidable.collider.get());
+						collidable.collider = ColliderBox();
+						ColliderBox& colliderBox = std::get<ColliderBox>(collidable.collider);
 
 						if (collidableNode.contains("center")) {
 							const JSON::Node& centerNode = collidableNode["center"];
 
-							colliderBox->center = { centerNode[0].getNumber(), centerNode[1].getNumber(), centerNode[2].getNumber() };
+							colliderBox.center = { centerNode[0].getNumber(), centerNode[1].getNumber(), centerNode[2].getNumber() };
 						}
 
 						if (collidableNode.contains("halfExtent")) {
 							const JSON::Node& halfExtentNode = collidableNode["halfExtent"];
 
-							colliderBox->halfExtent = { halfExtentNode[0].getNumber(), halfExtentNode[1].getNumber(), halfExtentNode[2].getNumber() };
+							colliderBox.halfExtent = { halfExtentNode[0].getNumber(), halfExtentNode[1].getNumber(), halfExtentNode[2].getNumber() };
 						}
 
 						if (collidableNode.contains("rotation")) {
 							const JSON::Node& rotationNode = collidableNode["rotation"];
 
-							colliderBox->rotation = { Math::toRad(rotationNode[0].getNumber()), Math::toRad(rotationNode[1].getNumber()), Math::toRad(rotationNode[2].getNumber()) };
+							colliderBox.rotation = { Math::toRad(rotationNode[0].getNumber()), Math::toRad(rotationNode[1].getNumber()), Math::toRad(rotationNode[2].getNumber()) };
 						}
 
 						if (!collidableNode.contains("center") && !collidableNode.contains("halfExtent") && !collidableNode.contains("rotation")) {
 							// Default box collider
-							colliderBox->center = Math::vec3(0.0f, 0.0f, 0.0f);
-							colliderBox->halfExtent = Math::vec3(0.5f, 0.5f, 0.5f);
-							colliderBox->rotation = Math::vec3(0.0f, 0.0f, 0.0f);
+							colliderBox.center = Math::vec3(0.0f, 0.0f, 0.0f);
+							colliderBox.halfExtent = Math::vec3(0.5f, 0.5f, 0.5f);
+							colliderBox.rotation = Math::vec3(0.0f, 0.0f, 0.0f);
 						}
 					}
 					else if (typeNode.getString() == "Sphere") {
-						collidable.collider = std::make_unique<ColliderSphere>();
-						ColliderSphere* colliderSphere = static_cast<ColliderSphere*>(collidable.collider.get());
+						collidable.collider = ColliderSphere();
+						ColliderSphere& colliderSphere = std::get<ColliderSphere>(collidable.collider);
 
 						if (collidableNode.contains("center")) {
 							const JSON::Node& centerNode = collidableNode["center"];
 
-							colliderSphere->center = { centerNode[0].getNumber(), centerNode[1].getNumber(), centerNode[2].getNumber() };
+							colliderSphere.center = { centerNode[0].getNumber(), centerNode[1].getNumber(), centerNode[2].getNumber() };
 						}
 
 						if (collidableNode.contains("radius")) {
 							const JSON::Node& radiusNode = collidableNode["radius"];
 
-							colliderSphere->radius = radiusNode.getNumber();
+							colliderSphere.radius = radiusNode.getNumber();
 						}
 
 						if (!collidableNode.contains("center") && !collidableNode.contains("radius")) {
 							// Default sphere collider
-							colliderSphere->center = Math::vec3(0.0f, 0.0f, 0.0f);
-							colliderSphere->radius = 0.5f;
+							colliderSphere.center = Math::vec3(0.0f, 0.0f, 0.0f);
+							colliderSphere.radius = 0.5f;
 						}
 					}
 					else if (typeNode.getString() == "Capsule") {
-						collidable.collider = std::make_unique<ColliderCapsule>();
-						ColliderCapsule* colliderCapsule = static_cast<ColliderCapsule*>(collidable.collider.get());
+						collidable.collider = ColliderCapsule();
+						ColliderCapsule& colliderCapsule = std::get<ColliderCapsule>(collidable.collider);
 
 						if (collidableNode.contains("base")) {
 							const JSON::Node& baseNode = collidableNode["base"];
 
-							colliderCapsule->base = { baseNode[0].getNumber(), baseNode[1].getNumber(), baseNode[2].getNumber() };
+							colliderCapsule.base = { baseNode[0].getNumber(), baseNode[1].getNumber(), baseNode[2].getNumber() };
 						}
 
 						if (collidableNode.contains("tip")) {
 							const JSON::Node& tipNode = collidableNode["tip"];
 
-							colliderCapsule->tip = { tipNode[0].getNumber(), tipNode[1].getNumber(), tipNode[2].getNumber() };
+							colliderCapsule.tip = { tipNode[0].getNumber(), tipNode[1].getNumber(), tipNode[2].getNumber() };
 						}
 
 						if (collidableNode.contains("radius")) {
 							const JSON::Node& radiusNode = collidableNode["radius"];
 
-							colliderCapsule->radius = radiusNode.getNumber();
+							colliderCapsule.radius = radiusNode.getNumber();
 						}
 
 						if (!collidableNode.contains("base") && !collidableNode.contains("tip") && !collidableNode.contains("radius")) {
 							// Default capsule collider
-							colliderCapsule->base = Math::vec3(0.0f, 0.25f, 0.0f);
-							colliderCapsule->tip = Math::vec3(0.0f, 0.75f, 0.0f);
-							colliderCapsule->radius = 0.25f;
+							colliderCapsule.base = Math::vec3(0.0f, 0.25f, 0.0f);
+							colliderCapsule.tip = Math::vec3(0.0f, 0.75f, 0.0f);
+							colliderCapsule.radius = 0.25f;
 						}
 					}
 				}
