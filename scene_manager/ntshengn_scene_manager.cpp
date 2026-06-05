@@ -19,9 +19,6 @@ void NtshEngn::SceneManager::goToScene(const std::string& filePath) {
 	std::string previousScenePath = m_currentScenePath;
 	m_currentScenePath = filePath;
 
-	JSON json;
-	const JSON::Node& sceneRoot = json.read(filePath);
-
 	const std::set<Entity>& entities = m_ecs->getEntities();
 	for (Entity entity : entities) {
 		if (m_ecs->hasComponent<Scriptable>(entity)) {
@@ -30,6 +27,23 @@ void NtshEngn::SceneManager::goToScene(const std::string& filePath) {
 	}
 
 	m_ecs->destroyNonPersistentEntities();
+
+	createEntitiesFromScene(filePath);
+
+	for (Entity entity : entities) {
+		if (m_ecs->hasComponent<Scriptable>(entity)) {
+			m_ecs->getComponent<Scriptable>(entity).script->onSceneEnter(m_currentScenePath);
+		}
+	}
+}
+
+std::string NtshEngn::SceneManager::getCurrentScenePath() {
+	return m_currentScenePath;
+}
+
+void NtshEngn::SceneManager::createEntitiesFromScene(const std::string& filePath) {
+	JSON json;
+	const JSON::Node& sceneRoot = json.read(filePath);
 
 	if (sceneRoot.contains("entities")) {
 		const JSON::Node& entitiesNode = sceneRoot["entities"];
@@ -569,16 +583,6 @@ void NtshEngn::SceneManager::goToScene(const std::string& filePath) {
 			}
 		}
 	}
-
-	for (Entity entity : entities) {
-		if (m_ecs->hasComponent<Scriptable>(entity)) {
-			m_ecs->getComponent<Scriptable>(entity).script->onSceneEnter(m_currentScenePath);
-		}
-	}
-}
-
-std::string NtshEngn::SceneManager::getCurrentScenePath() {
-	return m_currentScenePath;
 }
 
 void NtshEngn::SceneManager::setECS(ECS* ecs) {

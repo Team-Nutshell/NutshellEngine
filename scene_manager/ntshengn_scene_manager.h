@@ -13,6 +13,8 @@ namespace NtshEngn {
 
 		std::string getCurrentScenePath();
 
+		void createEntitiesFromScene(const std::string& filePath);
+
 	public:
 		void setECS(ECS* ecs);
 
