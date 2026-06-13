@@ -28,7 +28,7 @@ void NtshEngn::SceneManager::goToScene(const std::string& filePath) {
 
 	m_ecs->destroyNonPersistentEntities();
 
-	createEntitiesFromScene(filePath);
+	createEntitiesFromScene(m_currentScenePath);
 
 	for (Entity entity : entities) {
 		if (m_ecs->hasComponent<Scriptable>(entity)) {
