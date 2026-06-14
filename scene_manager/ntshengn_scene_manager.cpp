@@ -134,7 +134,7 @@ void NtshEngn::SceneManager::createEntitiesFromScene(const std::string& filePath
 				if (transformNode.contains("rotation")) {
 					const JSON::Node& rotationNode = transformNode["rotation"];
 
-					transform.rotation = { Math::toRad(rotationNode[0].getNumber()), Math::toRad(rotationNode[1].getNumber()), Math::toRad(rotationNode[2].getNumber()) };
+					transform.rotation = Math::eulerAnglesToQuat(Math::vec3(Math::toRad(rotationNode[0].getNumber()), Math::toRad(rotationNode[1].getNumber()), Math::toRad(rotationNode[2].getNumber())));
 				}
 
 				if (transformNode.contains("scale")) {
@@ -355,14 +355,14 @@ void NtshEngn::SceneManager::createEntitiesFromScene(const std::string& filePath
 						if (collidableNode.contains("rotation")) {
 							const JSON::Node& rotationNode = collidableNode["rotation"];
 
-							colliderBox.rotation = { Math::toRad(rotationNode[0].getNumber()), Math::toRad(rotationNode[1].getNumber()), Math::toRad(rotationNode[2].getNumber()) };
+							colliderBox.rotation = Math::eulerAnglesToQuat(Math::vec3(Math::toRad(rotationNode[0].getNumber()), Math::toRad(rotationNode[1].getNumber()), Math::toRad(rotationNode[2].getNumber())));
 						}
 
 						if (!collidableNode.contains("center") && !collidableNode.contains("halfExtent") && !collidableNode.contains("rotation")) {
 							// Default box collider
 							colliderBox.center = Math::vec3(0.0f, 0.0f, 0.0f);
 							colliderBox.halfExtent = Math::vec3(0.5f, 0.5f, 0.5f);
-							colliderBox.rotation = Math::vec3(0.0f, 0.0f, 0.0f);
+							colliderBox.rotation = Math::quat::identity();
 						}
 					}
 					else if (typeNode.getString() == "Sphere") {
