@@ -1,6 +1,6 @@
 #pragma once
-#include "../utils/ntshengn_core_defines.h"
 #include "../Common/modules/ntshengn_module_interface.h"
+#include "../utils/ntshengn_core_defines.h"
 #include <windows.h>
 #undef far
 #undef near

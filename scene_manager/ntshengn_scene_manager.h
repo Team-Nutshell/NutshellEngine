@@ -3,6 +3,7 @@
 #include "../asset_manager/ntshengn_asset_manager.h"
 #include "../ecs/ntshengn_ecs.h"
 #include "../script/ntshengn_script_manager_interface.h"
+#include "../scripting/ntshengn_scripting.h"
 #include <string>
 
 namespace NtshEngn {
@@ -22,12 +23,16 @@ namespace NtshEngn {
 
 		void setScriptManager(ScriptManagerInterface* scriptManager);
 
+		void setScripting(Scripting* scripting);
+
 	private:
 		AssetManager* m_assetManager;
 
 		ECS* m_ecs;
 
 		ScriptManagerInterface* m_scriptManager;
+
+		Scripting* m_scripting;
 
 		std::string m_currentScenePath = "";
 	};

@@ -15,6 +15,26 @@ void NtshEngn::Scripting::update(float dt) {
 	m_entityScriptsToDestroy.clear();
 }
 
+void NtshEngn::Scripting::onSceneEnter(const std::string& filePath) {
+	for (auto& entityScript : m_entityScripts) {
+		if (m_entityScriptsToDestroy.find(entityScript) == m_entityScriptsToDestroy.end()) {
+			const Scriptable& entityScriptable = m_ecs->getComponent<Scriptable>(entityScript);
+			Script* script = static_cast<Script*>(entityScriptable.script);
+			script->onSceneEnter(filePath);
+		}
+	}
+}
+
+void NtshEngn::Scripting::onSceneExit(const std::string& filePath) {
+	for (auto& entityScript : m_entityScripts) {
+		if (m_entityScriptsToDestroy.find(entityScript) == m_entityScriptsToDestroy.end()) {
+			const Scriptable& entityScriptable = m_ecs->getComponent<Scriptable>(entityScript);
+			Script* script = static_cast<Script*>(entityScriptable.script);
+			script->onSceneExit(filePath);
+		}
+	}
+}
+
 void NtshEngn::Scripting::setModules(GraphicsModuleInterface* graphicsModule, PhysicsModuleInterface* physicsModule, WindowModuleInterface* windowModule, AudioModuleInterface* audioModule, PlatformModuleInterface* platformModule) {
 	m_graphicsModule = graphicsModule;
 	m_physicsModule = physicsModule;
@@ -55,7 +75,7 @@ void NtshEngn::Scripting::setNetworking(Networking* networking) {
 	m_networking = networking;
 }
 
-void NtshEngn::Scripting::setSceneManager(SceneManager* sceneManager) {
+void NtshEngn::Scripting::setSceneManager(SceneManagerInterface* sceneManager) {
 	m_sceneManager = sceneManager;
 }
 

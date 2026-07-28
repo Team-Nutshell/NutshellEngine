@@ -19,22 +19,13 @@ void NtshEngn::SceneManager::goToScene(const std::string& filePath) {
 	std::string previousScenePath = m_currentScenePath;
 	m_currentScenePath = filePath;
 
-	const std::set<Entity>& entities = m_ecs->getEntities();
-	for (Entity entity : entities) {
-		if (m_ecs->hasComponent<Scriptable>(entity)) {
-			m_ecs->getComponent<Scriptable>(entity).script->onSceneExit(previousScenePath);
-		}
-	}
+	m_scripting->onSceneExit(previousScenePath);
 
 	m_ecs->destroyNonPersistentEntities();
 
 	createEntitiesFromScene(m_currentScenePath);
 
-	for (Entity entity : entities) {
-		if (m_ecs->hasComponent<Scriptable>(entity)) {
-			m_ecs->getComponent<Scriptable>(entity).script->onSceneEnter(m_currentScenePath);
-		}
-	}
+	m_scripting->onSceneEnter(filePath);
 }
 
 std::string NtshEngn::SceneManager::getCurrentScenePath() {
@@ -595,4 +586,8 @@ void NtshEngn::SceneManager::setAssetManager(AssetManager* assetManager) {
 
 void NtshEngn::SceneManager::setScriptManager(ScriptManagerInterface* scriptManager) {
 	m_scriptManager = scriptManager;
+}
+
+void NtshEngn::SceneManager::setScripting(Scripting* scripting) {
+	m_scripting = scripting;
 }

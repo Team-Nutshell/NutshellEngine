@@ -1,4 +1,7 @@
 #pragma once
+#include "../Common/scene_manager/ntshengn_scene_manager_interface.h"
+#include "../Common/script/ntshengn_script.h"
+#include "../Common/script/ntshengn_script_manager_interface.h"
 #include "../command_line/ntshengn_command_line.h"
 #include "../ecs/ntshengn_ecs.h"
 #include "../asset_manager/ntshengn_asset_manager.h"
@@ -6,9 +9,6 @@
 #include "../profiler/ntshengn_profiler.h"
 #include "../frame_limiter/ntshengn_frame_limiter.h"
 #include "../networking/ntshengn_networking.h"
-#include "../scene_manager/ntshengn_scene_manager.h"
-#include "../Common/script/ntshengn_script.h"
-#include "../Common/script/ntshengn_script_manager_interface.h"
 #include <unordered_map>
 #include <set>
 
@@ -17,6 +17,9 @@ namespace NtshEngn {
 	class Scripting : public System {
 	public:
 		void update(float dt);
+
+		void onSceneEnter(const std::string& filePath);
+		void onSceneExit(const std::string& filePath);
 
 		void setModules(GraphicsModuleInterface* graphicsModule, PhysicsModuleInterface* physicsModule, WindowModuleInterface* windowModule, AudioModuleInterface* audioModule, PlatformModuleInterface* platformModule);
 		void setScriptManager(ScriptManagerInterface* scriptManager);
@@ -27,7 +30,7 @@ namespace NtshEngn {
 		void setJobSystem(JobSystem* jobSystem);
 		void setProfiler(Profiler* profiler);
 		void setNetworking(Networking* networking);
-		void setSceneManager(SceneManager* sceneManager);
+		void setSceneManager(SceneManagerInterface* sceneManager);
 
 	public:
 		void onEntityComponentAdded(Entity entity, Component componentID);
@@ -54,7 +57,7 @@ namespace NtshEngn {
 
 		Networking* m_networking = nullptr;
 
-		SceneManager* m_sceneManager = nullptr;
+		SceneManagerInterface* m_sceneManager = nullptr;
 
 	private:
 		ScriptManagerInterface* m_scriptManager;

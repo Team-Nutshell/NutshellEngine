@@ -186,6 +186,9 @@ void NtshEngn::Core::init(int windowWidth, int windowHeight, const std::string& 
 	// Pass Scene Manager
 	passSceneManager();
 
+	// Pass Scripting
+	passScripting();
+
 	// Initialize System Modules
 	m_profiler.startBlock("Init Platform Module");
 	NTSHENGN_POINTER_EXECUTE(m_platformModule, init());
@@ -521,4 +524,8 @@ void NtshEngn::Core::passNetworking() {
 
 void NtshEngn::Core::passSceneManager() {
 	m_scripting.setSceneManager(&m_sceneManager);
+}
+
+void NtshEngn::Core::passScripting() {
+	m_sceneManager.setScripting(&m_scripting);
 }

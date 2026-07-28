@@ -87,6 +87,8 @@ namespace NtshEngn {
 
 		void passSceneManager();
 
+		void passScripting();
+
 	private:
 		GraphicsModuleInterface* m_graphicsModule = nullptr;
 		PhysicsModuleInterface* m_physicsModule = nullptr;
