@@ -58,7 +58,7 @@ namespace NtshEngn {
 
 	private:
 		ScriptManagerInterface* m_scriptManager;
-		std::unordered_map<Entity, bool> m_entityScriptsJustInitialized;
+		std::set<Entity> m_entityScripts;
 		std::set<Entity> m_entityScriptsToDestroy;
 	};
 

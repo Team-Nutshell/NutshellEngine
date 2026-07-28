@@ -1,21 +1,16 @@
 #include "ntshengn_scripting.h"
 
 void NtshEngn::Scripting::update(float dt) {
-	for (auto& entityScript : m_entityScriptsJustInitialized) {
-		if (m_entityScriptsToDestroy.find(entityScript.first) == m_entityScriptsToDestroy.end()) {
-			if (!entityScript.second) {
-				const Scriptable& entityScriptable = m_ecs->getComponent<Scriptable>(entityScript.first);
-				Script* script = static_cast<Script*>(entityScriptable.script);
-				script->update(dt);
-			}
-			else {
-				entityScript.second = false;
-			}
+	for (auto& entityScript : m_entityScripts) {
+		if (m_entityScriptsToDestroy.find(entityScript) == m_entityScriptsToDestroy.end()) {
+			const Scriptable& entityScriptable = m_ecs->getComponent<Scriptable>(entityScript);
+			Script* script = static_cast<Script*>(entityScriptable.script);
+			script->update(dt);
 		}
 	}
 
 	for (auto destroyedEntity : m_entityScriptsToDestroy) {
-		m_entityScriptsJustInitialized.erase(destroyedEntity);
+		m_entityScripts.erase(destroyedEntity);
 	}
 	m_entityScriptsToDestroy.clear();
 }
@@ -84,7 +79,7 @@ void NtshEngn::Scripting::onEntityComponentAdded(Entity entity, Component compon
 		if (m_entityScriptsToDestroy.find(entity) != m_entityScriptsToDestroy.end()) {
 			m_entityScriptsToDestroy.erase(entity);
 		}
-		m_entityScriptsJustInitialized[entity] = true;
+		m_entityScripts.insert(entity);
 
 		script->init();
 	}
