@@ -15,6 +15,16 @@ void NtshEngn::Scripting::update(float dt) {
 	m_entityScriptsToDestroy.clear();
 }
 
+void NtshEngn::Scripting::lateUpdate(float dt) {
+	for (auto& entityScript : m_entityScripts) {
+		if (m_entityScriptsToDestroy.find(entityScript) == m_entityScriptsToDestroy.end()) {
+			const Scriptable& entityScriptable = m_ecs->getComponent<Scriptable>(entityScript);
+			Script* script = static_cast<Script*>(entityScriptable.script);
+			script->lateUpdate(dt);
+		}
+	}
+}
+
 void NtshEngn::Scripting::onSceneEnter(const std::string& filePath) {
 	for (auto& entityScript : m_entityScripts) {
 		if (m_entityScriptsToDestroy.find(entityScript) == m_entityScriptsToDestroy.end()) {

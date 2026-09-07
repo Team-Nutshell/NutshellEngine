@@ -239,6 +239,9 @@ void NtshEngn::Core::update() {
 		m_profiler.startBlock("Update Physics Module");
 		NTSHENGN_POINTER_EXECUTE(m_physicsModule, update(dt));
 		m_profiler.endBlock();
+		m_profiler.startBlock("Late Update Scripting");
+		m_scripting.lateUpdate(dt);
+		m_profiler.endBlock();
 		m_profiler.startBlock("Update Audio Module");
 		NTSHENGN_POINTER_EXECUTE(m_audioModule, update(dt));
 		m_profiler.endBlock();

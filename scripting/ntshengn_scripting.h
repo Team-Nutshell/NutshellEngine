@@ -18,6 +18,8 @@ namespace NtshEngn {
 	public:
 		void update(float dt);
 
+		void lateUpdate(float dt);
+
 		void onSceneEnter(const std::string& filePath);
 		void onSceneExit(const std::string& filePath);
 
