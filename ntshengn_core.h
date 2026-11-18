@@ -1,6 +1,5 @@
 #pragma once
 #include "Common/utils/ntshengn_defines.h"
-#include "Common/utils/ntshengn_enums.h"
 #include "Common/modules/ntshengn_graphics_module_interface.h"
 #include "Common/modules/ntshengn_physics_module_interface.h"
 #include "Common/modules/ntshengn_window_module_interface.h"
